@@ -2,13 +2,13 @@
 //
 // Informática Gráfica (Grado Informática)
 //
-// Archivo: Cubo.h
+// Archivo: tetraedro.h
 
 //
 // #############################################################################
 
-#ifndef CUBO_H_INCLUDED
-#define CUBO_H_INCLUDED
+#ifndef TETRAEDRO_H_INCLUDED
+#define TETRAEDRO_H_INCLUDED
 
 #include "aux.h"
 
@@ -19,13 +19,12 @@
 // *****************************************************************************
 
 // *****************************************************************************
-// Cubo con centro en el origen y lado unidad por defecto
-// (tiene 9 vertices y 6 caras)
+// Tetraedro con centro en el origen 
 
-class Cubo : public Malla3D
+class Tetraedro: public Malla3D
 {
    public:
-   Cubo(float l=1) ;
+      Tetraedro();
 
 } ;
 

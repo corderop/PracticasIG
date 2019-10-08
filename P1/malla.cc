@@ -14,17 +14,15 @@ Malla3D::Malla3D(){
 }
 
 void Malla3D::setColor(float R, float G, float B){
-   Tupla3f c0(R,G,B), c1(R,G,B), c2(R,G,B), c3(R,G,B),
-           c4(R,G,B), c5(R,G,B), c6(R,G,B), c7(R,G,B);
 
-   c[0] = c0;
-   c[1] = c1;
-   c[2] = c2;
-   c[3] = c3;
-   c[4] = c4;
-   c[5] = c5;
-   c[6] = c6;
-   c[7] = c7;
+   c.clear();
+
+   for(int i=0; i<v.size(); i++){
+      Tupla3f color(R,G,B);
+
+      c.push_back(color);
+   }
+
 }
 
 void Malla3D::draw_ModoInmediato()
@@ -98,11 +96,11 @@ void Malla3D::draw_ModoAjedrez(){
 
    glShadeModel(GL_FLAT);
 
-   glDrawElements(GL_TRIANGLES, f.size()*3/2, GL_UNSIGNED_INT, f.data());
+   glDrawElements(GL_TRIANGLES, (int)f.size()*3/2, GL_UNSIGNED_INT, f.data());
    setColor(0.0, 1.0, 1.0);
 
    // Dibujamos los elementos
-   glDrawElements(GL_TRIANGLES, f.size()*3/2, GL_UNSIGNED_INT, f.data()[6]);
+   glDrawElements(GL_TRIANGLES, (int)f.size()*3/2, GL_UNSIGNED_INT, f.data()[(int)f.size()/2]);
 
    // Hecho para el redibujado
    setColor(1.0, 0.0, 0.0);

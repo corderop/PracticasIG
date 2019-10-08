@@ -37,7 +37,10 @@ class Escena
    Ejes ejes;
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
-
+   int objeto, modoV, modoD; // Objeto, modo de visualizacion, modo de dibujado
+   // Objeto: -1 nada, 0 cubo, 1 tetraedro
+   // Modo visualizacion: 0 puntos, 1 lineas, 2 solido, 3 ajedrez
+   // Modo dibujado: 1 Modo inmediato, 2 Modo diferido
    
    public:
 

@@ -21,7 +21,11 @@ Escena::Escena()
     // crear los objetos de la escena....
     // .......completar: ...
     // .....
-
+    cubo = new Cubo(75);
+    tetraedro = new Tetraedro();
+    objeto = -1;  // Ninguno seleccionado
+    modoV = 2;    // Modo solido por defecto
+    modoD = 1;    // Modo inmediato por defecto
 }
 
 //**************************************************************************
@@ -64,7 +68,28 @@ void Escena::dibujar()
     // cubo.draw()
     // o
     // tetraedro.draw()
-    
+    bool ajedrez = false;
+
+    switch (modoV){
+       case 0: 
+         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+         break;
+       case 1: 
+         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+         break;
+       case 2: 
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         break;
+       case 3: 
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         ajedrez = true;
+         break;
+    }
+
+    if(objeto == 0)
+      cubo->draw(modoD, ajedrez);
+    else if(objeto == 1)
+      tetraedro->draw(modoD, ajedrez);
 }
 
 //**************************************************************************
@@ -102,6 +127,46 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          modoMenu=SELDIBUJADO;
          break ;
          // COMPLETAR con los diferentes opciones de teclado
+       case 'C' :
+         if(modoMenu == SELOBJETO){
+            objeto = 0;
+         }
+         break;
+       case 'T' :
+         if(modoMenu == SELOBJETO){
+            objeto = 1;
+         }
+         break;
+       case 'P' :
+         if(modoMenu == SELVISUALIZACION){
+            modoV = 0;
+         }
+         break;
+       case 'L' :
+         if(modoMenu == SELVISUALIZACION){
+            modoV = 1;
+         }
+         break;
+       case 'S' :
+         if(modoMenu == SELVISUALIZACION){
+            modoV = 2;
+         }
+         break;
+       case 'A' :
+         if(modoMenu == SELVISUALIZACION){
+            modoV = 3;
+         }
+         break;
+       case '1' :
+         if(modoMenu == SELDIBUJADO){
+            modoD = 1;
+         }
+         break;
+       case '2' :
+         if(modoMenu == SELDIBUJADO){
+            modoD = 2;
+         }
+         break;
             
    }
    return salir;

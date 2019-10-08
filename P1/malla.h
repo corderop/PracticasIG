@@ -25,6 +25,9 @@ class Malla3D
    // Contructor
    Malla3D();
 
+   // Cambiar el vector de color
+   void setColor(float R, float G, float B);
+
    // dibuja el objeto en modo inmediato
    void draw_ModoInmediato();
 
@@ -33,6 +36,9 @@ class Malla3D
 
    // dibuja el objeto en modo diferido (usando VBOs)
    void draw_ModoDiferido();
+
+   // dibuja el modo ajedrez
+   void draw_ModoAjedrez();
 
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)

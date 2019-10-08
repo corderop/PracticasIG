@@ -13,8 +13,18 @@ Malla3D::Malla3D(){
    id_ind = id_ver = 0;
 }
 
-void setColor(bool ajedrez){
-   
+void Malla3D::setColor(float R, float G, float B){
+   Tupla3f c0(R,G,B), c1(R,G,B), c2(R,G,B), c3(R,G,B),
+           c4(R,G,B), c5(R,G,B), c6(R,G,B), c7(R,G,B);
+
+   c[0] = c0;
+   c[1] = c1;
+   c[2] = c2;
+   c[3] = c3;
+   c[4] = c4;
+   c[5] = c5;
+   c[6] = c6;
+   c[7] = c7;
 }
 
 void Malla3D::draw_ModoInmediato()
@@ -76,15 +86,41 @@ void Malla3D::draw_ModoDiferido()
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw_ModoDiferido(){
+void Malla3D::draw_ModoAjedrez(){
 
+   // Para que no se vean sombras
+
+   glEnable(GL_CULL_FACE);
+   glEnableClientState(GL_VERTEX_ARRAY);
+   glVertexPointer(3, GL_FLOAT, 0, v.data());
+   glEnableClientState(GL_COLOR_ARRAY);
+   glColorPointer(3, GL_FLOAT, 0, c.data());
+
+   glShadeModel(GL_FLAT);
+
+   glDrawElements(GL_TRIANGLES, f.size()*3/2, GL_UNSIGNED_INT, f.data());
+   setColor(0.0, 1.0, 1.0);
+
+   // Dibujamos los elementos
+   glDrawElements(GL_TRIANGLES, f.size()*3/2, GL_UNSIGNED_INT, f.data()[6]);
+
+   // Hecho para el redibujado
+   setColor(1.0, 0.0, 0.0);
+
+   // Desactivamos el uso de ambos arrays
+   glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void Malla3D::draw(int modo, bool ajedrez)
 {
    // Activamos aquí el color para que funcione para ambos modos   
-   if(modo == 1)
-      draw_ModoInmediato();
+   if(modo == 1){
+      if(ajedrez)
+         draw_ModoAjedrez();
+      else
+         draw_ModoInmediato();
+   }
    else if(modo == 2)
       draw_ModoDiferido();
 

@@ -29,7 +29,6 @@ void Malla3D::draw_ModoInmediato()
 {
 
   // Activamos el uso de un array de vértices
-  glEnable(GL_CULL_FACE);
   glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3, GL_FLOAT, 0, v.data());
   glEnableClientState(GL_COLOR_ARRAY);
@@ -87,8 +86,6 @@ void Malla3D::draw_ModoDiferido()
 void Malla3D::draw_ModoAjedrez(){
 
    // Para que no se vean sombras
-
-   glEnable(GL_CULL_FACE);
    glEnableClientState(GL_VERTEX_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
    glEnableClientState(GL_COLOR_ARRAY);
@@ -112,6 +109,8 @@ void Malla3D::draw_ModoAjedrez(){
 
 void Malla3D::draw(int modo, bool ajedrez)
 {
+   glEnable(GL_CULL_FACE);
+
    // Activamos aquí el color para que funcione para ambos modos   
    if(modo == 1){
       if(ajedrez)

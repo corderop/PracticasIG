@@ -47,11 +47,14 @@ class Malla3D
 
    protected:
 
+   void crearAjedrez();
+
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
-   std::vector<Tupla3i> f ; // una terna de 3 enteros por cada cara o triángulo
-   std::vector<Tupla3f> c ; // terna para colores
+   std::vector<Tupla3i> f ;   // una terna de 3 enteros por cada cara o triángulo
+   std::vector<Tupla3i> f_a;  // terna para el modo ajedrez
+   std::vector<Tupla3f> c ;   // terna para colores
    GLuint id_ind, id_ver;
 
    // completar: tabla de colores, tabla de normales de vértices

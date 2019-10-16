@@ -25,12 +25,12 @@ Cubo::Cubo(float lado)
    v.push_back(v7);
 
    //Triangulos
-   Tupla3i  f0(0,2,1), f6(0,3,2),   // Cara de abajo
-            f1(4,5,6), f7(6,7,4),   // Cara de arriba
-            f2(0,4,3), f8(4,7,3),   // Cara de frente
-            f3(1,2,6), f9(6,5,1),   // Cara posterior
-            f4(0,1,5), f10(5,4,0),  // Cara derecha
-            f5(2,3,7), f11(7,6,2);  // Cara izquierda
+   Tupla3i  f0(0,2,1), f1(0,3,2),   // Cara de abajo
+            f2(4,5,6), f3(6,7,4),   // Cara de arriba
+            f4(0,4,3), f5(4,7,3),   // Cara de frente
+            f6(1,2,6), f7(6,5,1),   // Cara posterior
+            f8(0,1,5), f9(5,4,0),  // Cara derecha
+            f10(2,3,7),f11(7,6,2);  // Cara izquierda
 
    f.push_back(f0);
    f.push_back(f1);

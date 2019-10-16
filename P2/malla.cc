@@ -13,6 +13,24 @@ Malla3D::Malla3D(){
    id_ind = id_ver = 0;
 }
 
+void Malla3D::crearAjedrez(){
+   int a=0, 
+       b=ceil(f.size()/2);
+
+   f_a.resize(f.size());
+
+   for(int i=0; i<f.size(); i++){
+      if(i%2 == 0){
+         f_a[a] = f[i];
+         a++;
+      }
+      else{
+         f_a[b] = f[i];
+         b++;
+      }
+   }
+}
+
 void Malla3D::setColor(float R, float G, float B){
 
    c.clear();
@@ -85,6 +103,9 @@ void Malla3D::draw_ModoDiferido()
 
 void Malla3D::draw_ModoAjedrez(){
 
+   if(f_a.empty())
+      crearAjedrez();
+
    // Para que no se vean sombras
    glEnableClientState(GL_VERTEX_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
@@ -93,11 +114,16 @@ void Malla3D::draw_ModoAjedrez(){
 
    glShadeModel(GL_FLAT);
 
-   glDrawElements(GL_TRIANGLES, (int)f.size()*3/2, GL_UNSIGNED_INT, f.data());
+   // Esto lo hago por si el objeto tiene un número de triángulos impar
+   int mitad = floor(f_a.size()/2),
+       mitad2 = ceil(f_a.size()/2);
+
+   glDrawElements(GL_TRIANGLES, mitad*3, GL_UNSIGNED_INT, f_a.data());
+   
    setColor(0.0, 1.0, 1.0);
 
    // Dibujamos los elementos
-   glDrawElements(GL_TRIANGLES, (int)f.size()*3/2, GL_UNSIGNED_INT, f.data()[(int)f.size()/2]);
+   glDrawElements(GL_TRIANGLES, mitad2*3, GL_UNSIGNED_INT, f_a.data()[mitad]);
 
    // Hecho para el redibujado
    setColor(1.0, 0.0, 0.0);

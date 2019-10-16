@@ -23,6 +23,9 @@ Escena::Escena()
     // .....
     cubo = new Cubo(75);
     tetraedro = new Tetraedro();
+    ply_no1 = new ObjPLY("plys/ant.ply");
+    ply_no2 = new ObjPLY("plys/ant.ply");
+
     objeto = -1;  // Ninguno seleccionado
     modoV = 2;    // Modo solido por defecto
     modoD = 1;    // Modo inmediato por defecto
@@ -90,6 +93,20 @@ void Escena::dibujar()
       cubo->draw(modoD, ajedrez);
     else if(objeto == 1)
       tetraedro->draw(modoD, ajedrez);
+    else if(objeto == 2){
+      glPushMatrix();
+         glScalef(5.0,5.0,5.0);
+         glTranslatef(-20.0,0.0,0.0);
+         ply_no1->setColor(1.0,0,0);
+         ply_no1->draw(modoD, ajedrez);
+         glTranslatef(+40.0,0.0,0.0);
+         ply_no2->setColor(0.0,0.0,0.0);
+         ply_no2->draw(modoD, ajedrez);
+      glPopMatrix();
+    }
+    else if(objeto == 3){
+       
+    }
 }
 
 //**************************************************************************
@@ -137,9 +154,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             objeto = 1;
          }
          break;
+       case 'R' :
+         if(modoMenu == SELOBJETO){
+            objeto = 3;
+         }
+         break;
        case 'P' :
          if(modoMenu == SELVISUALIZACION){
             modoV = 0;
+         }
+         else if(modoMenu == SELOBJETO){
+            objeto = 2;
          }
          break;
        case 'L' :

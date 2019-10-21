@@ -25,6 +25,16 @@ Escena::Escena()
     tetraedro = new Tetraedro();
     ply_no1 = new ObjPLY("plys/ant.ply");
     ply_no2 = new ObjPLY("plys/ant.ply");
+    ply_rev = new ObjRevolucion("plys/peon.ply", 40, true, true);
+    
+    std::vector<Tupla3f> cil;
+
+    for(int i=0; i<40; i++){
+       Tupla3f aux(20, i, 0);
+       cil.push_back(aux);
+    }
+
+    cilindro = new ObjRevolucion(cil,40,true, true);
 
     objeto = -1;  // Ninguno seleccionado
     modoV = 2;    // Modo solido por defecto
@@ -105,7 +115,24 @@ void Escena::dibujar()
       glPopMatrix();
     }
     else if(objeto == 3){
+       if(tapas){
+         ply_rev->cambiarTapas();
+         ply_rev->crearAjedrez();
+         tapas=false;
+       }
+       glPushMatrix();
+         ply_rev->setColor(1.0,0,0);
+         glScalef(50.0,50.0,50.0);
+         ply_rev->draw(modoD, ajedrez);
+       glPopMatrix();
        
+    }
+    else if(objeto == 4){
+       glPushMatrix();
+         cilindro->setColor(1.0,0,0);
+         // glScalef(50.0,50.0,50.0);
+         cilindro->draw(modoD, ajedrez);
+       glPopMatrix();
     }
 }
 
@@ -157,6 +184,18 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
        case 'R' :
          if(modoMenu == SELOBJETO){
             objeto = 3;
+         }
+         break;
+       case 'X' :
+         // Cilindro
+         if(modoMenu == SELOBJETO){
+            objeto = 4;
+         }
+         break;
+       case 'F':
+         // Alternar tapas
+         if(objeto==3){
+            tapas = true;
          }
          break;
        case 'P' :

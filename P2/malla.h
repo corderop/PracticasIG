@@ -11,6 +11,7 @@
 #define MALLA3D_H_INCLUDED
 
 #include "aux.h"
+#include "ply_reader.h"
 
 // *****************************************************************************
 //
@@ -45,9 +46,9 @@ class Malla3D
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
    void draw(int modo, bool ajedrez) ;
 
-   protected:
-
    void crearAjedrez();
+
+   protected:
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 

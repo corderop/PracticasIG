@@ -6,6 +6,7 @@
 #include "cubo.h"
 #include "tetraedro.h"
 #include "objply.h"
+#include "objrevolucion.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
 class Escena
@@ -40,7 +41,10 @@ class Escena
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
    ObjPLY * ply_no1 = nullptr;
    ObjPLY * ply_no2 = nullptr;
+   ObjRevolucion * ply_rev = nullptr;
+   ObjRevolucion * cilindro = nullptr;
    int objeto, modoV, modoD; // Objeto, modo de visualizacion, modo de dibujado
+   bool tapas = false;
    // Objeto: -1 nada, 0 cubo, 1 tetraedro, 2 ply cargado, 3 ply revolución
    // Modo visualizacion: 0 puntos, 1 lineas, 2 solido, 3 ajedrez
    // Modo dibujado: 1 Modo inmediato, 2 Modo diferido

@@ -11,6 +11,9 @@
 
 Malla3D::Malla3D(){
    id_ind = id_ver = 0;
+
+   if(c.empty())
+      setColor(1.0,0.0,0.0);
 }
 
 void Malla3D::crearAjedrez(){

@@ -73,7 +73,7 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
    glEnable(GL_CULL_FACE);
-
+   
 	change_observer();
     ejes.draw();
 
@@ -125,6 +125,10 @@ void Escena::dibujar()
        
     }
     else if(objeto == 4){
+       if(tapas){
+         cilindro->cambiarTapas();
+         tapas=false;
+       }
        glPushMatrix();
          cilindro->setColor(1.0,0,0);
          cilindro->draw(modoD, ajedrez);
@@ -190,7 +194,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break;
        case 'F':
          // Alternar tapas
-         if(objeto==3){
+         if(objeto==3 || objeto==4){
             tapas = true;
          }
          break;

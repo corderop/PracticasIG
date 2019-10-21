@@ -86,13 +86,21 @@ void Malla3D::draw_ModoDiferido()
    
    if(id_ind == 0)
       id_ind = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, f.size()*sizeof(int)*3, f.data());
+   
+   if(id_col == 0)
+      id_col = CrearVBO(GL_COLOR_ARRAY, c.size()*sizeof(int)*3, c.data());
 
    // especificar localización y formato de la tabla de vértices, habilitar tabla
    glBindBuffer( GL_ARRAY_BUFFER, id_ver );  // activar VBO de vértices
    glVertexPointer( 3, GL_FLOAT, 0, 0 );     // especifica formato y offset (=0)
    glBindBuffer( GL_ARRAY_BUFFER, 0 );       // desactivar VBO de vértices.
-   glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
+   glBindBuffer( GL_COLOR_ARRAY, id_col ); 
+   glColorPointer(3, GL_FLOAT, 0, 0);
+   glBindBuffer( GL_COLOR_ARRAY, 0 );
    
+   glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
+   glEnableClientState(GL_COLOR_ARRAY);
+
    // visualizar triángulos con glDrawElements (puntero a tabla == 0)
    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_ind); // activar VBO de triángulos
    glDrawElements( GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, 0 ) ;
@@ -138,7 +146,6 @@ void Malla3D::draw_ModoAjedrez(){
 
 void Malla3D::draw(int modo, bool ajedrez)
 {
-   glEnable(GL_CULL_FACE);
 
    // Activamos aquí el color para que funcione para ambos modos   
    if(modo == 1){

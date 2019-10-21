@@ -72,16 +72,13 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
+   glEnable(GL_CULL_FACE);
+
 	change_observer();
     ejes.draw();
-    // COMPLETAR
-    //   Dibujar los diferentes elementos de la escena
-    // Habrá que tener en esta primera práctica una variable que indique qué objeto se ha de visualizar
-    // y hacer 
-    // cubo.draw()
-    // o
-    // tetraedro.draw()
-    bool ajedrez = false;
+
+    bool ajedrez = (modoV == 3);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     switch (modoV){
        case 0: 
@@ -130,7 +127,6 @@ void Escena::dibujar()
     else if(objeto == 4){
        glPushMatrix();
          cilindro->setColor(1.0,0,0);
-         // glScalef(50.0,50.0,50.0);
          cilindro->draw(modoD, ajedrez);
        glPopMatrix();
     }

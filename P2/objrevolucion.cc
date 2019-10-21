@@ -1,9 +1,6 @@
 #include "aux.h"
 #include "objrevolucion.h"
 
-
-
-
 // *****************************************************************************
 //
 // Clase ObjRevolucion (práctica 2)

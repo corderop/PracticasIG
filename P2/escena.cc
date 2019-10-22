@@ -34,7 +34,7 @@ Escena::Escena()
        cil.push_back(aux);
     }
 
-    cilindro = new ObjRevolucion(cil,40,true, true);
+    cilindro = new Cilindro(40,40,100,40);
 
     objeto = -1;  // Ninguno seleccionado
     modoV = 2;    // Modo solido por defecto
@@ -73,7 +73,7 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
    glEnable(GL_CULL_FACE);
-   
+
 	change_observer();
     ejes.draw();
 
@@ -127,10 +127,12 @@ void Escena::dibujar()
     else if(objeto == 4){
        if(tapas){
          cilindro->cambiarTapas();
+         cilindro->crearAjedrez();
          tapas=false;
        }
        glPushMatrix();
          cilindro->setColor(1.0,0,0);
+         glTranslatef(0.0,-50.0,0.0);
          cilindro->draw(modoD, ajedrez);
        glPopMatrix();
     }

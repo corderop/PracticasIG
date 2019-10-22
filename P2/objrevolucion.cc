@@ -11,7 +11,12 @@
 // *****************************************************************************
 // objeto de revolución obtenido a partir de un perfil (en un PLY)
 
-ObjRevolucion::ObjRevolucion() {}
+ObjRevolucion::ObjRevolucion() {
+
+   _tapa_inf = true;
+   _tapa_sup = true;
+
+}
 
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
    std::vector<Tupla3f> perfil;  

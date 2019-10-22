@@ -31,15 +31,17 @@ class ObjRevolucion : public Malla3D
     ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true) ;
     void cambiarTapas();
 
-private:
+protected:
     void crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje);
+    int N, M;
+
+private:
     void detectarTapas(std::vector<Tupla3f> & perfil_original, bool &sup, bool &inf, char eje, std::vector<Tupla3f> & tapas);
     void anadirTapas(std::vector<Tupla3f> & tapas, bool sup, bool inf, char eje);
     void darVuelta(std::vector<Tupla3f> &perfil_original);
 
     bool _tapa_sup;
     bool _tapa_inf;
-    int N, M;
 } ;
 
 #endif

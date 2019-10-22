@@ -38,5 +38,6 @@
 
 #include "tuplasg.h" // tipos: Tupla3f, Tupla2f, Tupla3d, etc.........
 
+const double PI = 3.14159265358979323846;
 
 #endif // AUX_H_INCLUDED

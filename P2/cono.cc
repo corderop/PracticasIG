@@ -4,11 +4,7 @@
 
 Cono::Cono(const int num_vert_perfil, const int num_instancias_perf, const float altura, const float radio ){
 
-    // t_sup = false;
-    // _tapa_sup = false;
-
     std::vector<Tupla3f> con;
-    // _tapa_sup = fals
     int j = 0;
 
     for(int i=num_vert_perfil-1; i>=0; i--){

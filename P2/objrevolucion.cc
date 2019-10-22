@@ -13,19 +13,13 @@
 
 ObjRevolucion::ObjRevolucion() {
 
-   // t_sup = true;
-   // t_inf = true;
-
    _tapa_inf = true;
    _tapa_sup = true;
 
 }
 
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
-   std::vector<Tupla3f> perfil;  
-
-   // t_sup = tapa_sup;
-   // t_inf = tapa_inf;
+   std::vector<Tupla3f> perfil;
 
    _tapa_inf = tapa_inf;
    _tapa_sup = tapa_sup;
@@ -65,7 +59,6 @@ ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, b
 }
 
 void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje) {
-   const double PI = 3.14159265358979323846;
    float x, y, z;
    int a, b;
    bool sup, inf;

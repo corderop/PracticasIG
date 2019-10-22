@@ -29,6 +29,7 @@ Escena::Escena()
 
     cilindro = new Cilindro(40,40,100,40);
     cono = new Cono(40, 40, 100, 40);
+    esfera = new Esfera(40, 40, 50);
 
     objeto = -1;  // Ninguno seleccionado
     modoV = 2;    // Modo solido por defecto
@@ -122,19 +123,25 @@ void Escena::dibujar()
        if(tapas){
          cilindro->cambiarTapas();
          cono->cambiarTapas();
+         esfera->cambiarTapas();
          cilindro->crearAjedrez();
          cono->crearAjedrez();
+         esfera->crearAjedrez();
          tapas=false;
        }
        glPushMatrix();
          cilindro->setColor(1.0,0,0);
          cono->setColor(1.0,0,0);
+         esfera->setColor(1.0,0,0);
 
          glTranslatef(0.0,-50.0,0.0);
-         glTranslatef(-60.0,0.0,0.0);
+         glTranslatef(-120.0,0.0,0.0);
          cilindro->draw(modoD, ajedrez);
-         glTranslatef(120.0,0.0,0.0);
+         glTranslatef(240.0,0.0,0.0);
          cono->draw(modoD, ajedrez);
+         glTranslatef(0.0,+50.0,0.0);
+         glTranslatef(-120.0,0.0,0.0);
+         esfera->draw(modoD, ajedrez);
        glPopMatrix();
     }
 }

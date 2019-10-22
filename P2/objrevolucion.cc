@@ -13,6 +13,9 @@
 
 ObjRevolucion::ObjRevolucion() {
 
+   // t_sup = true;
+   // t_inf = true;
+
    _tapa_inf = true;
    _tapa_sup = true;
 
@@ -21,8 +24,12 @@ ObjRevolucion::ObjRevolucion() {
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
    std::vector<Tupla3f> perfil;  
 
+   // t_sup = tapa_sup;
+   // t_inf = tapa_inf;
+
    _tapa_inf = tapa_inf;
    _tapa_sup = tapa_sup;
+
    N = num_instancias;
 
    ply::read_vertices(archivo ,perfil);
@@ -41,15 +48,20 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
 
  
 ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
-    _tapa_inf = tapa_inf;
-    _tapa_sup = tapa_sup;
-    N = num_instancias;
-    M = archivo.size();
     
-    if(archivo[0][1] < archivo[M-1][1])
-      darVuelta(archivo);
+   // t_sup = tapa_sup;
+   // t_inf = tapa_inf;
 
-    crearMalla(archivo, num_instancias, 'y');
+   _tapa_inf = tapa_inf;
+   _tapa_sup = tapa_sup;
+
+   N = num_instancias;
+   M = archivo.size();
+   
+   if(archivo[0][1] < archivo[M-1][1])
+   darVuelta(archivo);
+
+   crearMalla(archivo, num_instancias, 'y');
 }
 
 void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje) {
@@ -114,6 +126,7 @@ void ObjRevolucion::detectarTapas(std::vector<Tupla3f> & perfil_original, bool &
             Tupla3f aux = perfil_original[0];
             perfil_original.erase(perfil_original.begin());
             tapas.push_back(aux);
+            M--;
          }
          else{
             Tupla3f aux(0,0,0);
@@ -125,6 +138,7 @@ void ObjRevolucion::detectarTapas(std::vector<Tupla3f> & perfil_original, bool &
             Tupla3f aux = perfil_original[perfil_original.size()-1];
             perfil_original.pop_back();
             tapas.push_back(aux);
+            M--;
          }
          else{
             Tupla3f aux(0,0,0);
@@ -163,35 +177,39 @@ void ObjRevolucion::cambiarTapas(){
 
    if(_tapa_inf || _tapa_sup){
 
-      if(_tapa_inf)
+      if(_tapa_inf){
          for(int i=0; i<N; i++){
             f.pop_back();
          }
+         _tapa_inf = false;
+      }
 
-      if(_tapa_sup)
+      if(_tapa_sup){
          for(int i=0; i<N; i++){
             f.pop_back();
          }  
+         _tapa_sup = false;
+      }
 
-      _tapa_sup = false;
-      _tapa_inf = false;
    }
    else{
 
-      if(!_tapa_sup)
+      if(!_tapa_sup){
          for(int i=0; i<N; i++){
             Tupla3i aux(M*N, ((i+1)%N)*M, i*M);
             f.push_back(aux);
          }
+         _tapa_sup = true;
+      }
 
-      if(!_tapa_inf)
+      if(!_tapa_inf){
          for(int i=0; i<N; i++){
             Tupla3i aux(M*N+1, M*(i+1)-1, M*(((i+1)%N)+1)-1);
             f.push_back(aux);
          }
+         _tapa_inf = true;
+      }
 
-      _tapa_sup = true;
-      _tapa_inf = true;
    }
 }
 

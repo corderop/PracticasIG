@@ -26,15 +26,9 @@ Escena::Escena()
     ply_no1 = new ObjPLY("plys/ant.ply");
     ply_no2 = new ObjPLY("plys/ant.ply");
     ply_rev = new ObjRevolucion("plys/peon.ply", 40, true, true);
-    
-    std::vector<Tupla3f> cil;
-
-    for(int i=0; i<40; i++){
-       Tupla3f aux(20, i, 0);
-       cil.push_back(aux);
-    }
 
     cilindro = new Cilindro(40,40,100,40);
+    cono = new Cono(40, 40, 100, 40);
 
     objeto = -1;  // Ninguno seleccionado
     modoV = 2;    // Modo solido por defecto
@@ -127,13 +121,20 @@ void Escena::dibujar()
     else if(objeto == 4){
        if(tapas){
          cilindro->cambiarTapas();
+         cono->cambiarTapas();
          cilindro->crearAjedrez();
+         cono->crearAjedrez();
          tapas=false;
        }
        glPushMatrix();
          cilindro->setColor(1.0,0,0);
+         cono->setColor(1.0,0,0);
+
          glTranslatef(0.0,-50.0,0.0);
+         glTranslatef(-60.0,0.0,0.0);
          cilindro->draw(modoD, ajedrez);
+         glTranslatef(120.0,0.0,0.0);
+         cono->draw(modoD, ajedrez);
        glPopMatrix();
     }
 }

@@ -34,14 +34,20 @@ class ObjRevolucion : public Malla3D
 protected:
     void crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje);
     int N, M;
+    
+    // // Si tienen tapas (ejemplo: el cono no tiene superior)
+    // bool t_sup;
+    // bool t_inf;
+
+    // Si están activas las tapas
+    bool _tapa_sup;
+    bool _tapa_inf;
 
 private:
     void detectarTapas(std::vector<Tupla3f> & perfil_original, bool &sup, bool &inf, char eje, std::vector<Tupla3f> & tapas);
     void anadirTapas(std::vector<Tupla3f> & tapas, bool sup, bool inf, char eje);
     void darVuelta(std::vector<Tupla3f> &perfil_original);
 
-    bool _tapa_sup;
-    bool _tapa_inf;
 } ;
 
 #endif

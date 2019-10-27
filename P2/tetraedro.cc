@@ -24,13 +24,9 @@ Tetraedro::Tetraedro()
    f.push_back(f3);
 
    // Colores
-   Tupla3f c0(1.0,0.0,0.0), c1(1.0,0.0,0.0),
-           c2(1.0,0.0,0.0), c3(1.0,0.0,0.0);
-
-   c.push_back(c0);
-   c.push_back(c1);
-   c.push_back(c2);
-   c.push_back(c3);
+   setColor(1.0, 0.0, 0.0, 0);
+   setColor(0.0, 1.0, 0.0, 1);
+   setColor(0.0, 0.0, 1.0, 2);
 
 }
 

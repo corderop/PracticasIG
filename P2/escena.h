@@ -17,7 +17,10 @@ class Escena
 
    private:
 
-   
+    /**
+     * Hecho para ahorrar código cuando se quiere dibujar en diferentes modos simultaneamente
+     */
+    void selDibujado(Malla3D * objeto);
 
  // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
        
@@ -41,7 +44,6 @@ class Escena
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
    ObjPLY * ply_no1 = nullptr;
-   ObjPLY * ply_no2 = nullptr;
    ObjRevolucion * ply_rev = nullptr;
    Cilindro * cilindro = nullptr;
    Cono * cono = nullptr;
@@ -50,7 +52,7 @@ class Escena
    int objeto, modoV, modoD; // Objeto, modo de visualizacion, modo de dibujado
    bool tapas = false;
    // Objeto: -1 nada, 0 cubo, 1 tetraedro, 2 ply cargado, 3 ply revolución
-   // Modo visualizacion: 0 puntos, 1 lineas, 2 solido, 3 ajedrez
+   // Modo visualizacion: 0 solido, 1 puntos, 2 lineas, 3 todos, 4 ajedrez
    // Modo dibujado: 1 Modo inmediato, 2 Modo diferido
    
    public:

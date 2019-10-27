@@ -13,16 +13,16 @@
 
 ObjRevolucion::ObjRevolucion() {
 
-   _tapa_inf = true;
-   _tapa_sup = true;
+   _tapa_inf = _tapa_sup = true;
+   q_tapa_inf = q_tapa_sup = true;
 
 }
 
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
    std::vector<Tupla3f> perfil;
 
-   _tapa_inf = tapa_inf;
-   _tapa_sup = tapa_sup;
+   q_tapa_inf = _tapa_inf = tapa_inf;
+   q_tapa_sup = _tapa_sup = tapa_sup;
 
    N = num_instancias;
 
@@ -43,11 +43,8 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
  
 ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
     
-   // t_sup = tapa_sup;
-   // t_inf = tapa_inf;
-
-   _tapa_inf = tapa_inf;
-   _tapa_sup = tapa_sup;
+   q_tapa_inf = _tapa_inf = tapa_inf;
+   q_tapa_sup = _tapa_sup = tapa_sup;
 
    N = num_instancias;
    M = archivo.size();
@@ -93,20 +90,22 @@ void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_ins
 
    anadirTapas(tapas, !sup, !inf, eje);
    
-   // Añadir triángulos tapas
+   // Añadir triángulos tapas (única vez que lo hace)
    // SUP
-   if(_tapa_sup)
+   if(q_tapa_sup)
       for(int i=0; i<num_instancias; i++){
          Tupla3i aux(M*num_instancias, ((i+1)%num_instancias)*M,i*M);
-         f.push_back(aux);
+         f_a.push_back(aux);
       }
 
    // INF
-   if(_tapa_inf)
+   if(q_tapa_inf)
       for(int i=0; i<num_instancias; i++){
          Tupla3i aux(M*num_instancias+1, M*(i+1)-1, M*(((i+1)%num_instancias)+1)-1);
-         f.push_back(aux);
+         f_a.push_back(aux);
       }
+
+   anadirTriangulosTapas(q_tapa_sup, q_tapa_inf);
 }
 
 void ObjRevolucion::detectarTapas(std::vector<Tupla3f> & perfil_original, bool &sup, bool &inf, char eje, std::vector<Tupla3f> & tapas){
@@ -168,41 +167,26 @@ void ObjRevolucion::anadirTapas(std::vector<Tupla3f> & tapas, bool sup, bool inf
 
 void ObjRevolucion::cambiarTapas(){
 
-   if(_tapa_inf || _tapa_sup){
-
-      if(_tapa_inf){
-         for(int i=0; i<N; i++){
-            f.pop_back();
-         }
-         _tapa_inf = false;
+   if(q_tapa_inf && _tapa_inf){
+      for(int i=0; i<N; i++){
+         f.pop_back();
       }
-
-      if(_tapa_sup){
-         for(int i=0; i<N; i++){
-            f.pop_back();
-         }  
-         _tapa_sup = false;
-      }
-
+      _tapa_inf = false;
    }
-   else{
+   else if(q_tapa_sup){
+      anadirTriangulosTapas(false, true);
+      _tapa_inf = true;
+   }
 
-      if(!_tapa_sup){
-         for(int i=0; i<N; i++){
-            Tupla3i aux(M*N, ((i+1)%N)*M, i*M);
-            f.push_back(aux);
-         }
-         _tapa_sup = true;
-      }
-
-      if(!_tapa_inf){
-         for(int i=0; i<N; i++){
-            Tupla3i aux(M*N+1, M*(i+1)-1, M*(((i+1)%N)+1)-1);
-            f.push_back(aux);
-         }
-         _tapa_inf = true;
-      }
-
+   if(q_tapa_sup && _tapa_sup){
+      for(int i=0; i<N; i++){
+         f.pop_back();
+      }  
+      _tapa_sup = false;
+   }
+   else if(q_tapa_sup){
+      anadirTriangulosTapas(true, false);
+      _tapa_sup = true;
    }
 }
 
@@ -216,4 +200,14 @@ void ObjRevolucion::darVuelta(std::vector<Tupla3f> &perfil_original){
       perfil_original.push_back(aux.back());
       aux.pop_back();
    }
+}
+
+void ObjRevolucion::anadirTriangulosTapas(bool sup, bool inf){
+   if(sup && inf)
+      f.insert(f.end(), f_a.begin(), f_a.end());
+   else if(sup)
+      f.insert(f.end(), f_a.begin(), f_a.begin()+N);
+   else
+      f.insert(f.end(), f_a.begin()+N, f_a.end());
+
 }

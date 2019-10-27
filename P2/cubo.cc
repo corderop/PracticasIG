@@ -46,16 +46,8 @@ Cubo::Cubo(float lado)
    f.push_back(f11);
 
    // Color
-   Tupla3f c0(1.0,0.0,0.0), c1(1.0,0.0,0.0), c2(1.0,0.0,0.0), c3(1.0,0.0,0.0),
-           c4(1.0,0.0,0.0), c5(1.0,0.0,0.0), c6(1.0,0.0,0.0), c7(1.0,0.0,0.0);
-
-   c.push_back(c0);
-   c.push_back(c1);
-   c.push_back(c2);
-   c.push_back(c3);
-   c.push_back(c4);
-   c.push_back(c5);
-   c.push_back(c6);
-   c.push_back(c7);
+   setColor(1.0, 0.0, 0.0, 0);
+   setColor(0.0, 1.0, 0.0, 1);
+   setColor(0.0, 0.0, 1.0, 2);
 }
 

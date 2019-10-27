@@ -27,16 +27,16 @@ class Malla3D
    Malla3D();
 
    // Cambiar el vector de color
-   void setColor(float R, float G, float B);
+   void setColor(float R, float G, float B, int tipo);
 
    // dibuja el objeto en modo inmediato
-   void draw_ModoInmediato();
+   void draw_ModoInmediato(int modo);
 
    // Función para crear el VBO
    GLuint CrearVBO( GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram );
 
    // dibuja el objeto en modo diferido (usando VBOs)
-   void draw_ModoDiferido();
+   void draw_ModoDiferido(int modo);
 
    // dibuja el modo ajedrez
    void draw_ModoAjedrez();
@@ -44,7 +44,7 @@ class Malla3D
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
-   void draw(int modo, bool ajedrez) ;
+   void draw(int modoD, int modoV, bool ajedrez) ;
 
    void crearAjedrez();
 
@@ -55,8 +55,9 @@ class Malla3D
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ;   // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3i> f_a;  // terna para el modo ajedrez
-   std::vector<Tupla3f> c ;   // terna para colores
-   GLuint id_ind, id_ver, id_col;
+   std::vector<Tupla3f> c[3]; // Colores: 0->sólido, 1->puntos, 2->lineas
+
+   GLuint id_ind, id_ver, id_col[3];
 
    // completar: tabla de colores, tabla de normales de vértices
 } ;

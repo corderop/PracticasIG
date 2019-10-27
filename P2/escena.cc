@@ -18,21 +18,40 @@ Escena::Escena()
 
     ejes.changeAxisSize( 5000 );
 
-    // crear los objetos de la escena....
-    // .......completar: ...
-    // .....
+    // Cubo y tetraedro
     cubo = new Cubo(75);
     tetraedro = new Tetraedro();
-    ply_no1 = new ObjPLY("plys/ant.ply");
-    ply_no2 = new ObjPLY("plys/ant.ply");
-    ply_rev = new ObjRevolucion("plys/peon.ply", 40, true, true);
 
+    // PLY sin revolución
+    ply_no1 = new ObjPLY("plys/ant.ply");
+    ply_no1->setColor(1.0, 0.0, 0.0, 0);
+    ply_no1->setColor(0.0, 1.0, 0.0, 1);
+    ply_no1->setColor(0.0, 0.0, 0.0, 2);
+
+    // PLY con revolución
+    ply_rev = new ObjRevolucion("plys/peon.ply", 40, true, false);
+    ply_rev->setColor(1.0, 0.0, 0.0, 0);
+    ply_rev->setColor(0.0, 1.0, 0.0, 1);
+    ply_rev->setColor(0.0, 0.0, 0.0, 2);
+
+    // Cilindro, cono y esfera
     cilindro = new Cilindro(40,40,100,40);
+    cilindro->setColor(1.0, 0.0, 0.0, 0);
+    cilindro->setColor(0.0, 1.0, 0.0, 1);
+    cilindro->setColor(0.0, 0.0, 0.0, 2);
+
     cono = new Cono(40, 40, 100, 40);
+    cono->setColor(1.0, 0.0, 0.0, 0);
+    cono->setColor(0.0, 1.0, 0.0, 1);
+    cono->setColor(0.0, 0.0, 0.0, 2);
+
     esfera = new Esfera(40, 40, 50);
+    esfera->setColor(1.0, 0.0, 0.0, 0);
+    esfera->setColor(0.0, 1.0, 0.0, 1);
+    esfera->setColor(0.0, 0.0, 0.0, 2);
 
     objeto = -1;  // Ninguno seleccionado
-    modoV = 2;    // Modo solido por defecto
+    modoV = 0;    // Modo solido por defecto
     modoD = 1;    // Modo inmediato por defecto
 }
 
@@ -64,6 +83,44 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 //
 // **************************************************************************
 
+void Escena::selDibujado(Malla3D * objeto){
+   
+   bool ajedrez = (modoV == 4);
+
+   switch (modoV){
+      case 0: 
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         objeto->draw(modoD, modoV, ajedrez);
+         break;
+      case 1: 
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         objeto->draw(modoD, 0, ajedrez);
+         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+         objeto->draw(modoD, modoV, ajedrez);
+         break;
+      case 2: 
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         objeto->draw(modoD, 0, ajedrez);
+         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+         objeto->draw(modoD, modoV, ajedrez);
+         break;
+      case 3:
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         objeto->draw(modoD, 0, ajedrez);
+         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+         objeto->draw(modoD, 1, ajedrez);
+         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+         objeto->draw(modoD, 2, ajedrez);
+         break;
+      case 4:
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         objeto->draw(modoD, 0, ajedrez);
+         ajedrez = true;
+      break;
+   }
+
+}
+
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
@@ -73,37 +130,16 @@ void Escena::dibujar()
     ejes.draw();
 
     bool ajedrez = (modoV == 3);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    switch (modoV){
-       case 0: 
-         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-         break;
-       case 1: 
-         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-         break;
-       case 2: 
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         break;
-       case 3: 
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         ajedrez = true;
-         break;
+    if(objeto == 0){
+      selDibujado(cubo);
     }
-
-    if(objeto == 0)
-      cubo->draw(modoD, ajedrez);
     else if(objeto == 1)
-      tetraedro->draw(modoD, ajedrez);
+      selDibujado(tetraedro);
     else if(objeto == 2){
       glPushMatrix();
          glScalef(5.0,5.0,5.0);
-         glTranslatef(-20.0,0.0,0.0);
-         ply_no1->setColor(1.0,0,0);
-         ply_no1->draw(modoD, ajedrez);
-         glTranslatef(+40.0,0.0,0.0);
-         ply_no2->setColor(0.0,0.0,0.0);
-         ply_no2->draw(modoD, ajedrez);
+         selDibujado(ply_no1);
       glPopMatrix();
     }
     else if(objeto == 3){
@@ -113,11 +149,9 @@ void Escena::dibujar()
          tapas=false;
        }
        glPushMatrix();
-         ply_rev->setColor(1.0,0,0);
          glScalef(50.0,50.0,50.0);
-         ply_rev->draw(modoD, ajedrez);
+         selDibujado(ply_rev);
        glPopMatrix();
-       
     }
     else if(objeto == 4){
        if(tapas){
@@ -130,18 +164,14 @@ void Escena::dibujar()
          tapas=false;
        }
        glPushMatrix();
-         cilindro->setColor(1.0,0,0);
-         cono->setColor(1.0,0,0);
-         esfera->setColor(1.0,0,0);
-
          glTranslatef(0.0,-50.0,0.0);
          glTranslatef(-120.0,0.0,0.0);
-         cilindro->draw(modoD, ajedrez);
+         selDibujado(cilindro);
          glTranslatef(240.0,0.0,0.0);
-         cono->draw(modoD, ajedrez);
+         selDibujado(cono);
          glTranslatef(0.0,+50.0,0.0);
          glTranslatef(-120.0,0.0,0.0);
-         esfera->draw(modoD, ajedrez);
+         selDibujado(esfera);
        glPopMatrix();
     }
 }
@@ -190,6 +220,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          if(modoMenu == SELOBJETO){
             objeto = 1;
          }
+         else if(modoMenu == SELVISUALIZACION){
+            modoV = 3;
+         }
          break;
        case 'R' :
          if(modoMenu == SELOBJETO){
@@ -210,7 +243,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break;
        case 'P' :
          if(modoMenu == SELVISUALIZACION){
-            modoV = 0;
+            modoV = 1;
          }
          else if(modoMenu == SELOBJETO){
             objeto = 2;
@@ -218,17 +251,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break;
        case 'L' :
          if(modoMenu == SELVISUALIZACION){
-            modoV = 1;
+            modoV = 2;
          }
          break;
        case 'S' :
          if(modoMenu == SELVISUALIZACION){
-            modoV = 2;
+            modoV = 0;
          }
          break;
        case 'A' :
          if(modoMenu == SELVISUALIZACION){
-            modoV = 3;
+            modoV = 4;
          }
          break;
        case '1' :

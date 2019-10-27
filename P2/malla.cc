@@ -10,10 +10,7 @@
 // Visualización en modo inmediato con 'glDrawElements'
 
 Malla3D::Malla3D(){
-   id_ind = id_ver = 0;
-
-   if(c.empty())
-      setColor(1.0,0.0,0.0);
+   id_ind = id_ver = id_col[0] = id_col[1] = id_col[2] = 0;
 }
 
 void Malla3D::crearAjedrez(){
@@ -34,26 +31,31 @@ void Malla3D::crearAjedrez(){
    }
 }
 
-void Malla3D::setColor(float R, float G, float B){
+void Malla3D::setColor(float R, float G, float B, int tipo){
 
-   c.clear();
+   // Evitar segmentation fault por que se salga del vector
+   if(tipo>=0 && tipo<=2){
 
-   for(int i=0; i<v.size(); i++){
-      Tupla3f color(R,G,B);
+      c[tipo].clear();
 
-      c.push_back(color);
+      for(int i=0; i<v.size(); i++){
+         Tupla3f color(R,G,B);
+
+         c[tipo].push_back(color);
+      }
+
    }
-
+   else std::cout<<"setColor: Tipo mal indicado"<<std::endl;
 }
 
-void Malla3D::draw_ModoInmediato()
+void Malla3D::draw_ModoInmediato(int modo)
 {
 
   // Activamos el uso de un array de vértices
   glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3, GL_FLOAT, 0, v.data());
   glEnableClientState(GL_COLOR_ARRAY);
-  glColorPointer(3, GL_FLOAT, 0, c.data());
+  glColorPointer(3, GL_FLOAT, 0, c[modo].data());
 
   // Para que no se vean sombras
   glShadeModel(GL_FLAT);
@@ -79,7 +81,7 @@ GLuint Malla3D::CrearVBO( GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * punter
 }
 
 
-void Malla3D::draw_ModoDiferido()
+void Malla3D::draw_ModoDiferido(int modo)
 {
    if(id_ver == 0)
       id_ver = CrearVBO(GL_ARRAY_BUFFER, v.size()*sizeof(float)*3, v.data());
@@ -87,16 +89,20 @@ void Malla3D::draw_ModoDiferido()
    if(id_ind == 0)
       id_ind = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, f.size()*sizeof(int)*3, f.data());
    
-   if(id_col == 0)
-      id_col = CrearVBO(GL_COLOR_ARRAY, c.size()*sizeof(int)*3, c.data());
+   if(id_col[modo] == 0)
+      id_col[modo] = CrearVBO(GL_ARRAY_BUFFER, c[modo].size()*sizeof(float)*3, c[modo].data());
 
    // especificar localización y formato de la tabla de vértices, habilitar tabla
    glBindBuffer( GL_ARRAY_BUFFER, id_ver );  // activar VBO de vértices
    glVertexPointer( 3, GL_FLOAT, 0, 0 );     // especifica formato y offset (=0)
    glBindBuffer( GL_ARRAY_BUFFER, 0 );       // desactivar VBO de vértices.
-   glBindBuffer( GL_COLOR_ARRAY, id_col ); 
+   
+   glBindBuffer( GL_ARRAY_BUFFER, id_col[modo] ); 
    glColorPointer(3, GL_FLOAT, 0, 0);
-   glBindBuffer( GL_COLOR_ARRAY, 0 );
+   glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+   // // Para que no se vean sombras
+   // glShadeModel(GL_FLAT);
    
    glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
    glEnableClientState(GL_COLOR_ARRAY);
@@ -107,6 +113,7 @@ void Malla3D::draw_ModoDiferido()
    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );     // desactivar VBO de triángulos
    // desactivar uso de array de vértices
    glDisableClientState( GL_VERTEX_ARRAY );
+   glDisableClientState( GL_COLOR_ARRAY );
 }
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,
@@ -121,7 +128,7 @@ void Malla3D::draw_ModoAjedrez(){
    glEnableClientState(GL_VERTEX_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
    glEnableClientState(GL_COLOR_ARRAY);
-   glColorPointer(3, GL_FLOAT, 0, c.data());
+   glColorPointer(3, GL_FLOAT, 0, c[0].data());
 
    glShadeModel(GL_FLAT);
 
@@ -131,31 +138,31 @@ void Malla3D::draw_ModoAjedrez(){
 
    glDrawElements(GL_TRIANGLES, mitad*3, GL_UNSIGNED_INT, f_a.data());
    
-   setColor(0.0, 1.0, 1.0);
+   setColor(0.0, 1.0, 1.0, 0);
 
    // Dibujamos los elementos
    glDrawElements(GL_TRIANGLES, mitad2*3, GL_UNSIGNED_INT, f_a.data()[mitad]);
 
    // Hecho para el redibujado
-   setColor(1.0, 0.0, 0.0);
+   setColor(1.0, 0.0, 0.0, 0);
 
    // Desactivamos el uso de ambos arrays
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void Malla3D::draw(int modo, bool ajedrez)
+void Malla3D::draw(int modoD, int modoV, bool ajedrez)
 {
 
    // Activamos aquí el color para que funcione para ambos modos   
-   if(modo == 1){
+   if(modoD == 1){
       if(ajedrez)
          draw_ModoAjedrez();
       else
-         draw_ModoInmediato();
+         draw_ModoInmediato(modoV);
    }
-   else if(modo == 2)
-      draw_ModoDiferido();
+   else if(modoD == 2)
+      draw_ModoDiferido(modoV);
 
 }
 

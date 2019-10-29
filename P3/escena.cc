@@ -35,12 +35,12 @@ Escena::Escena()
     ply_rev->setColor(0.0, 0.0, 0.0, 2);
 
     // Cilindro, cono y esfera
-    cilindro = new Cilindro(40,40,100,40);
+    cilindro = new Cilindro(40,100,40);
     cilindro->setColor(1.0, 0.0, 0.0, 0);
     cilindro->setColor(0.0, 1.0, 0.0, 1);
     cilindro->setColor(0.0, 0.0, 0.0, 2);
 
-    cono = new Cono(40, 40, 100, 40);
+    cono = new Cono(40, 100, 40);
     cono->setColor(1.0, 0.0, 0.0, 0);
     cono->setColor(0.0, 1.0, 0.0, 1);
     cono->setColor(0.0, 0.0, 0.0, 2);
@@ -155,23 +155,23 @@ void Escena::dibujar()
     }
     else if(objeto == 4){
        if(tapas){
-         cilindro->cambiarTapas();
+         // cilindro->cambiarTapas();
          cono->cambiarTapas();
-         esfera->cambiarTapas();
-         cilindro->crearAjedrez();
+         // esfera->cambiarTapas();
+         // cilindro->crearAjedrez();
          cono->crearAjedrez();
-         esfera->crearAjedrez();
+         // esfera->crearAjedrez();
          tapas=false;
        }
        glPushMatrix();
          glTranslatef(0.0,-50.0,0.0);
-         glTranslatef(-120.0,0.0,0.0);
-         selDibujado(cilindro);
-         glTranslatef(240.0,0.0,0.0);
+         // glTranslatef(-120.0,0.0,0.0);
+         // selDibujado(cilindro);
+         // glTranslatef(240.0,0.0,0.0);
          selDibujado(cono);
-         glTranslatef(0.0,+50.0,0.0);
-         glTranslatef(-120.0,0.0,0.0);
-         selDibujado(esfera);
+         // glTranslatef(0.0,+50.0,0.0);
+         // glTranslatef(-120.0,0.0,0.0);
+         // selDibujado(esfera);
        glPopMatrix();
     }
 }

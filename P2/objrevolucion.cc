@@ -113,7 +113,7 @@ void ObjRevolucion::detectarTapas(std::vector<Tupla3f> & perfil_original, bool &
 
    switch(eje){
       case 'y':
-         if(perfil_original[0][0] == 0 && perfil_original[0][2] == 0 ){
+         if(q_tapa_sup && perfil_original[0][0] == 0 && perfil_original[0][2] == 0 ){
             sup = true;
             Tupla3f aux = perfil_original[0];
             perfil_original.erase(perfil_original.begin());
@@ -125,7 +125,7 @@ void ObjRevolucion::detectarTapas(std::vector<Tupla3f> & perfil_original, bool &
             tapas.push_back(aux);
          }
 
-         if(perfil_original[perfil_original.size()-1][0] == 0 && perfil_original[perfil_original.size()-1][2] == 0){
+         if(q_tapa_inf && perfil_original[perfil_original.size()-1][0] == 0 && perfil_original[perfil_original.size()-1][2] == 0){
             inf = true;
             Tupla3f aux = perfil_original[perfil_original.size()-1];
             perfil_original.pop_back();
@@ -173,7 +173,7 @@ void ObjRevolucion::cambiarTapas(){
       }
       _tapa_inf = false;
    }
-   else if(q_tapa_sup){
+   else if(q_tapa_inf){
       anadirTriangulosTapas(false, true);
       _tapa_inf = true;
    }
@@ -203,11 +203,16 @@ void ObjRevolucion::darVuelta(std::vector<Tupla3f> &perfil_original){
 }
 
 void ObjRevolucion::anadirTriangulosTapas(bool sup, bool inf){
-   if(sup && inf)
+   if(q_tapa_inf && q_tapa_sup){
+      if(sup && inf)
+         f.insert(f.end(), f_a.begin(), f_a.end());
+      else if(sup)
+         f.insert(f.end(), f_a.begin(), f_a.begin()+N);
+      else
+         f.insert(f.end(), f_a.begin()+N, f_a.end());
+   }
+   else{
       f.insert(f.end(), f_a.begin(), f_a.end());
-   else if(sup)
-      f.insert(f.end(), f_a.begin(), f_a.begin()+N);
-   else
-      f.insert(f.end(), f_a.begin()+N, f_a.end());
+   }
 
 }

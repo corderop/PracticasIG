@@ -2,14 +2,16 @@
 #include "objrevolucion.h"
 #include "cilindro.h"
 
-Cilindro::Cilindro(const int num_vert_perfil, const int num_instancias_perf, const float altura, const float radio ){
+Cilindro::Cilindro(const int num_instancias_perf, const float altura, const float radio){
 
     std::vector<Tupla3f> cil;
 
-    for(int i=num_vert_perfil-1; i>=0; i--){
-       Tupla3f aux(radio, i*(altura/num_vert_perfil), 0);
-       cil.push_back(aux);
-    }
+    q_tapa_sup = false;
+
+    Tupla3f aux1(radio, altura, 0);
+    cil.push_back(aux1);
+    Tupla3f aux2(radio, 0, 0);
+    cil.push_back(aux2);
 
     N = num_instancias_perf;
     M = cil.size();

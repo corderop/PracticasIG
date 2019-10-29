@@ -36,6 +36,13 @@ protected:
     void crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje);
     int N, M;
 
+    // Si están activas las tapas
+    bool _tapa_sup;
+    bool _tapa_inf;
+    // Si se quieren las tapas
+    bool q_tapa_sup;
+    bool q_tapa_inf;
+
 private:
     void detectarTapas(std::vector<Tupla3f> & perfil_original, bool &sup, bool &inf, char eje, std::vector<Tupla3f> & tapas);
     void anadirTapas(std::vector<Tupla3f> & tapas, bool sup, bool inf, char eje);
@@ -43,12 +50,7 @@ private:
 
     std::vector<Tupla3i> f_a ; // Triángulo de las tapas
 
-    // Si están activas las tapas
-    bool _tapa_sup;
-    bool _tapa_inf;
-    // Si se quieren las tapas
-    bool q_tapa_sup;
-    bool q_tapa_inf;
+    
 } ;
 
 #endif

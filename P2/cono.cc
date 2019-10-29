@@ -2,17 +2,16 @@
 #include "objrevolucion.h"
 #include "cono.h"
 
-Cono::Cono(const int num_vert_perfil, const int num_instancias_perf, const float altura, const float radio ){
+Cono::Cono(const int num_instancias_perf, const float altura, const float radio ){
+
+    q_tapa_sup = _tapa_sup = false;
 
     std::vector<Tupla3f> con;
-    int j = 0;
-
-    for(int i=num_vert_perfil-1; i>=0; i--){
-        Tupla3f aux(j*(radio/num_vert_perfil), i*(altura/num_vert_perfil), 0);
-        con.push_back(aux);
-        
-        j++;
-    }
+    
+    Tupla3f aux1(0, altura, 0);
+    con.push_back(aux1);
+    Tupla3f aux2(radio, 0, 0);
+    con.push_back(aux2);
 
     N = num_instancias_perf;
     M = con.size();

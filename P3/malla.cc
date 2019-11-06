@@ -166,3 +166,34 @@ void Malla3D::draw(int modoD, int modoV, bool ajedrez)
 
 }
 
+// Cálculo de normales
+
+void Malla3D::calcular_normales(){
+
+   Tupla3f aux(0,0,0);
+   nv.resize(v.size(), aux);
+
+   for(int i=0; i<f.size(); i++){
+      nv[f[i][0]] = nv[f[i][0]] + nc[i];
+      nv[f[i][1]] = nv[f[i][1]] + nc[i];
+      nv[f[i][2]] = nv[f[i][2]] + nc[i];
+   }
+
+   // Crear la versión normalizada
+   for(int i=0; i<nv.size(); i++)
+      nv[i] = nv[i].normalized();
+
+}
+
+void Malla3D::calcular_normales_caras(){
+
+   for(int i=0; i<f.size(); i++){
+      Tupla3f a = v[f[i][2]] - v[f[i][0]];
+      Tupla3f b = v[f[i][2]] - v[f[i][1]];
+      
+      Tupla3f m = a.cross(b);
+      Tupla3f n = m.normalized();
+
+      nc.push_back(n);
+   }
+}

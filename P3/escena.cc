@@ -51,8 +51,12 @@ Escena::Escena()
     esfera->setColor(0.0, 0.0, 0.0, 2);
 
     objeto = -1;  // Ninguno seleccionado
-    modoV = 0;    // Modo solido por defecto
     modoD = 1;    // Modo inmediato por defecto
+    modoV[0] = false;
+    modoV[1] = false;
+    modoV[2] = true;    // Modo solido por defecto
+    modoV[3] = false;
+    modoV[4] = false;
 }
 
 //**************************************************************************
@@ -85,40 +89,26 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 
 void Escena::selDibujado(Malla3D * objeto){
    
-   bool ajedrez = (modoV == 4);
+   bool ajedrez = modoV[3];
 
-   switch (modoV){
-      case 0: 
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         objeto->draw(modoD, modoV, ajedrez);
-         break;
-      case 1: 
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         objeto->draw(modoD, 0, ajedrez);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-         objeto->draw(modoD, modoV, ajedrez);
-         break;
-      case 2: 
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         objeto->draw(modoD, 0, ajedrez);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-         objeto->draw(modoD, modoV, ajedrez);
-         break;
-      case 3:
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         objeto->draw(modoD, 0, ajedrez);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-         objeto->draw(modoD, 1, ajedrez);
-         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-         objeto->draw(modoD, 2, ajedrez);
-         break;
-      case 4:
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-         objeto->draw(modoD, 0, ajedrez);
-         ajedrez = true;
-      break;
+   if(modoV[0]){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+      objeto->draw(modoD, 1, ajedrez);
    }
 
+   if(modoV[1]){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      objeto->draw(modoD, 2, ajedrez);
+   }
+
+   if(modoV[3] || modoV[2]){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      objeto->draw(modoD, 0, ajedrez);
+   }
+
+   if(modoV[4]){
+
+   }
 }
 
 void Escena::dibujar()
@@ -127,53 +117,51 @@ void Escena::dibujar()
    glEnable(GL_CULL_FACE);
 
 	change_observer();
-    ejes.draw();
+   ejes.draw();
 
-    bool ajedrez = (modoV == 3);
-
-    if(objeto == 0){
+   if(objeto == 0){
       selDibujado(cubo);
-    }
-    else if(objeto == 1)
+   }
+   else if(objeto == 1)
       selDibujado(tetraedro);
-    else if(objeto == 2){
+   else if(objeto == 2){
       glPushMatrix();
          glScalef(5.0,5.0,5.0);
          selDibujado(ply_no1);
       glPopMatrix();
-    }
-    else if(objeto == 3){
-       if(tapas){
-         ply_rev->cambiarTapas();
-         ply_rev->crearAjedrez();
-         tapas=false;
-       }
-       glPushMatrix();
-         glScalef(50.0,50.0,50.0);
-         selDibujado(ply_rev);
-       glPopMatrix();
-    }
-    else if(objeto == 4){
-       if(tapas){
-         // cilindro->cambiarTapas();
-         cono->cambiarTapas();
-         // esfera->cambiarTapas();
-         // cilindro->crearAjedrez();
-         cono->crearAjedrez();
-         // esfera->crearAjedrez();
-         tapas=false;
-       }
-       glPushMatrix();
-         glTranslatef(0.0,-50.0,0.0);
-         // glTranslatef(-120.0,0.0,0.0);
-         // selDibujado(cilindro);
-         // glTranslatef(240.0,0.0,0.0);
-         selDibujado(cono);
-         // glTranslatef(0.0,+50.0,0.0);
-         // glTranslatef(-120.0,0.0,0.0);
-         // selDibujado(esfera);
-       glPopMatrix();
-    }
+   }
+   else if(objeto == 3){
+      if(tapas){
+      ply_rev->cambiarTapas();
+      ply_rev->crearAjedrez();
+      tapas=false;
+      }
+      glPushMatrix();
+      glScalef(50.0,50.0,50.0);
+      selDibujado(ply_rev);
+      glPopMatrix();
+   }
+   else if(objeto == 4){
+      if(tapas){
+      // cilindro->cambiarTapas();
+      cono->cambiarTapas();
+      // esfera->cambiarTapas();
+      // cilindro->crearAjedrez();
+      cono->crearAjedrez();
+      // esfera->crearAjedrez();
+      tapas=false;
+      }
+      glPushMatrix();
+      glTranslatef(0.0,-50.0,0.0);
+      // glTranslatef(-120.0,0.0,0.0);
+      // selDibujado(cilindro);
+      // glTranslatef(240.0,0.0,0.0);
+      selDibujado(cono);
+      // glTranslatef(0.0,+50.0,0.0);
+      // glTranslatef(-120.0,0.0,0.0);
+      // selDibujado(esfera);
+      glPopMatrix();
+   }
 }
 
 //**************************************************************************
@@ -220,9 +208,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          if(modoMenu == SELOBJETO){
             objeto = 1;
          }
-         else if(modoMenu == SELVISUALIZACION){
-            modoV = 3;
-         }
          break;
        case 'R' :
          if(modoMenu == SELOBJETO){
@@ -242,26 +227,60 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          break;
        case 'P' :
-         if(modoMenu == SELVISUALIZACION){
-            modoV = 1;
-         }
-         else if(modoMenu == SELOBJETO){
+         if(modoMenu == SELOBJETO){
             objeto = 2;
+         }
+         else if(modoMenu == SELVISUALIZACION){
+            if(modoV[0]){
+               modoV[0] = false;
+            }
+            else{
+               modoV[0] = true;
+               modoV[3] = false;
+               modoV[4] = false;
+            }
          }
          break;
        case 'L' :
          if(modoMenu == SELVISUALIZACION){
-            modoV = 2;
+            if(modoV[1]){
+               modoV[1] = false;
+            }
+            else{
+               modoV[1] = true;
+               modoV[3] = false;
+               modoV[4] = false;
+            }
          }
          break;
        case 'S' :
          if(modoMenu == SELVISUALIZACION){
-            modoV = 0;
+            if(modoV[2]){
+               modoV[2] = false;
+            }
+            else{
+               modoV[2] = true;
+               modoV[3] = false;
+               modoV[4] = false;
+            }
          }
          break;
        case 'A' :
          if(modoMenu == SELVISUALIZACION){
-            modoV = 4;
+            modoV[0] = false;
+            modoV[1] = false;
+            modoV[2] = false;
+            modoV[3] = true;
+            modoV[4] = false;
+         }
+         break;
+       case 'I' :
+         if(modoMenu == SELVISUALIZACION){
+            modoV[0] = false;
+            modoV[1] = false;
+            modoV[2] = false;
+            modoV[3] = false;
+            modoV[4] = true;
          }
          break;
        case '1' :

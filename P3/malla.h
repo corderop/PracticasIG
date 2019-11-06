@@ -52,10 +52,14 @@ class Malla3D
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
+   void calcular_normales_caras();
+
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ;   // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3i> f_a;  // terna para el modo ajedrez
    std::vector<Tupla3f> c[3]; // Colores: 0->sólido, 1->puntos, 2->lineas
+   std::vector<Tupla3f> nc;   // Vector de normales de las caras
+   std::vector<Tupla3f> nv;   // Vector de normales de los vértices
 
    GLuint id_ind, id_ver, id_col[3];
 

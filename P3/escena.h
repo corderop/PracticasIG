@@ -49,7 +49,8 @@ class Escena
    Cono * cono = nullptr;
    Esfera * esfera = nullptr;
 
-   int objeto, modoV, modoD; // Objeto, modo de visualizacion, modo de dibujado
+   int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
+   bool modoV[5]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion
    bool tapas = false;
    // Objeto: -1 nada, 0 cubo, 1 tetraedro, 2 ply cargado, 3 ply revolución
    // Modo visualizacion: 0 solido, 1 puntos, 2 lineas, 3 todos, 4 ajedrez

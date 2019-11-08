@@ -48,7 +48,7 @@ private:
     void anadirTapas(std::vector<Tupla3f> & tapas, bool sup, bool inf, char eje);
     void anadirTriangulosTapas(bool sup, bool inf);
 
-    std::vector<Tupla3i> f_a ; // Triángulo de las tapas
+    std::vector<Tupla3i> f ; // Triángulo de las tapas
 
     
 } ;

@@ -1,5 +1,3 @@
-
-
 #include "aux.h"     // includes de OpenGL/glut/glew, windows, y librería std de C++
 #include "escena.h"
 #include "malla.h" // objetos: Cubo y otros....
@@ -39,6 +37,9 @@ Escena::Escena()
     cilindro->setColor(1.0, 0.0, 0.0, 0);
     cilindro->setColor(0.0, 1.0, 0.0, 1);
     cilindro->setColor(0.0, 0.0, 0.0, 2);
+    Tupla4f col1(0.32, 0.0, 0.0, 1.0);
+    Material m1(col1, col1, col1, 128.0);
+    cilindro->setMaterial(m1);
 
     cono = new Cono(40, 100, 40);
     cono->setColor(1.0, 0.0, 0.0, 0);
@@ -49,6 +50,22 @@ Escena::Escena()
     esfera->setColor(1.0, 0.0, 0.0, 0);
     esfera->setColor(0.0, 1.0, 0.0, 1);
     esfera->setColor(0.0, 0.0, 0.0, 2);
+
+    // P3
+    peon1 = new ObjRevolucion("plys/peon.ply", 40, true, false);
+    peon1->setColor(1.0, 0.0, 0.0, 0);
+    peon1->setColor(0.0, 1.0, 0.0, 1);
+    peon1->setColor(0.0, 0.0, 1.0, 2);
+
+    peon2 = new ObjRevolucion("plys/peon.ply", 40, true, false);
+    peon2->setColor(0.0, 0.0, 1.0, 0);
+    peon2->setColor(0.0, 1.0, 0.0, 1);
+    peon2->setColor(1.0, 0.0, 0.0, 2);
+
+    // Luces
+    Tupla3f pos(500, 500, 500);
+    Tupla4f colL(1.0, 1.0, 1.0, 1.0);
+    luz1 = new LuzPosicional(pos, GL_LIGHT0, colL, colL, colL);
 
     objeto = -1;  // Ninguno seleccionado
     modoD = 1;    // Modo inmediato por defecto
@@ -91,30 +108,42 @@ void Escena::selDibujado(Malla3D * objeto){
    
    bool ajedrez = modoV[3];
 
+   // Activación modo puntos
    if(modoV[0]){
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
       objeto->draw(modoD, 1, ajedrez);
    }
 
+   // Activación modo líneas
    if(modoV[1]){
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       objeto->draw(modoD, 2, ajedrez);
    }
 
-   if(modoV[3] || modoV[2]){
+   // Activación modo sólido
+   if(modoV[3] || modoV[2] || modoV[4] ){
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       objeto->draw(modoD, 0, ajedrez);
-   }
-
-   if(modoV[4]){
-
    }
 }
 
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
-   glEnable(GL_CULL_FACE);
+   glEnable(GL_CULL_FACE | GL_NORMALIZE);
+
+   if(modoV[4]){
+      glEnable(GL_LIGHTING);
+      glShadeModel(GL_SMOOTH);
+      // o
+      // glShadeModel(GL_FLAT);
+      // 
+      luz1->activar();
+   }
+   else{
+      glDisable(GL_LIGHTING);
+      glShadeModel(GL_FLAT);
+   }
 
 	change_observer();
    ejes.draw();
@@ -132,9 +161,9 @@ void Escena::dibujar()
    }
    else if(objeto == 3){
       if(tapas){
-      ply_rev->cambiarTapas();
-      ply_rev->crearAjedrez();
-      tapas=false;
+         ply_rev->cambiarTapas();
+         ply_rev->crearAjedrez();
+         tapas=false;
       }
       glPushMatrix();
       glScalef(50.0,50.0,50.0);
@@ -143,24 +172,30 @@ void Escena::dibujar()
    }
    else if(objeto == 4){
       if(tapas){
-      // cilindro->cambiarTapas();
-      cono->cambiarTapas();
+      peon1->cambiarTapas();
+      peon2->cambiarTapas();
       // esfera->cambiarTapas();
-      // cilindro->crearAjedrez();
-      cono->crearAjedrez();
+      peon1->crearAjedrez();
+      peon2->crearAjedrez();
       // esfera->crearAjedrez();
       tapas=false;
       }
       glPushMatrix();
-      glTranslatef(0.0,-50.0,0.0);
-      // glTranslatef(-120.0,0.0,0.0);
+      // glScalef(15.0,15.0,15.0);
+      // glTranslatef(0.0,-50.0,0.0);
+         // glTranslatef(-40.0,0.0,0.0);
+         // glScalef(5.0,5.0,5.0);
       // selDibujado(cilindro);
       // glTranslatef(240.0,0.0,0.0);
-      selDibujado(cono);
-      // glTranslatef(0.0,+50.0,0.0);
-      // glTranslatef(-120.0,0.0,0.0);
-      // selDibujado(esfera);
+
+         selDibujado(cilindro);
       glPopMatrix();
+      // glPushMatrix();
+      //    // glTranslatef(0.0,+50.0,0.0);
+      //    glTranslatef(+40.0,0.0,0.0);
+      //    glScalef(30.0,30.0,30.0);
+      // selDibujado(peon2);
+      // glPopMatrix();
    }
 }
 

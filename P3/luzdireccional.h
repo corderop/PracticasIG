@@ -2,6 +2,7 @@
 #define LUZDIRECCIONAL_H_INCLUDED
 
 #include "aux.h"
+#include "luz.h"
 
 class LuzDireccional : public Luz
 {

@@ -6,8 +6,6 @@ Cilindro::Cilindro(const int num_instancias_perf, const float altura, const floa
 
     std::vector<Tupla3f> cil;
 
-    q_tapa_sup = false;
-
     Tupla3f aux1(radio, altura, 0);
     cil.push_back(aux1);
     Tupla3f aux2(radio, 0, 0);
@@ -17,4 +15,6 @@ Cilindro::Cilindro(const int num_instancias_perf, const float altura, const floa
     M = cil.size();
 
     crearMalla(cil, num_instancias_perf, 'y');
+
+    calcular_normales();
 }

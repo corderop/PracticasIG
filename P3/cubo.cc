@@ -49,5 +49,7 @@ Cubo::Cubo(float lado)
    setColor(1.0, 0.0, 0.0, 0);
    setColor(0.0, 1.0, 0.0, 1);
    setColor(0.0, 0.0, 1.0, 2);
+
+   calcular_normales();
 }
 

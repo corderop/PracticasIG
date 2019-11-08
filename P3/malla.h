@@ -12,6 +12,7 @@
 
 #include "aux.h"
 #include "ply_reader.h"
+#include "material.h"
 
 // *****************************************************************************
 //
@@ -48,6 +49,8 @@ class Malla3D
 
    void crearAjedrez();
 
+   void setMaterial(Material mat);
+
    protected:
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
@@ -60,6 +63,7 @@ class Malla3D
    std::vector<Tupla3f> c[3]; // Colores: 0->sólido, 1->puntos, 2->lineas
    std::vector<Tupla3f> nc;   // Vector de normales de las caras
    std::vector<Tupla3f> nv;   // Vector de normales de los vértices
+   Material m;
 
    GLuint id_ind, id_ver, id_col[3];
 

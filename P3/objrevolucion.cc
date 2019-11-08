@@ -32,9 +32,7 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
    if(perfil[0][1] < perfil[perfil.size()-1][1])
       darVuelta(perfil);
 
-
    crearMalla(perfil, num_instancias, 'y');
-
 }
 
 // *****************************************************************************

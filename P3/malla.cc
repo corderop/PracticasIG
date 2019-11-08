@@ -56,9 +56,8 @@ void Malla3D::draw_ModoInmediato(int modo)
   glVertexPointer(3, GL_FLOAT, 0, v.data());
   glEnableClientState(GL_COLOR_ARRAY);
   glColorPointer(3, GL_FLOAT, 0, c[modo].data());
-
-  // Para que no se vean sombras
-  glShadeModel(GL_FLAT);
+  glEnableClientState( GL_NORMAL_ARRAY );
+  glNormalPointer( GL_FLOAT, 0, nv.data() );
 
   // Dibujamos los elementos
   glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
@@ -66,6 +65,7 @@ void Malla3D::draw_ModoInmediato(int modo)
   // Desactivamos el uso de ambos arrays
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_COLOR_ARRAY);
+  glDisableClientState(GL_NORMAL_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
@@ -100,9 +100,6 @@ void Malla3D::draw_ModoDiferido(int modo)
    glBindBuffer( GL_ARRAY_BUFFER, id_col[modo] ); 
    glColorPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-   // // Para que no se vean sombras
-   // glShadeModel(GL_FLAT);
    
    glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
    glEnableClientState(GL_COLOR_ARRAY);
@@ -130,8 +127,6 @@ void Malla3D::draw_ModoAjedrez(){
    glEnableClientState(GL_COLOR_ARRAY);
    glColorPointer(3, GL_FLOAT, 0, c[0].data());
 
-   glShadeModel(GL_FLAT);
-
    // Esto lo hago por si el objeto tiene un número de triángulos impar
    int mitad = floor(f_a.size()/2),
        mitad2 = ceil(f_a.size()/2);
@@ -153,7 +148,7 @@ void Malla3D::draw_ModoAjedrez(){
 
 void Malla3D::draw(int modoD, int modoV, bool ajedrez)
 {
-
+   m.aplicar();
    // Activamos aquí el color para que funcione para ambos modos   
    if(modoD == 1){
       if(ajedrez)
@@ -170,10 +165,12 @@ void Malla3D::draw(int modoD, int modoV, bool ajedrez)
 
 void Malla3D::calcular_normales(){
 
+   calcular_normales_caras();
+
    Tupla3f aux(0,0,0);
    nv.resize(v.size(), aux);
 
-   for(int i=0; i<f.size(); i++){
+   for(int i=0; i<nc.size(); i++){
       nv[f[i][0]] = nv[f[i][0]] + nc[i];
       nv[f[i][1]] = nv[f[i][1]] + nc[i];
       nv[f[i][2]] = nv[f[i][2]] + nc[i];
@@ -188,12 +185,17 @@ void Malla3D::calcular_normales(){
 void Malla3D::calcular_normales_caras(){
 
    for(int i=0; i<f.size(); i++){
-      Tupla3f a = v[f[i][2]] - v[f[i][0]];
-      Tupla3f b = v[f[i][2]] - v[f[i][1]];
+      Tupla3f a = v[f[i][1]] - v[f[i][0]];
+      Tupla3f b = v[f[i][2]] - v[f[i][0]];
       
       Tupla3f m = a.cross(b);
       Tupla3f n = m.normalized();
 
       nc.push_back(n);
    }
+}
+
+void Malla3D::setMaterial(Material mat){
+   this->m = mat;
+   m.aplicar();
 }

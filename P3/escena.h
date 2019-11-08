@@ -10,6 +10,9 @@
 #include "cilindro.h"
 #include "cono.h"
 #include "esfera.h"
+#include "luz.h"
+#include "luzdireccional.h"
+#include "luzposicional.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
 class Escena
@@ -48,6 +51,13 @@ class Escena
    Cilindro * cilindro = nullptr;
    Cono * cono = nullptr;
    Esfera * esfera = nullptr;
+
+   // P3
+   ObjRevolucion * peon1 = nullptr;
+   ObjRevolucion * peon2 = nullptr;
+
+   // Luces
+   LuzPosicional * luz1 = nullptr;
 
    int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
    bool modoV[5]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion

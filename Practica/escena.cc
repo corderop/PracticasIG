@@ -139,6 +139,10 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
    glEnable(GL_CULL_FACE);
    glEnable(GL_NORMALIZE);
+   glDisable(GL_LIGHTING);
+
+   change_observer();
+   ejes.draw();
 
    if(modoV[4]){
       glEnable(GL_LIGHTING);
@@ -152,9 +156,6 @@ void Escena::dibujar()
       glDisable(GL_LIGHTING);
       glShadeModel(GL_FLAT);
    }
-
-	change_observer();
-   ejes.draw();
 
    if(objeto == 0){
       selDibujado(cubo);

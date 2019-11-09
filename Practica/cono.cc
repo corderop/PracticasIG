@@ -3,9 +3,6 @@
 #include "cono.h"
 
 Cono::Cono(const int num_instancias_perf, const float altura, const float radio ){
-
-    q_tapa_sup = _tapa_sup = false;
-
     std::vector<Tupla3f> con;
     
     Tupla3f aux1(0, altura, 0);

@@ -229,15 +229,6 @@ void ObjRevolucion::draw_ModoDiferido(int modo)
    glEnableClientState(GL_COLOR_ARRAY);
 
    // Elemento sin tapas
-//   glDrawElements(GL_TRIANGLES, (f.size()-2*N)*3, GL_UNSIGNED_INT, f.data());
-
-//   if(_tapa_inf)
-//      glDrawElements(GL_TRIANGLES, N*3, GL_UNSIGNED_INT, f.data()[f.size()-2*N]);
-
-//   if(_tapa_sup)
-   //   glDrawElements(GL_TRIANGLES, N*3, GL_UNSIGNED_INT, f.data()[f.size()-N]);
-   // visualizar triángulos con glDrawElements (puntero a tabla == 0)
-   // Elemento sin tapas
    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_ind); // activar VBO de triángulos
    glDrawElements(GL_TRIANGLES, (f.size()-2*N)*3, GL_UNSIGNED_INT, 0);
    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );     // desactivar VBO de triángulos

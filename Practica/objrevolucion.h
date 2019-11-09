@@ -36,7 +36,7 @@ class ObjRevolucion : public Malla3D
     // gestionar el cambio de tapas desde el dibujado
     // sin modificar el vector
     void draw_ModoInmediato(int modo) override;
-    // void draw_ModoDiferido(int modo) override;
+    void draw_ModoDiferido(int modo) override;
     void draw_ModoAjedrez() override;
 
 protected:
@@ -49,6 +49,8 @@ protected:
     // Si se quieren las tapas
     bool q_tapa_sup;
     bool q_tapa_inf;
+
+    GLuint id_tapas[2]; // Sup y inf
 
 private:
     void detectarTapas(std::vector<Tupla3f> & perfil_original, char eje, std::vector<Tupla3f> & tapas);

@@ -16,6 +16,8 @@ ObjRevolucion::ObjRevolucion() {
    _tapa_inf = _tapa_sup = true;
    q_tapa_inf = q_tapa_sup = true;
 
+   id_tapas[0] = id_tapas[1] = 0;
+
 }
 
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
@@ -197,37 +199,65 @@ void ObjRevolucion::draw_ModoInmediato(int modo){
   glDisableClientState(GL_NORMAL_ARRAY);
 }
 
-// void ObjRevolucion::draw_ModoDiferido(int modo)
-// {
-//    if(id_ver == 0)
-//       id_ver = CrearVBO(GL_ARRAY_BUFFER, v.size()*sizeof(float)*3, v.data());
+void ObjRevolucion::draw_ModoDiferido(int modo)
+{
+   if(id_ver == 0)
+      id_ver = CrearVBO(GL_ARRAY_BUFFER, v.size()*sizeof(float)*3, v.data());
    
-//    if(id_ind == 0)
-//       id_ind = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, f.size()*sizeof(int)*3, f.data());
-   
-//    if(id_col[modo] == 0)
-//       id_col[modo] = CrearVBO(GL_ARRAY_BUFFER, c[modo].size()*sizeof(float)*3, c[modo].data());
+   if(id_ind == 0)
+      id_ind = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, (f.size()-2*N)*sizeof(int)*3, f.data());
 
-//    // especificar localización y formato de la tabla de vértices, habilitar tabla
-//    glBindBuffer( GL_ARRAY_BUFFER, id_ver );  // activar VBO de vértices
-//    glVertexPointer( 3, GL_FLOAT, 0, 0 );     // especifica formato y offset (=0)
-//    glBindBuffer( GL_ARRAY_BUFFER, 0 );       // desactivar VBO de vértices.
-   
-//    glBindBuffer( GL_ARRAY_BUFFER, id_col[modo] ); 
-//    glColorPointer(3, GL_FLOAT, 0, 0);
-//    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-   
-//    glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
-//    glEnableClientState(GL_COLOR_ARRAY);
+   if(id_tapas[0] == 0)
+      id_tapas[0] = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, N*sizeof(int)*3, f.data()[f.size()-N]);
 
-//    // visualizar triángulos con glDrawElements (puntero a tabla == 0)
-//    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_ind); // activar VBO de triángulos
-//    glDrawElements( GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, 0 ) ;
-//    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );     // desactivar VBO de triángulos
-//    // desactivar uso de array de vértices
-//    glDisableClientState( GL_VERTEX_ARRAY );
-//    glDisableClientState( GL_COLOR_ARRAY );
-// }
+   if(id_tapas[1] == 0)
+      id_tapas[1] = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, N*sizeof(int)*3, f.data()[f.size()-2*N]);   
+   
+   if(id_col[modo] == 0)
+      id_col[modo] = CrearVBO(GL_ARRAY_BUFFER, c[modo].size()*sizeof(float)*3, c[modo].data());
+
+   // especificar localización y formato de la tabla de vértices, habilitar tabla
+   glBindBuffer( GL_ARRAY_BUFFER, id_ver );  // activar VBO de vértices
+   glVertexPointer( 3, GL_FLOAT, 0, 0 );     // especifica formato y offset (=0)
+   glBindBuffer( GL_ARRAY_BUFFER, 0 );       // desactivar VBO de vértices.
+   
+   glBindBuffer( GL_ARRAY_BUFFER, id_col[modo] ); 
+   glColorPointer(3, GL_FLOAT, 0, 0);
+   glBindBuffer( GL_ARRAY_BUFFER, 0 );
+   
+   glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
+   glEnableClientState(GL_COLOR_ARRAY);
+
+   // Elemento sin tapas
+//   glDrawElements(GL_TRIANGLES, (f.size()-2*N)*3, GL_UNSIGNED_INT, f.data());
+
+//   if(_tapa_inf)
+//      glDrawElements(GL_TRIANGLES, N*3, GL_UNSIGNED_INT, f.data()[f.size()-2*N]);
+
+//   if(_tapa_sup)
+   //   glDrawElements(GL_TRIANGLES, N*3, GL_UNSIGNED_INT, f.data()[f.size()-N]);
+   // visualizar triángulos con glDrawElements (puntero a tabla == 0)
+   // Elemento sin tapas
+   glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_ind); // activar VBO de triángulos
+   glDrawElements(GL_TRIANGLES, (f.size()-2*N)*3, GL_UNSIGNED_INT, 0);
+   glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );     // desactivar VBO de triángulos
+
+   // INF
+   if(_tapa_inf){
+      glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_tapas[1]); // activar VBO de triángulos
+      glDrawElements(GL_TRIANGLES, N*3, GL_UNSIGNED_INT, 0);
+      glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );     // desactivar VBO de triángulos
+   }
+
+   if(_tapa_sup){
+      glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_tapas[0]); // activar VBO de triángulos
+      glDrawElements(GL_TRIANGLES, N*3, GL_UNSIGNED_INT, 0);
+      glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );     // desactivar VBO de triángulos
+   }
+   // desactivar uso de array de vértices
+   glDisableClientState( GL_VERTEX_ARRAY );
+   glDisableClientState( GL_COLOR_ARRAY );
+}
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido

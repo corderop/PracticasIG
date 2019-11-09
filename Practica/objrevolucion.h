@@ -32,6 +32,13 @@ class ObjRevolucion : public Malla3D
     void cambiarTapas();
     void darVuelta(std::vector<Tupla3f> &perfil_original);
 
+    // Funciones de dibujado sobrecargadas para poder
+    // gestionar el cambio de tapas desde el dibujado
+    // sin modificar el vector
+    void draw_ModoInmediato(int modo) override;
+    // void draw_ModoDiferido(int modo) override;
+    void draw_ModoAjedrez() override;
+
 protected:
     void crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje);
     int N, M;
@@ -44,13 +51,8 @@ protected:
     bool q_tapa_inf;
 
 private:
-    void detectarTapas(std::vector<Tupla3f> & perfil_original, bool &sup, bool &inf, char eje, std::vector<Tupla3f> & tapas);
-    void anadirTapas(std::vector<Tupla3f> & tapas, bool sup, bool inf, char eje);
-    void anadirTriangulosTapas(bool sup, bool inf);
-
-    std::vector<Tupla3i> f ; // Triángulo de las tapas
-
-    
+    void detectarTapas(std::vector<Tupla3f> & perfil_original, char eje, std::vector<Tupla3f> & tapas);
+    void anadirTapas(std::vector<Tupla3f> & tapas, char eje);    
 } ;
 
 #endif

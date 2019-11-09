@@ -31,16 +31,16 @@ class Malla3D
    void setColor(float R, float G, float B, int tipo);
 
    // dibuja el objeto en modo inmediato
-   void draw_ModoInmediato(int modo);
+   virtual void draw_ModoInmediato(int modo);
 
    // Función para crear el VBO
    GLuint CrearVBO( GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram );
 
    // dibuja el objeto en modo diferido (usando VBOs)
-   void draw_ModoDiferido(int modo);
+   virtual void draw_ModoDiferido(int modo);
 
    // dibuja el modo ajedrez
-   void draw_ModoAjedrez();
+   virtual void draw_ModoAjedrez();
 
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)

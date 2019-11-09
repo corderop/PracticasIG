@@ -130,7 +130,8 @@ void Escena::selDibujado(Malla3D * objeto){
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
-   glEnable(GL_CULL_FACE | GL_NORMALIZE);
+   glEnable(GL_CULL_FACE);
+   glEnable(GL_NORMALIZE);
 
    if(modoV[4]){
       glEnable(GL_LIGHTING);
@@ -162,7 +163,6 @@ void Escena::dibujar()
    else if(objeto == 3){
       if(tapas){
          ply_rev->cambiarTapas();
-         ply_rev->crearAjedrez();
          tapas=false;
       }
       glPushMatrix();
@@ -172,13 +172,8 @@ void Escena::dibujar()
    }
    else if(objeto == 4){
       if(tapas){
-      peon1->cambiarTapas();
-      peon2->cambiarTapas();
-      // esfera->cambiarTapas();
-      peon1->crearAjedrez();
-      peon2->crearAjedrez();
-      // esfera->crearAjedrez();
-      tapas=false;
+         cono->cambiarTapas();
+         tapas=false;
       }
       glPushMatrix();
       // glScalef(15.0,15.0,15.0);
@@ -188,7 +183,7 @@ void Escena::dibujar()
       // selDibujado(cilindro);
       // glTranslatef(240.0,0.0,0.0);
 
-         selDibujado(cilindro);
+         selDibujado(cono);
       glPopMatrix();
       // glPushMatrix();
       //    // glTranslatef(0.0,+50.0,0.0);

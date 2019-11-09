@@ -37,9 +37,6 @@ Escena::Escena()
     cilindro->setColor(1.0, 0.0, 0.0, 0);
     cilindro->setColor(0.0, 1.0, 0.0, 1);
     cilindro->setColor(0.0, 0.0, 0.0, 2);
-    Tupla4f col1(0.32, 0.0, 0.0, 1.0);
-    Material m1(col1, col1, col1, 128.0);
-    cilindro->setMaterial(m1);
 
     cono = new Cono(40, 100, 40);
     cono->setColor(1.0, 0.0, 0.0, 0);
@@ -52,18 +49,28 @@ Escena::Escena()
     esfera->setColor(0.0, 0.0, 0.0, 2);
 
     // P3
-    peon1 = new ObjRevolucion("plys/peon.ply", 40, true, false);
-    peon1->setColor(1.0, 0.0, 0.0, 0);
+    peon1 = new ObjRevolucion("plys/peon.ply", 40, true, true);
+    peon1->setColor(1.0, 1.0, 1.0, 0);
     peon1->setColor(0.0, 1.0, 0.0, 1);
     peon1->setColor(0.0, 0.0, 1.0, 2);
+    Tupla4f col1(1.0, 1.0, 1.0, 1.0);
+    Tupla4f col2(0.0, 0.0, 0.0, 0.0);
+    Tupla4f col3(0.0, 0.0, 0.0, 1.0);
+    Material m1(col1, col2, col3, 128.0);
+    peon1->setMaterial(m1);
 
-    peon2 = new ObjRevolucion("plys/peon.ply", 40, true, false);
-    peon2->setColor(0.0, 0.0, 1.0, 0);
+    peon2 = new ObjRevolucion("plys/peon.ply", 40, true, true);
+    peon2->setColor(0.0, 0.0, 0.0, 0);
     peon2->setColor(0.0, 1.0, 0.0, 1);
     peon2->setColor(1.0, 0.0, 0.0, 2);
+    Tupla4f col4(0.04, 0.04, 0.04, 1.0);
+    Tupla4f col5(0.75, 0.75, 0.75, 1.0);
+    Tupla4f col6(0.20, 0.20, 0.20, 1.0);
+    Material m2(col4, col5, col6, 128.0);
+    peon2->setMaterial(m2);
 
     // Luces
-    Tupla3f pos(500, 500, 500);
+    Tupla3f pos(0, 0, 0);
     Tupla4f colL(1.0, 1.0, 1.0, 1.0);
     luz1 = new LuzPosicional(pos, GL_LIGHT0, colL, colL, colL);
 
@@ -172,25 +179,21 @@ void Escena::dibujar()
    }
    else if(objeto == 4){
       if(tapas){
-         cono->cambiarTapas();
+         peon1->cambiarTapas();
+         peon2->cambiarTapas();
          tapas=false;
       }
       glPushMatrix();
-      // glScalef(15.0,15.0,15.0);
-      // glTranslatef(0.0,-50.0,0.0);
-         // glTranslatef(-40.0,0.0,0.0);
-         // glScalef(5.0,5.0,5.0);
-      // selDibujado(cilindro);
-      // glTranslatef(240.0,0.0,0.0);
-
-         selDibujado(cono);
+         glTranslatef(-80.0,0.0,0.0);
+         glScalef(30.0,30.0,30.0);
+         selDibujado(peon1);
       glPopMatrix();
-      // glPushMatrix();
-      //    // glTranslatef(0.0,+50.0,0.0);
-      //    glTranslatef(+40.0,0.0,0.0);
-      //    glScalef(30.0,30.0,30.0);
-      // selDibujado(peon2);
-      // glPopMatrix();
+      glPushMatrix();
+         // glTranslatef(0.0,+50.0,0.0);
+         glTranslatef(+80.0,0.0,0.0);
+         glScalef(30.0,30.0,30.0);
+         selDibujado(peon2);
+      glPopMatrix();
    }
 }
 

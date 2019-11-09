@@ -29,6 +29,8 @@ void Malla3D::crearAjedrez(){
          b++;
       }
    }
+
+   setColor(1.0, 0.0, 0.0, 3);
 }
 
 void Malla3D::setColor(float R, float G, float B, int tipo){
@@ -42,6 +44,16 @@ void Malla3D::setColor(float R, float G, float B, int tipo){
          Tupla3f color(R,G,B);
 
          c[tipo].push_back(color);
+      }
+
+   }
+   else if(tipo == 3){
+      c_a.clear();
+
+      for(int i=0; i<v.size(); i++){
+         Tupla3f color(R,G,B);
+
+         c_a.push_back(color);
       }
 
    }
@@ -125,21 +137,21 @@ void Malla3D::draw_ModoAjedrez(){
    glEnableClientState(GL_VERTEX_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
    glEnableClientState(GL_COLOR_ARRAY);
-   glColorPointer(3, GL_FLOAT, 0, c[0].data());
+   glColorPointer(3, GL_FLOAT, 0, c_a.data());
 
    // Esto lo hago por si el objeto tiene un número de triángulos impar
    int mitad = floor(f_a.size()/2),
        mitad2 = ceil(f_a.size()/2);
 
+   // Hecho para el redibujado
+   setColor(1.0, 0.0, 0.0, 3);
+
    glDrawElements(GL_TRIANGLES, mitad*3, GL_UNSIGNED_INT, f_a.data());
    
-   setColor(0.0, 1.0, 1.0, 0);
+   setColor(0.0, 1.0, 1.0, 3);
 
    // Dibujamos los elementos
    glDrawElements(GL_TRIANGLES, mitad2*3, GL_UNSIGNED_INT, f_a.data()[mitad]);
-
-   // Hecho para el redibujado
-   setColor(1.0, 0.0, 0.0, 0);
 
    // Desactivamos el uso de ambos arrays
    glDisableClientState(GL_VERTEX_ARRAY);

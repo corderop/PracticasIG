@@ -61,6 +61,7 @@ class Malla3D
    std::vector<Tupla3i> f ;   // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3i> f_a;  // terna para el modo ajedrez
    std::vector<Tupla3f> c[3]; // Colores: 0->sólido, 1->puntos, 2->lineas
+   std::vector<Tupla3f> c_a;
    std::vector<Tupla3f> nc;   // Vector de normales de las caras
    std::vector<Tupla3f> nv;   // Vector de normales de los vértices
    Material m;

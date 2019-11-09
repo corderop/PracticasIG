@@ -36,6 +36,7 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
 
    crearMalla(perfil, N, 'y');
    crearAjedrez();
+   calcular_normales();
 }
 
 // *****************************************************************************
@@ -54,6 +55,7 @@ ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, b
       darVuelta(archivo);
 
    crearMalla(archivo, N, 'y');
+   calcular_normales();
 }
 
 void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje) {
@@ -262,7 +264,7 @@ void ObjRevolucion::draw_ModoAjedrez(){
    glEnableClientState(GL_VERTEX_ARRAY);
    glVertexPointer(3, GL_FLOAT, 0, v.data());
    glEnableClientState(GL_COLOR_ARRAY);
-   glColorPointer(3, GL_FLOAT, 0, c[0].data());
+   glColorPointer(3, GL_FLOAT, 0, c_a.data());
 
    // Esto lo hago por si el objeto tiene un número de triángulos impar
    int N2_1 = floor(N/2),
@@ -270,6 +272,8 @@ void ObjRevolucion::draw_ModoAjedrez(){
        mitad = floor(f_a.size()/2),
        mitad2 = ceil(f_a.size()/2);
        
+   // Hecho para el redibujado
+   setColor(1.0, 0.0, 0.0, 3);
 
    // Elemento sin tapas
    glDrawElements(GL_TRIANGLES, (mitad-N2_1*2)*3, GL_UNSIGNED_INT, f_a.data());
@@ -280,7 +284,7 @@ void ObjRevolucion::draw_ModoAjedrez(){
    if(_tapa_sup)
       glDrawElements(GL_TRIANGLES, N2_1*3, GL_UNSIGNED_INT, f_a.data()[mitad-N2_1]);
    
-   setColor(0.0, 1.0, 1.0, 0);
+   setColor(0.0, 1.0, 1.0, 3);
 
    // Elemento sin tapas
    glDrawElements(GL_TRIANGLES, (mitad2-N2_2*2)*3, GL_UNSIGNED_INT, f_a.data()[mitad]);
@@ -290,9 +294,6 @@ void ObjRevolucion::draw_ModoAjedrez(){
 
    if(_tapa_sup)
       glDrawElements(GL_TRIANGLES, N2_2*3, GL_UNSIGNED_INT, f_a.data()[mitad + mitad-N2_1]);
-
-   // Hecho para el redibujado
-   setColor(1.0, 0.0, 0.0, 0);
 
    // Desactivamos el uso de ambos arrays
    glDisableClientState(GL_VERTEX_ARRAY);

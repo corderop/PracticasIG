@@ -15,6 +15,4 @@ Cilindro::Cilindro(const int num_instancias_perf, const float altura, const floa
     M = cil.size();
 
     crearMalla(cil, num_instancias_perf, 'y');
-
-    calcular_normales();
 }

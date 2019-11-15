@@ -14,6 +14,10 @@ class Luz{
 
     public:
       void activar();
+      bool esDireccional();
+
+     virtual void variarAnguloAlpha(float incremento){};
+     virtual void variarAnguloBeta(float incremento){};
 };
 
 #endif

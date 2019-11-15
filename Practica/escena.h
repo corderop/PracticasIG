@@ -24,6 +24,7 @@ class Escena
      * Hecho para ahorrar código cuando se quiere dibujar en diferentes modos simultaneamente
      */
     void selDibujado(Malla3D * objeto);
+    void changeTapas();
 
  // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
        
@@ -44,25 +45,27 @@ class Escena
    menu modoMenu=NADA;
    // Objetos de la escena
    Ejes ejes;
+   // 0
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
-   ObjPLY * ply_no1 = nullptr;
-   ObjRevolucion * ply_rev = nullptr;
+   
+   // 1
    Cilindro * cilindro = nullptr;
    Cono * cono = nullptr;
    Esfera * esfera = nullptr;
 
-   // P3
+   // 2
    ObjRevolucion * peon1 = nullptr;
    ObjRevolucion * peon2 = nullptr;
 
    // Luces
-   LuzPosicional * luz1 = nullptr;
+   Luz* luz[8];
 
    int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
    bool modoV[5]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion
-   bool tapas = false;
-   // Objeto: -1 nada, 0 cubo, 1 tetraedro, 2 ply cargado, 3 ply revolución
+   bool tapas = false; // Indica si hay que cambiar de estado las tapas
+   int luzS, angulo; // Número de la luz seleccionada y angulo a modificar
+   // Objeto: -1 nada, 0 cubo, 1 cilindro, esfera y cono, 2 escena
    // Modo visualizacion: 0 solido, 1 puntos, 2 lineas, 3 todos, 4 ajedrez
    // Modo dibujado: 1 Modo inmediato, 2 Modo diferido
    

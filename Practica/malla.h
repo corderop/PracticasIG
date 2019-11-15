@@ -66,7 +66,7 @@ class Malla3D
    std::vector<Tupla3f> nv;   // Vector de normales de los vértices
    Material m;
 
-   GLuint id_ind, id_ver, id_col[3];
+   GLuint id_ind, id_ver, id_col[3], id_nor;
 
    // completar: tabla de colores, tabla de normales de vértices
 } ;

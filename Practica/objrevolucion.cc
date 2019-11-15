@@ -36,7 +36,6 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
 
    crearMalla(perfil, N, 'y');
    crearAjedrez();
-   calcular_normales();
 }
 
 // *****************************************************************************
@@ -55,7 +54,6 @@ ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, b
       darVuelta(archivo);
 
    crearMalla(archivo, N, 'y');
-   calcular_normales();
 }
 
 void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje) {

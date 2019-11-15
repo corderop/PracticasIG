@@ -13,3 +13,7 @@ void Luz::activar(){
     // Configuramos su posición en escena
     glLightfv(id, GL_POSITION, posicion);
 }
+
+bool Luz::esDireccional(){
+    return posicion[3]==0;
+}

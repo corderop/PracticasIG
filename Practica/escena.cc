@@ -16,71 +16,93 @@ Escena::Escena()
 
     ejes.changeAxisSize( 5000 );
 
+    objeto = -1;  // Ninguno seleccionado
+    modoD = 1;    // Modo inmediato por defecto
+    luzS = -1;
+    angulo = -1;
+    
+    luz[0] = nullptr;
+    luz[1] = nullptr;
+    luz[2] = nullptr;
+    luz[3] = nullptr;
+    luz[4] = nullptr;
+    luz[5] = nullptr;
+    luz[6] = nullptr;
+    luz[7] = nullptr;
+
+    modoV[0] = false;
+    modoV[1] = false;
+    modoV[2] = true;    // Modo solido por defecto
+    modoV[3] = false;
+    modoV[4] = false;
+
+    // Material de prueba
+    Tupla4f col4(0.61424, 0.04136, 0.04136, 1.0);
+    Tupla4f col5(0.727811, 0.626959, 0.626959, 1.0);
+    Tupla4f col6(0.1745, 0.01175, 0.01175, 1.0);
+    Material ruby(col4, col5, col6, 0.6*128);
+
+    Tupla4f col1(0.07568, 0.61424, 0.07568, 1.0);
+    Tupla4f col2(0.633, 0.727811, 0.633, 1.0);
+    Tupla4f col3(0.0215, 0.1745, 0.0215, 1.0);
+    Material esmeralda(col1, col2, col3, 0.6*128);
+
+    Tupla4f col7(0.75164, 0.60648, 0.22648, 1.0);
+    Tupla4f col8(0.628281, 0.555802, 0.366065, 1.0);
+    Tupla4f col9(0.24725, 0.1995, 0.0745, 1.0);
+    Material gold(col7, col8, col9, 0.4*128);
+
     // Cubo y tetraedro
     cubo = new Cubo(75);
+    cubo->setColor(1.0, 0.0, 0.0, 0);
+    cubo->setColor(0.0, 1.0, 0.0, 1);
+    cubo->setColor(0.0, 0.0, 1.0, 2);
+    cubo->setMaterial(ruby);
+
     tetraedro = new Tetraedro();
-
-    // PLY sin revolución
-    ply_no1 = new ObjPLY("plys/ant.ply");
-    ply_no1->setColor(1.0, 0.0, 0.0, 0);
-    ply_no1->setColor(0.0, 1.0, 0.0, 1);
-    ply_no1->setColor(0.0, 0.0, 0.0, 2);
-
-    // PLY con revolución
-    ply_rev = new ObjRevolucion("plys/peon.ply", 40, true, false);
-    ply_rev->setColor(1.0, 0.0, 0.0, 0);
-    ply_rev->setColor(0.0, 1.0, 0.0, 1);
-    ply_rev->setColor(0.0, 0.0, 0.0, 2);
+    tetraedro->setColor(0.0, 0.0, 1.0, 0);
+    tetraedro->setColor(1.0, 0.0, 0.0, 1);
+    tetraedro->setColor(0.0, 0.0, 0.0, 2);
+    tetraedro->setMaterial(esmeralda);
+    
 
     // Cilindro, cono y esfera
-    cilindro = new Cilindro(40,100,40);
+    cilindro = new Cilindro(40,80,30);
     cilindro->setColor(1.0, 0.0, 0.0, 0);
     cilindro->setColor(0.0, 1.0, 0.0, 1);
     cilindro->setColor(0.0, 0.0, 0.0, 2);
+    cilindro->setMaterial(esmeralda);
 
-    cono = new Cono(40, 100, 40);
+    cono = new Cono(40, 80, 30);
     cono->setColor(1.0, 0.0, 0.0, 0);
     cono->setColor(0.0, 1.0, 0.0, 1);
     cono->setColor(0.0, 0.0, 0.0, 2);
+    cono->setMaterial(ruby);
 
-    esfera = new Esfera(40, 40, 50);
+    esfera = new Esfera(40, 40, 30);
     esfera->setColor(1.0, 0.0, 0.0, 0);
     esfera->setColor(0.0, 1.0, 0.0, 1);
     esfera->setColor(0.0, 0.0, 0.0, 2);
+    esfera->setMaterial(gold);
 
     // P3
     peon1 = new ObjRevolucion("plys/peon.ply", 40, true, true);
     peon1->setColor(1.0, 1.0, 1.0, 0);
     peon1->setColor(0.0, 1.0, 0.0, 1);
     peon1->setColor(0.0, 0.0, 1.0, 2);
-    Tupla4f col1(1.0, 1.0, 1.0, 1.0);
-    Tupla4f col2(0.0, 0.0, 0.0, 0.0);
-    Tupla4f col3(0.0, 0.0, 0.0, 1.0);
-    Material m1(col1, col2, col3, 128.0);
-    peon1->setMaterial(m1);
+    peon1->setMaterial(esmeralda);
 
     peon2 = new ObjRevolucion("plys/peon.ply", 40, true, true);
-    peon2->setColor(0.0, 0.0, 0.0, 0);
+    peon2->setColor(1.0, 1.0, 1.0, 0);
     peon2->setColor(0.0, 1.0, 0.0, 1);
-    peon2->setColor(1.0, 0.0, 0.0, 2);
-    Tupla4f col4(0.04, 0.04, 0.04, 1.0);
-    Tupla4f col5(0.75, 0.75, 0.75, 1.0);
-    Tupla4f col6(0.20, 0.20, 0.20, 1.0);
-    Material m2(col4, col5, col6, 128.0);
-    peon2->setMaterial(m2);
+    peon2->setColor(0.0, 0.0, 1.0, 2);
+    peon2->setMaterial(ruby);
 
     // Luces
     Tupla3f pos(0, 0, 0);
     Tupla4f colL(1.0, 1.0, 1.0, 1.0);
-    luz1 = new LuzPosicional(pos, GL_LIGHT0, colL, colL, colL);
-
-    objeto = -1;  // Ninguno seleccionado
-    modoD = 1;    // Modo inmediato por defecto
-    modoV[0] = false;
-    modoV[1] = false;
-    modoV[2] = true;    // Modo solido por defecto
-    modoV[3] = false;
-    modoV[4] = false;
+    luz[0] = new LuzPosicional(pos, GL_LIGHT0, colL, colL, colL);
+    luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, colL, colL, colL);
 }
 
 //**************************************************************************
@@ -101,15 +123,6 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    change_projection( float(UI_window_width)/float(UI_window_height) );
 	glViewport( 0, 0, UI_window_width, UI_window_height );
 }
-
-
-
-// **************************************************************************
-//
-// función de dibujo de la escena: limpia ventana, fija cámara, dibuja ejes,
-// y dibuja los objetos
-//
-// **************************************************************************
 
 void Escena::selDibujado(Malla3D * objeto){
    
@@ -134,66 +147,78 @@ void Escena::selDibujado(Malla3D * objeto){
    }
 }
 
+void Escena::changeTapas(){
+   cilindro->cambiarTapas();
+   cono->cambiarTapas();
+   esfera->cambiarTapas();
+   peon1->cambiarTapas();
+   peon2->cambiarTapas();
+}
+
+// **************************************************************************
+//
+// función de dibujo de la escena: limpia ventana, fija cámara, dibuja ejes,
+// y dibuja los objetos
+//
+// **************************************************************************
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
    glEnable(GL_CULL_FACE);
    glEnable(GL_NORMALIZE);
    glDisable(GL_LIGHTING);
+   glShadeModel(GL_FLAT);
 
    change_observer();
    ejes.draw();
 
+   if(tapas){
+      changeTapas();
+      tapas=false;
+   }
+
    if(modoV[4]){
       glEnable(GL_LIGHTING);
-      glShadeModel(GL_SMOOTH);
-      // o
-      // glShadeModel(GL_FLAT);
-      // 
-      luz1->activar();
-   }
-   else{
-      glDisable(GL_LIGHTING);
-      glShadeModel(GL_FLAT);
+      glShadeModel(GL_SMOOTH); // Si se comenta usa el modo FLAT
+      // Activación de luces
+      luz[0]->activar();
+      luz[1]->activar();
    }
 
    if(objeto == 0){
-      selDibujado(cubo);
+      glPushMatrix();
+         glTranslatef(+80.0,0.0,0.0);
+         selDibujado(cubo);
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(-80.0,0.0,0.0);
+         selDibujado(tetraedro);
+      glPopMatrix();
    }
-   else if(objeto == 1)
-      selDibujado(tetraedro);
+   else if(objeto == 1){
+      glPushMatrix();
+         glTranslatef(+80.0,-40.0,0.0);
+         selDibujado(cilindro);
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(-80.0,-40.0,0.0);
+         selDibujado(cono);
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(0.0,0.0,-80.0);
+         selDibujado(esfera);
+      glPopMatrix();
+   }
    else if(objeto == 2){
-      glPushMatrix();
-         glScalef(5.0,5.0,5.0);
-         selDibujado(ply_no1);
-      glPopMatrix();
-   }
-   else if(objeto == 3){
-      if(tapas){
-         ply_rev->cambiarTapas();
-         tapas=false;
-      }
-      glPushMatrix();
-      glScalef(50.0,50.0,50.0);
-      selDibujado(ply_rev);
-      glPopMatrix();
-   }
-   else if(objeto == 4){
-      if(tapas){
-         peon1->cambiarTapas();
-         peon2->cambiarTapas();
-         tapas=false;
-      }
       glPushMatrix();
          glTranslatef(-80.0,0.0,0.0);
          glScalef(30.0,30.0,30.0);
-         selDibujado(peon1);
+         selDibujado(peon2);
       glPopMatrix();
       glPushMatrix();
-         // glTranslatef(0.0,+50.0,0.0);
          glTranslatef(+80.0,0.0,0.0);
          glScalef(30.0,30.0,30.0);
-         selDibujado(peon2);
+         selDibujado(peon1);
       glPopMatrix();
    }
 }
@@ -213,6 +238,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    bool salir=false;
    switch( toupper(tecla) )
    {
+      // -------------
+      // Teclas principales
+
+      // Salir
       case 'Q' :
          if (modoMenu!=NADA)
             modoMenu=NADA;            
@@ -220,51 +249,100 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             salir=true ;
          }
          break ;
+      // Sel. objeto
       case 'O' :
-         // ESTAMOS EN MODO SELECCION DE OBJETO
          modoMenu=SELOBJETO; 
          break ;
-        case 'V' :
-         // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
+      // Sel. modo visualización
+      case 'V' :
          modoMenu=SELVISUALIZACION;
-         break ;
-       case 'D' :
-         // ESTAMOS EN MODO SELECCION DE DIBUJADO
+      break ;
+      // Sel. modo dibujado
+      case 'D' :
          modoMenu=SELDIBUJADO;
-         break ;
-         // COMPLETAR con los diferentes opciones de teclado
-       case 'C' :
+      break ;
+
+      // -------------
+      // Subopciones
+
+      // Sel. objeto
+      // Cubo
+      case 'C' :
          if(modoMenu == SELOBJETO){
             objeto = 0;
          }
-         break;
-       case 'T' :
+      break;
+      // Cilindro, cono, esfera
+      case 'M' :
          if(modoMenu == SELOBJETO){
             objeto = 1;
          }
-         break;
-       case 'R' :
-         if(modoMenu == SELOBJETO){
-            objeto = 3;
-         }
-         break;
-       case 'X' :
-         // Cilindro
-         if(modoMenu == SELOBJETO){
-            objeto = 4;
-         }
-         break;
-       case 'F':
-         // Alternar tapas
-         if(objeto==3 || objeto==4){
-            tapas = true;
-         }
-         break;
-       case 'P' :
+      break;
+      // Escena
+      case 'X' :
          if(modoMenu == SELOBJETO){
             objeto = 2;
          }
-         else if(modoMenu == SELVISUALIZACION){
+      break;
+
+      // Cambiar tapas
+      case 'F':
+         tapas = true;
+      break;
+
+      // Modo de dibujado y selección luz
+      case '0' :
+         if(modoV[4]){
+            luzS = 0;
+         }
+      break;
+      case '1' :
+         // Modo inmediato
+         if(modoMenu == SELDIBUJADO){
+            modoD = 1;
+         }
+         else if(modoV[4]){
+            luzS = 1;
+         }
+      break;
+      case '2' :
+         // Modo diferido
+         if(modoMenu == SELDIBUJADO){
+            modoD = 2;
+         }
+         else if(modoV[4]){
+            luzS = 2;
+         }
+      case '3' :
+         if(modoV[4]){
+            luzS = 3;
+         }
+      break;
+      case '4' :
+         if(modoV[4]){
+            luzS = 4;
+         }
+      break;
+      case '5' :
+         if(modoV[4]){
+            luzS = 5;
+         }
+      break;
+      case '6' :
+         if(modoV[4]){
+            luzS = 6;
+         }
+      break;
+      case '7' :
+         if(modoV[4]){
+            luzS = 7;
+         }
+      break;
+
+      // Modo visualización
+      // Modo puntos
+      case 'P' :
+         if(modoMenu == SELVISUALIZACION){
             if(modoV[0]){
                modoV[0] = false;
             }
@@ -274,8 +352,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                modoV[4] = false;
             }
          }
-         break;
-       case 'L' :
+      break;
+      // Modo líneas
+      case 'L' :
          if(modoMenu == SELVISUALIZACION){
             if(modoV[1]){
                modoV[1] = false;
@@ -286,29 +365,35 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                modoV[4] = false;
             }
          }
-         break;
-       case 'S' :
-         if(modoMenu == SELVISUALIZACION){
-            if(modoV[2]){
-               modoV[2] = false;
-            }
-            else{
-               modoV[2] = true;
-               modoV[3] = false;
-               modoV[4] = false;
-            }
+      break;
+      // Modo solido
+      case 'S' :
+      if(modoMenu == SELVISUALIZACION){
+         if(modoV[2]){
+            modoV[2] = false;
          }
-         break;
-       case 'A' :
-         if(modoMenu == SELVISUALIZACION){
+         else{
+            modoV[2] = true;
+            modoV[3] = false;
+            modoV[4] = false;
+         }
+      }
+      break;
+      // Modo ajedrez y selecion del angulo alpha
+      case 'A' :
+         if(modoMenu == SELVISUALIZACION && !modoV[4]){
             modoV[0] = false;
             modoV[1] = false;
             modoV[2] = false;
             modoV[3] = true;
             modoV[4] = false;
          }
-         break;
-       case 'I' :
+         else if(modoV[4]){
+            angulo = 0;
+         }
+      break;
+      // Modo visualización
+      case 'I' :
          if(modoMenu == SELVISUALIZACION){
             modoV[0] = false;
             modoV[1] = false;
@@ -316,18 +401,31 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             modoV[3] = false;
             modoV[4] = true;
          }
-         break;
-       case '1' :
-         if(modoMenu == SELDIBUJADO){
-            modoD = 1;
+      break;  
+      // Selección Beta 
+      case 'B' :
+         if(modoV[4]){
+            angulo = 1;
          }
-         break;
-       case '2' :
-         if(modoMenu == SELDIBUJADO){
-            modoD = 2;
+      break;
+      // Incrementar angulo
+      case '>' :
+         if(modoV[4] && angulo!=-1 && luzS!=-1 && luz[luzS] != nullptr){
+            if(luz[luzS]->esDireccional()){
+               if(angulo == 0)   luz[luzS]->variarAnguloAlpha(1);
+               else              luz[luzS]->variarAnguloBeta(1);
+            }
          }
-         break;
-            
+      break;
+      // Decrementar angulo
+      case '<' :
+         if(modoV[4] && angulo!=-1 && luzS!=-1 && luz[luzS] != nullptr){
+            if(luz[luzS]->esDireccional()){
+               if(angulo == 0)   luz[luzS]->variarAnguloAlpha(-1);
+               else              luz[luzS]->variarAnguloBeta(-1);
+            }
+         }
+      break;
    }
    return salir;
 }

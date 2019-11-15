@@ -3,11 +3,10 @@
 
 LuzDireccional::LuzDireccional( Tupla2f direccion, GLenum idLuzOpenGL, Tupla4f colorAmbiente, Tupla4f colorEspecular, Tupla4f colorDifuso){
 
-    alpha = beta = 0;
+    alpha = direccion[0];
+    beta = direccion[1];
 
-    this->posicion[0] = direccion[0];
-    this->posicion[1] = direccion[1];
-    this->posicion[2] = 0.0;
+    calcularDireccion();
     this->posicion[3] = 0.0; // Para luz direccional
 
     this->id = idLuzOpenGL;
@@ -18,8 +17,16 @@ LuzDireccional::LuzDireccional( Tupla2f direccion, GLenum idLuzOpenGL, Tupla4f c
 
 void LuzDireccional::variarAnguloAlpha(float incremento){
     alpha += incremento;
+    calcularDireccion();
 }
 
 void LuzDireccional::variarAnguloBeta(float incremento){
     beta += incremento;
+    calcularDireccion();
+}
+
+void LuzDireccional::calcularDireccion(){
+    posicion[0] = sin(alpha*(PI/180));                      // x
+    posicion[1] = sin(beta*(PI/180));                       // y
+    posicion[2] = cos(alpha*(PI/180))*cos(beta*(PI/180));    // z
 }

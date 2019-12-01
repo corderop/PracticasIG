@@ -64,7 +64,7 @@ class Malla3D
    std::vector<Tupla3f> c_a;
    std::vector<Tupla3f> nc;   // Vector de normales de las caras
    std::vector<Tupla3f> nv;   // Vector de normales de los vértices
-   Material m;
+   Material *m = nullptr;
 
    GLuint id_ind, id_ver, id_col[3], id_nor;
 

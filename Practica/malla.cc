@@ -117,7 +117,7 @@ void Malla3D::draw_ModoDiferido(int modo)
    glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
    glBindBuffer( GL_ARRAY_BUFFER, id_nor );
-   glVertexPointer( 3, GL_FLOAT, 0, 0 );
+   glNormalPointer(GL_FLOAT, 0, 0 );
    glBindBuffer( GL_ARRAY_BUFFER, 0 );      
    
    glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
@@ -169,7 +169,8 @@ void Malla3D::draw_ModoAjedrez(){
 
 void Malla3D::draw(int modoD, int modoV, bool ajedrez)
 {
-   m.aplicar();
+   if(m != nullptr)
+      m->aplicar();
    if(nv.empty())
       calcular_normales();
    // Activamos aquí el color para que funcione para ambos modos   
@@ -219,6 +220,6 @@ void Malla3D::calcular_normales_caras(){
 }
 
 void Malla3D::setMaterial(Material mat){
-   this->m = mat;
-   m.aplicar();
+   m = new Material(mat);
+   // m.aplicar();
 }

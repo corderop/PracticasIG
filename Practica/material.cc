@@ -10,6 +10,10 @@ Material::Material(){
     this->brillo = 0.0;
 }
 
+Material::Material (const Material &mat){
+    (*this) = mat;
+}
+
 Material::Material(Tupla4f mdifuso, Tupla4f mespecular, Tupla4f mambiente, float brillo){
 
     this->difuso = mdifuso;

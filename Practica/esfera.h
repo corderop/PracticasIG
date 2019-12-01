@@ -2,6 +2,7 @@
 #define ESFERA_H_INCLUDED
 
 #include "aux.h"
+#include "objrevolucion.h"
 
 class Esfera : public ObjRevolucion
 {

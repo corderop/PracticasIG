@@ -13,6 +13,9 @@
 #include "luz.h"
 #include "luzdireccional.h"
 #include "luzposicional.h"
+#include "tronco.h"
+#include "pierna.h"
+#include "persona.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
 class Escena
@@ -57,6 +60,9 @@ class Escena
    // 2
    ObjRevolucion * peon1 = nullptr;
    ObjRevolucion * peon2 = nullptr;
+
+   // 3
+   Persona *persona = nullptr;
 
    // Luces
    Luz* luz[8];

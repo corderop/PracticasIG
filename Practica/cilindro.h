@@ -2,6 +2,7 @@
 #define CILINDRO_H_INCLUDED
 
 #include "aux.h"
+#include "objrevolucion.h"
 
 class Cilindro : public ObjRevolucion
 {

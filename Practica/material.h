@@ -14,6 +14,8 @@ class Material
    public:
 
     Material ();
+
+    Material (const Material &mat);
    
     Material (  Tupla4f mdifuso,
                 Tupla4f mespecular,

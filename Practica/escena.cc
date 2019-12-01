@@ -65,7 +65,6 @@ Escena::Escena()
     tetraedro->setColor(0.0, 0.0, 0.0, 2);
     tetraedro->setMaterial(esmeralda);
     
-
     // Cilindro, cono y esfera
     cilindro = new Cilindro(40,80,30);
     cilindro->setColor(1.0, 0.0, 0.0, 0);
@@ -97,6 +96,9 @@ Escena::Escena()
     peon2->setColor(0.0, 1.0, 0.0, 1);
     peon2->setColor(0.0, 0.0, 1.0, 2);
     peon2->setMaterial(ruby);
+
+    // P4
+    persona = new Persona();
 
     // Luces
     Tupla3f pos(0, 0, 0);
@@ -210,16 +212,18 @@ void Escena::dibujar()
       glPopMatrix();
    }
    else if(objeto == 2){
-      glPushMatrix();
-         glTranslatef(-80.0,0.0,0.0);
-         glScalef(30.0,30.0,30.0);
-         selDibujado(peon2);
-      glPopMatrix();
-      glPushMatrix();
-         glTranslatef(+80.0,0.0,0.0);
-         glScalef(30.0,30.0,30.0);
-         selDibujado(peon1);
-      glPopMatrix();
+      // glPushMatrix();
+      //    glTranslatef(-80.0,0.0,0.0);
+      //    glScalef(30.0,30.0,30.0);
+      //    selDibujado(peon2);
+      // glPopMatrix();
+      // glPushMatrix();
+      //    glTranslatef(+80.0,0.0,0.0);
+      //    glScalef(30.0,30.0,30.0);
+      //    selDibujado(peon1);
+      // glPopMatrix();
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      persona->draw(modoD, 0, false);
    }
 }
 

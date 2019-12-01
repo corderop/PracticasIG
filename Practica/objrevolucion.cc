@@ -216,6 +216,9 @@ void ObjRevolucion::draw_ModoDiferido(int modo)
    if(id_col[modo] == 0)
       id_col[modo] = CrearVBO(GL_ARRAY_BUFFER, c[modo].size()*sizeof(float)*3, c[modo].data());
 
+   if(id_nor == 0)
+      id_nor = CrearVBO(GL_ARRAY_BUFFER, nv.size()*sizeof(float)*3, nv.data());
+
    // especificar localización y formato de la tabla de vértices, habilitar tabla
    glBindBuffer( GL_ARRAY_BUFFER, id_ver );  // activar VBO de vértices
    glVertexPointer( 3, GL_FLOAT, 0, 0 );     // especifica formato y offset (=0)
@@ -224,9 +227,14 @@ void ObjRevolucion::draw_ModoDiferido(int modo)
    glBindBuffer( GL_ARRAY_BUFFER, id_col[modo] ); 
    glColorPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+   glBindBuffer( GL_ARRAY_BUFFER, id_nor );
+   glNormalPointer(GL_FLOAT, 0, 0 );
+   glBindBuffer( GL_ARRAY_BUFFER, 0 );   
    
    glEnableClientState( GL_VERTEX_ARRAY );   // habilitar tabla de vértices
    glEnableClientState(GL_COLOR_ARRAY);
+   glEnableClientState(GL_NORMAL_ARRAY);
 
    // Elemento sin tapas
    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_ind); // activar VBO de triángulos
@@ -248,6 +256,7 @@ void ObjRevolucion::draw_ModoDiferido(int modo)
    // desactivar uso de array de vértices
    glDisableClientState( GL_VERTEX_ARRAY );
    glDisableClientState( GL_COLOR_ARRAY );
+   glDisableClientState( GL_NORMAL_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,

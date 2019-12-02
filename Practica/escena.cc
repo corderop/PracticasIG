@@ -126,29 +126,6 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 	glViewport( 0, 0, UI_window_width, UI_window_height );
 }
 
-void Escena::selDibujado(Malla3D * objeto){
-   
-   bool ajedrez = modoV[3];
-
-   // Activación modo puntos
-   if(modoV[0]){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-      objeto->draw(modoD, 1, ajedrez);
-   }
-
-   // Activación modo líneas
-   if(modoV[1]){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      objeto->draw(modoD, 2, ajedrez);
-   }
-
-   // Activación modo sólido
-   if(modoV[3] || modoV[2] || modoV[4] ){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      objeto->draw(modoD, 0, ajedrez);
-   }
-}
-
 void Escena::changeTapas(){
    cilindro->cambiarTapas();
    cono->cambiarTapas();
@@ -190,40 +167,32 @@ void Escena::dibujar()
    if(objeto == 0){
       glPushMatrix();
          glTranslatef(+80.0,0.0,0.0);
-         selDibujado(cubo);
+         cubo->draw(modoD, modoV);
       glPopMatrix();
       glPushMatrix();
          glTranslatef(-80.0,0.0,0.0);
-         selDibujado(tetraedro);
+         tetraedro->draw(modoD, modoV);
       glPopMatrix();
    }
    else if(objeto == 1){
       glPushMatrix();
          glTranslatef(+80.0,-40.0,0.0);
-         selDibujado(cilindro);
+         cilindro->draw(modoD, modoV);
       glPopMatrix();
       glPushMatrix();
          glTranslatef(-80.0,-40.0,0.0);
-         selDibujado(cono);
+         cono->draw(modoD, modoV);
       glPopMatrix();
       glPushMatrix();
          glTranslatef(0.0,0.0,-80.0);
-         selDibujado(esfera);
+         esfera->draw(modoD, modoV);
       glPopMatrix();
    }
    else if(objeto == 2){
-      // glPushMatrix();
-      //    glTranslatef(-80.0,0.0,0.0);
-      //    glScalef(30.0,30.0,30.0);
-      //    selDibujado(peon2);
-      // glPopMatrix();
-      // glPushMatrix();
-      //    glTranslatef(+80.0,0.0,0.0);
-      //    glScalef(30.0,30.0,30.0);
-      //    selDibujado(peon1);
-      // glPopMatrix();
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      persona->draw(modoD, 0, false);
+      glPushMatrix();
+         glScalef(20,20,20);
+         persona->draw(modoD, modoV);
+      glPopMatrix();
    }
 }
 
@@ -244,6 +213,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    {
       // -------------
       // Teclas principales
+
+      case 'E':
+         persona->andar(4);
+         break;
 
       // Salir
       case 'Q' :

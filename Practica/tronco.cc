@@ -3,39 +3,35 @@
 
 Tronco::Tronco(){
     cuerpo = new Cilindro(40,1,1);
-    brazoDer = new Cilindro(40,1,1);
-    brazoIzq = new Cilindro(40,1,1);
+    brazoDer = new Brazo();
+    brazoIzq = new Brazo();
+
+    brazoDer->setRotando(true);
+    brazoIzq->setRotando(false);
 
     cuerpo->setColor(1.0, 0.0, 0.0, 0);
     cuerpo->setColor(0.0, 1.0, 0.0, 1);
     cuerpo->setColor(0.0, 0.0, 1.0, 2);
-
-    brazoDer->setColor(0.0, 1.0, 0.0, 0);
-    brazoDer->setColor(0.0, 1.0, 0.0, 1);
-    brazoDer->setColor(0.0, 0.0, 1.0, 2);
-
-    brazoIzq->setColor(0.0, 0.0, 1.0, 0);
-    brazoIzq->setColor(0.0, 1.0, 0.0, 1);
-    brazoIzq->setColor(0.0, 0.0, 1.0, 2);
 }
 
-void Tronco::draw(int modoD, int modoV, bool ajedrez){
+void Tronco::draw(int modoD, bool modoV[]){
     glPushMatrix();
-        // glScalef(20,20,20);
         glPushMatrix();
             glScalef(3,8,3);
-            // glTranslatef(1.5,0,0);
-            cuerpo->draw(modoD, modoV, ajedrez);
+            cuerpo->draw(modoD, modoV);
         glPopMatrix();
         glPushMatrix();
-            glTranslatef(4.05,2,0);
-            glScalef(0.8,6,0.8);
-            brazoIzq->draw(modoD, modoV, ajedrez);
+            glTranslatef(3.8,8,0);
+            brazoIzq->draw(modoD, modoV);
         glPopMatrix();
         glPushMatrix();
-            glTranslatef(-4.05,2,0);
-            glScalef(0.8,6,0.8);
-            brazoDer->draw(modoD, modoV, ajedrez);
+            glTranslatef(-3.8,8,0);
+            brazoDer->draw(modoD, modoV);
         glPopMatrix();
     glPopMatrix();
+}
+
+void Tronco::animacionAndar(float velocidad){
+    brazoDer->animacionAndar(velocidad);
+    brazoIzq->animacionAndar(velocidad);
 }

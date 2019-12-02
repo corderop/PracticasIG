@@ -14,11 +14,24 @@ class Persona
     Tronco *tronco;
     Esfera *cabeza;
 
+    // Orientación
+    int orientacion;
+    // Avance
+    float avance;
+
    public:
    Persona();
 
-   void draw(int modoD, int modoV, bool ajedrez);
+   // Dibujar persona
+   void draw(int modoD, bool modoV[]);
+   
+   // Rotar
+   void rotar(int grados);
 
+   // Modificar avance
+   void avanzar(float mod);
+
+   void andar(float velocidad);
 } ;
 
 #endif

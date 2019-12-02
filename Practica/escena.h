@@ -16,6 +16,7 @@
 #include "tronco.h"
 #include "pierna.h"
 #include "persona.h"
+#include "brazo.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
 class Escena
@@ -26,7 +27,6 @@ class Escena
     /**
      * Hecho para ahorrar código cuando se quiere dibujar en diferentes modos simultaneamente
      */
-    void selDibujado(Malla3D * objeto);
     void changeTapas();
 
  // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
@@ -63,6 +63,7 @@ class Escena
 
    // 3
    Persona *persona = nullptr;
+   Brazo *brazo = nullptr;
 
    // Luces
    Luz* luz[8];

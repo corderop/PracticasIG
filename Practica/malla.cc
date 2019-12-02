@@ -167,6 +167,28 @@ void Malla3D::draw_ModoAjedrez(){
    glDisableClientState(GL_COLOR_ARRAY);
 }
 
+void Malla3D::draw(int modoD, bool modoV[]){
+   bool ajedrez = modoV[3];
+
+   // Activación modo puntos
+   if(modoV[0]){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+      draw(modoD, 1, ajedrez);
+   }
+
+   // Activación modo líneas
+   if(modoV[1]){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      draw(modoD, 2, ajedrez);
+   }
+
+   // Activación modo sólido
+   if(modoV[3] || modoV[2] || modoV[4] ){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      draw(modoD, 0, ajedrez);
+   }
+}
+
 void Malla3D::draw(int modoD, int modoV, bool ajedrez)
 {
    if(m != nullptr)

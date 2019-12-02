@@ -1,18 +1,15 @@
-#ifndef PIERNA_H_INCLUDED
-#define PIERNA_H_INCLUDED
+#ifndef BRAZO_H_INCLUDED
+#define BRAZO_H_INCLUDED
 
 #include "aux.h"
 #include "cilindro.h"
-#include "esfera.h"
 
-class Pierna
+class Brazo
 {
-   private:
-        Cilindro *tobillo,
-                 *antepierna;
-        Esfera *rodilla;
+    private:
+        Cilindro *brazo;
 
-        int gradoPierna;
+        int gradoBrazo;
 
         // Variable auxiliar de movimiento,
         // Si está rotando hacia delante true.
@@ -20,15 +17,16 @@ class Pierna
         bool rotando;
 
     public:
-        Pierna();
+        Brazo();
 
         void draw(int modoD, bool modoV[]);
 
         void setRotando(bool rot);
 
-        void cambiarGradoPierna(int grado);
+        void cambiarGradoBrazo(int grado);
 
         void animacionAndar(float velocidad);
+
 } ;
 
 #endif

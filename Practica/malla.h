@@ -42,6 +42,8 @@ class Malla3D
    // dibuja el modo ajedrez
    virtual void draw_ModoAjedrez();
 
+   void draw(int modoD, bool modoV[]);
+
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)

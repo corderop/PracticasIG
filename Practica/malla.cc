@@ -243,5 +243,4 @@ void Malla3D::calcular_normales_caras(){
 
 void Malla3D::setMaterial(Material mat){
    m = new Material(mat);
-   // m.aplicar();
 }

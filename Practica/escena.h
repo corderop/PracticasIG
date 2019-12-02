@@ -13,10 +13,7 @@
 #include "luz.h"
 #include "luzdireccional.h"
 #include "luzposicional.h"
-#include "tronco.h"
-#include "pierna.h"
 #include "persona.h"
-#include "brazo.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
 class Escena
@@ -28,6 +25,8 @@ class Escena
      * Hecho para ahorrar código cuando se quiere dibujar en diferentes modos simultaneamente
      */
     void changeTapas();
+    // Activar las luces de la escena
+    void activarLuces();
 
  // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
        
@@ -44,6 +43,12 @@ class Escena
 	void change_observer();
 
    void clear_window();
+
+   // Animación
+   bool animarAutomatico = false;
+   float velocidadAnimacion = 1,
+         velocidadManual = 1;
+   int manualActivado = 0;
 
    menu modoMenu=NADA;
    // Objetos de la escena
@@ -67,6 +72,7 @@ class Escena
 
    // Luces
    Luz* luz[8];
+   bool luzActiva[8];
 
    int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
    bool modoV[5]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion
@@ -89,5 +95,7 @@ class Escena
 	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
 	void teclaEspecial( int Tecla1, int x, int y );
 
+    void animarModeloAutomaticamente();
+    void animarModeloManual(int numero, float suma);
 };
 #endif

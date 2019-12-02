@@ -3,6 +3,7 @@
 
 #include "aux.h"
 #include "cilindro.h"
+#include "material.h"
 
 class Brazo
 {
@@ -27,6 +28,12 @@ class Brazo
 
         void animacionAndar(float velocidad);
 
+        void setColor(float R, float G, float B, int tipo);
+
+        void setMaterial(Material &mat);
+
+        // Cambiar tapas
+        void cambiarTapas();
 } ;
 
 #endif

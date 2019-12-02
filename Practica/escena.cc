@@ -30,6 +30,15 @@ Escena::Escena()
     luz[6] = nullptr;
     luz[7] = nullptr;
 
+    luzActiva[0] = true;
+    luzActiva[1] = true;
+    luzActiva[2] = true;
+    luzActiva[3] = true;
+    luzActiva[4] = true;
+    luzActiva[5] = true;
+    luzActiva[6] = true;
+    luzActiva[7] = true;
+
     modoV[0] = false;
     modoV[1] = false;
     modoV[2] = true;    // Modo solido por defecto
@@ -51,6 +60,11 @@ Escena::Escena()
     Tupla4f col8(0.628281, 0.555802, 0.366065, 1.0);
     Tupla4f col9(0.24725, 0.1995, 0.0745, 1.0);
     Material gold(col7, col8, col9, 0.4*128);
+
+    Tupla4f col10(1.0, 0.829, 0.829, 0.922);
+    Tupla4f col11(0.296648, 0.296648, 0.296648, 0.922);
+    Tupla4f col12(0.25, 0.20725, 0.20725, 0.922);
+    Material skin(col10, col11, col12, 11.264);
 
     // Cubo y tetraedro
     cubo = new Cubo(75);
@@ -99,6 +113,14 @@ Escena::Escena()
 
     // P4
     persona = new Persona();
+    persona->setColorPiel(236.0/256, 188.0/256, 180.0/256);
+    persona->setColorCamiseta(0,0,1.0);
+    persona->setColorPantalones(1.0,0,0);
+    persona->setColor(0.0, 0.0, 0.0, 2);
+    persona->setColor(0.0, 1.0, 0.0, 1);
+    persona->setMaterialPiel(skin);
+    persona->setMaterialCamiseta(ruby);
+    persona->setMaterialPantalones(esmeralda);
 
     // Luces
     Tupla3f pos(0, 0, 0);
@@ -132,6 +154,20 @@ void Escena::changeTapas(){
    esfera->cambiarTapas();
    peon1->cambiarTapas();
    peon2->cambiarTapas();
+   persona->cambiarTapas();
+}
+
+void Escena::activarLuces(){
+   glEnable(GL_LIGHTING);
+   // Activación de luces
+   if(luzActiva[0] && luz[0]!=nullptr)  luz[0]->activar(); else glDisable(GL_LIGHT0);
+   if(luzActiva[1] && luz[1]!=nullptr)  luz[1]->activar(); else glDisable(GL_LIGHT1);
+   if(luzActiva[2] && luz[2]!=nullptr)  luz[2]->activar(); else glDisable(GL_LIGHT2);
+   if(luzActiva[3] && luz[3]!=nullptr)  luz[3]->activar(); else glDisable(GL_LIGHT3);
+   if(luzActiva[4] && luz[4]!=nullptr)  luz[4]->activar(); else glDisable(GL_LIGHT4);
+   if(luzActiva[5] && luz[5]!=nullptr)  luz[5]->activar(); else glDisable(GL_LIGHT5);
+   if(luzActiva[6] && luz[6]!=nullptr)  luz[6]->activar(); else glDisable(GL_LIGHT6);
+   if(luzActiva[7] && luz[7]!=nullptr)  luz[7]->activar(); else glDisable(GL_LIGHT7);
 }
 
 // **************************************************************************
@@ -157,11 +193,8 @@ void Escena::dibujar()
    }
 
    if(modoV[4]){
-      glEnable(GL_LIGHTING);
       glShadeModel(GL_SMOOTH); // Si se comenta usa el modo FLAT
-      // Activación de luces
-      luz[0]->activar();
-      luz[1]->activar();
+      activarLuces();
    }
 
    if(objeto == 0){
@@ -190,10 +223,19 @@ void Escena::dibujar()
    }
    else if(objeto == 2){
       glPushMatrix();
-         glScalef(20,20,20);
+         glScalef(10,10,10);
          persona->draw(modoD, modoV);
       glPopMatrix();
    }
+}
+
+void Escena::animarModeloAutomaticamente(){
+   if(animarAutomatico)
+      persona->andar(velocidadAnimacion);
+}
+
+void Escena::animarModeloManual(int numero, float suma){
+   persona->moverGradoLibertad(numero, suma);
 }
 
 //**************************************************************************
@@ -215,9 +257,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       // Teclas principales
 
       case 'E':
-         persona->andar(4);
+         persona->andar(8);
          break;
-
+      case 'R':
+         persona->rotar(1);
+         break;
       // Salir
       case 'Q' :
          if (modoMenu!=NADA)
@@ -271,6 +315,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case '0' :
          if(modoV[4]){
             luzS = 0;
+            luzActiva[0] = !luzActiva[0];
+         }
+         else if(!animarAutomatico){
+            manualActivado = 0;
          }
       break;
       case '1' :
@@ -280,6 +328,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoV[4]){
             luzS = 1;
+            luzActiva[1] = !luzActiva[1];
+         }
+         else if(!animarAutomatico){
+            manualActivado = 1;
          }
       break;
       case '2' :
@@ -289,30 +341,48 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoV[4]){
             luzS = 2;
+            luzActiva[2] = !luzActiva[2];
+         }
+         else if(!animarAutomatico){
+            manualActivado = 2;
          }
       case '3' :
          if(modoV[4]){
             luzS = 3;
+            luzActiva[3] = !luzActiva[3];
+         }
+         else if(!animarAutomatico){
+            manualActivado = 3;
          }
       break;
       case '4' :
          if(modoV[4]){
             luzS = 4;
+            luzActiva[4] = !luzActiva[4];
+         }
+         else if(!animarAutomatico){
+            manualActivado = 4;
          }
       break;
       case '5' :
          if(modoV[4]){
             luzS = 5;
+            luzActiva[5] = !luzActiva[5];
+         }
+         else if(!animarAutomatico){
+            manualActivado = 5;
          }
       break;
       case '6' :
          if(modoV[4]){
             luzS = 6;
+            luzActiva[6] = !luzActiva[6];
          }
       break;
       case '7' :
          if(modoV[4]){
             luzS = 7;
+            luzActiva[7] = !luzActiva[7];
          }
       break;
 
@@ -369,7 +439,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             angulo = 0;
          }
       break;
-      // Modo visualización
+      // Modo iluminación
       case 'I' :
          if(modoMenu == SELVISUALIZACION){
             modoV[0] = false;
@@ -393,6 +463,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                else              luz[luzS]->variarAnguloBeta(1);
             }
          }
+         else if( modoMenu == SELVISUALIZACION && !animarAutomatico){
+            velocidadManual++;
+         }
       break;
       // Decrementar angulo
       case '<' :
@@ -401,6 +474,40 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                if(angulo == 0)   luz[luzS]->variarAnguloAlpha(-1);
                else              luz[luzS]->variarAnguloBeta(-1);
             }
+         }
+         else if( modoMenu == SELVISUALIZACION && !animarAutomatico){
+            velocidadManual--;
+         }
+      break;
+      // Modo animación
+      // Automática
+      case 'J' :
+         if(modoMenu == SELVISUALIZACION){
+            animarAutomatico = !animarAutomatico;
+         }
+      break;
+      // Manualmente
+      case 'W' :
+         if(modoMenu == SELVISUALIZACION){
+            animarAutomatico = false;
+         }
+      break;
+
+      case '+' :
+         if(modoMenu == SELVISUALIZACION){
+            if(animarAutomatico)
+                  velocidadAnimacion++;
+            else
+               animarModeloManual(manualActivado, velocidadManual);
+         }
+      break;
+      case '-' :
+         if(modoMenu == SELVISUALIZACION){
+            if(animarAutomatico)
+               if(velocidadAnimacion>1)
+                  velocidadAnimacion--;
+            else
+               animarModeloManual(manualActivado, -velocidadManual);
          }
       break;
    }

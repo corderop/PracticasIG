@@ -45,3 +45,15 @@ void Brazo::animacionAndar(float velocidad){
 void Brazo::setRotando(bool rot){
     rotando = rot;
 }
+
+void Brazo::setColor(float R, float G, float B, int tipo){
+    brazo->setColor(R,G,B,tipo);
+}
+
+void Brazo::setMaterial(Material &mat){
+    brazo->setMaterial(mat);
+}
+
+void Brazo::cambiarTapas(){
+    brazo->cambiarTapas();
+}

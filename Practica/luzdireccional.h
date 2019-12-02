@@ -17,6 +17,7 @@ class LuzDireccional : public Luz
      void variarAnguloAlpha(float incremento) override;
      void variarAnguloBeta(float incremento) override;
      void calcularDireccion();
+     void animacionAutomatica();
 } ;
 
 #endif

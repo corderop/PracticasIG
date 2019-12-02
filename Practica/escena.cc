@@ -226,16 +226,23 @@ void Escena::dibujar()
          glScalef(10,10,10);
          persona->draw(modoD, modoV);
       glPopMatrix();
+      esfera->draw(modoD, modoV);
    }
 }
 
 void Escena::animarModeloAutomaticamente(){
    if(animarAutomatico)
       persona->andar(velocidadAnimacion);
+   if(animarAutomaticoLuces)
+      animarLuces();
 }
 
 void Escena::animarModeloManual(int numero, float suma){
    persona->moverGradoLibertad(numero, suma);
+}
+
+void Escena::animarLuces(){
+   luz[luzS]->variarAnguloAlpha(velocidadAnimacion);
 }
 
 //**************************************************************************
@@ -393,6 +400,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             if(modoV[0]){
                modoV[0] = false;
             }
+            else if(modoV[4]){
+               if(luz[luzS]->esDireccional())
+                  animarAutomaticoLuces = true;
+            }
             else{
                modoV[0] = true;
                modoV[3] = false;
@@ -495,7 +506,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case '+' :
          if(modoMenu == SELVISUALIZACION){
-            if(animarAutomatico)
+            if(animarAutomatico || animarAutomaticoLuces)
                   velocidadAnimacion++;
             else
                animarModeloManual(manualActivado, velocidadManual);
@@ -503,7 +514,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
       case '-' :
          if(modoMenu == SELVISUALIZACION){
-            if(animarAutomatico)
+            if(animarAutomatico || animarAutomaticoLuces)
                if(velocidadAnimacion>1)
                   velocidadAnimacion--;
             else

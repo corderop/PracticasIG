@@ -45,7 +45,8 @@ class Escena
    void clear_window();
 
    // Animación
-   bool animarAutomatico = false;
+   bool animarAutomatico = false,
+        animarAutomaticoLuces = false;
    float velocidadAnimacion = 1,
          velocidadManual = 1;
    int manualActivado = 0;
@@ -97,5 +98,6 @@ class Escena
 
     void animarModeloAutomaticamente();
     void animarModeloManual(int numero, float suma);
+    void animarLuces();
 };
 #endif

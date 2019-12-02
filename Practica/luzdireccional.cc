@@ -28,5 +28,5 @@ void LuzDireccional::variarAnguloBeta(float incremento){
 void LuzDireccional::calcularDireccion(){
     posicion[0] = sin(alpha*(PI/180));                      // x
     posicion[1] = sin(beta*(PI/180));                       // y
-    posicion[2] = cos(alpha*(PI/180))*cos(beta*(PI/180));    // z
+    posicion[2] = cos(alpha*(PI/180))*cos(beta*(PI/180));   // z
 }

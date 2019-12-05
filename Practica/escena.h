@@ -15,7 +15,7 @@
 #include "luzposicional.h"
 #include "persona.h"
 
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
+typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, SELAUTO, SELMANUAL} menu;
 class Escena
 {
 
@@ -48,6 +48,7 @@ class Escena
    bool animarAutomatico = false,
         animarAutomaticoLuces = false;
    float velocidadAnimacion = 1,
+         velocidadAnimacionLuz = 1,
          velocidadManual = 1;
    int manualActivado = 0;
 
@@ -95,6 +96,7 @@ class Escena
 	// Interacción con la escena
 	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
 	void teclaEspecial( int Tecla1, int x, int y );
+    void opcionesInteraccion();
 
     void animarModeloAutomaticamente();
     void animarModeloManual(int numero, float suma);

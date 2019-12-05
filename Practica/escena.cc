@@ -8,6 +8,7 @@
 
 Escena::Escena()
 {
+    opcionesInteraccion();
     Front_plane       = 50.0;
     Back_plane        = 2000.0;
     Observer_distance = 4*Front_plane;
@@ -18,7 +19,7 @@ Escena::Escena()
 
     objeto = -1;  // Ninguno seleccionado
     modoD = 1;    // Modo inmediato por defecto
-    luzS = -1;
+    luzS = 0;
     angulo = -1;
     
     luz[0] = nullptr;
@@ -226,7 +227,6 @@ void Escena::dibujar()
          glScalef(10,10,10);
          persona->draw(modoD, modoV);
       glPopMatrix();
-      esfera->draw(modoD, modoV);
    }
 }
 
@@ -242,7 +242,47 @@ void Escena::animarModeloManual(int numero, float suma){
 }
 
 void Escena::animarLuces(){
-   luz[luzS]->variarAnguloAlpha(velocidadAnimacion);
+   luz[luzS]->variarAnguloAlpha(velocidadAnimacionLuz);
+}
+
+/**
+ * Opciones de interacción
+ */
+void Escena::opcionesInteraccion(){
+   std::cout<<std::endl<<"----------------------------------"<<std::endl;
+   std::cout<<"Q - Salir de cualquier modo o de la ejecución"<<std::endl;
+   std::cout<<"D - Seleccionar modo dibujado"<<std::endl;
+   std::cout<<"    1 - Modo inmediato"<<std::endl;
+   std::cout<<"    2 - Modo diferido"<<std::endl;
+   std::cout<<"O - Seleccionar modo objeto"<<std::endl;
+   std::cout<<"    C - Cubo y tetraedro"<<std::endl;
+   std::cout<<"    M - Cilindro, esfera y cono"<<std::endl;
+   std::cout<<"    X - Modelo jerárquico"<<std::endl;
+   std::cout<<"V - Seleccionar modo visualización"<<std::endl;
+   std::cout<<"    P - Activar/desactivar modo puntos"<<std::endl;
+   std::cout<<"    L - Activar/desactivar modo líneas"<<std::endl;
+   std::cout<<"    S - Activar/desactivar modo sólido"<<std::endl;
+   std::cout<<"    A - Activar/desactivar modo ajedrez"<<std::endl;
+   std::cout<<"    I - Activar/desactivar modo iluminación"<<std::endl;
+   std::cout<<"        0...7 - Activar/desactivar y seleccionar cada luz"<<std::endl;
+   std::cout<<"        A - Activar variación ángulo alpha"<<std::endl;
+   std::cout<<"        B - Activar variación ángulo beta"<<std::endl;
+   std::cout<<"        > - Incrementa el ángulo"<<std::endl;
+   std::cout<<"        < - Decrementa el ángulo"<<std::endl;
+   std::cout<<"        P - Activar/desactivar animación automática de la luz"<<std::endl;
+   std::cout<<"            + - Aumenta la velocidad de la animación"<<std::endl;
+   std::cout<<"            - - Disminuye la velocidad de la animación"<<std::endl;
+   std::cout<<"A - Activar/descativar animación automática de los modelos"<<std::endl;
+   std::cout<<"    + - Aumenta la velocidad de la animación"<<std::endl;
+   std::cout<<"    - - Disminuye la velocidad de la animación"<<std::endl;
+   std::cout<<"M - Activar animación manual de los modelos"<<std::endl;
+   std::cout<<"    0...n - Seleccionar el grado de libertad"<<std::endl;
+   std::cout<<"    > - Aumentar velocidad manual"<<std::endl;
+   std::cout<<"    < - Reducir velocidad manual"<<std::endl;
+   std::cout<<"    + - Aumenta el grado de libertad"<<std::endl;
+   std::cout<<"    - - Disminuye el grado de libertad"<<std::endl;
+   std::cout<<"F - Activar/desactivar tapas"<<std::endl;
+   std::cout<<std::endl<<"----------------------------------"<<std::endl;
 }
 
 //**************************************************************************
@@ -261,135 +301,108 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    switch( toupper(tecla) )
    {
       // -------------
-      // Teclas principales
-
-      case 'E':
-         persona->andar(8);
-         break;
-      case 'R':
-         persona->rotar(1);
-         break;
+      // SELECCIÓN DE MODO
+      // -------------
       // Salir
       case 'Q' :
-         if (modoMenu!=NADA)
-            modoMenu=NADA;            
+         if (modoMenu!=NADA){
+            modoMenu=NADA;  
+            cout<<"Saliendo del modo actual"<<endl;    
+         }
          else {
             salir=true ;
          }
-         break ;
-      // Sel. objeto
-      case 'O' :
-         modoMenu=SELOBJETO; 
-         break ;
-      // Sel. modo visualización
-      case 'V' :
-         modoMenu=SELVISUALIZACION;
       break ;
       // Sel. modo dibujado
       case 'D' :
-         modoMenu=SELDIBUJADO;
+         if(modoMenu == NADA){
+            modoMenu=SELDIBUJADO;
+            cout<<"Modo dibujado seleccionado"<<endl;
+         }
       break ;
+      // Sel. objeto
+      case 'O' :
+         if(modoMenu == NADA){
+            modoMenu=SELOBJETO; 
+            cout<<"Modo objeto seleccionado"<<endl;   
+         }
+      break ;
+      // Sel. modo visualización
+      case 'V' :
+         if(modoMenu == NADA){
+            modoMenu=SELVISUALIZACION;
+            cout<<"Modo visualización seleccionado"<<endl;   
+         }
+      break ;
+      // Sel. modo animación auto
+      case 'A' :
+         if(modoMenu == NADA){
+            if(!animarAutomatico){
+               modoMenu=SELAUTO;
+               cout<<"Animación automática activada"<<endl;   
+               animarAutomatico = true;
+            }
+         }
+         else if(modoMenu == SELAUTO){
+            modoMenu = NADA;
+            cout<<"Animación automática desactivada"<<endl;
+            animarAutomatico = false;
+         }
+         else if(modoMenu == SELVISUALIZACION && !modoV[4]){
+            if(modoV[3]){
+               modoV[2] = true;
+               modoV[3] = false;
+               cout<<"Modo ajedrez desactivado"<<endl;
+            }
+            else{
+               modoV[0] = false;
+               modoV[1] = false;
+               modoV[2] = false;
+               modoV[3] = true;
+               modoV[4] = false;
+               cout<<"Modo ajedrez activado"<<endl;
+            }
+         }
+         else if(modoMenu == SELVISUALIZACION && modoV[4]){
+            angulo = 0;
+            cout<<"Ángulo alpha seleccionado"<<endl;
+         }
+      break ;
+      // Sel. modo animación manual
+      // Mostrar cilindro, esfera y cono
+      case 'M' :
+         if(modoMenu == NADA){
+            modoMenu=SELMANUAL;
+            cout<<"Animación manual activada"<<endl;   
+            animarAutomatico = false;
+         }
+         else if(modoMenu == SELOBJETO){
+            objeto = 1;
+            cout<<"Mostrando cilindro, esfera y cono"<<endl;
+         }
+      break ;
+      // CAMBIAR TAPAS
+      case 'F':
+         if(modoMenu = NADA)
+            tapas = true;
+      break;
 
       // -------------
       // Subopciones
-
-      // Sel. objeto
-      // Cubo
+      // -------------
+      // Selección de objeto
+      // Cubo y tetraedro
       case 'C' :
          if(modoMenu == SELOBJETO){
             objeto = 0;
+            cout<<"Mostrando cubo y tetraedro"<<endl;
          }
       break;
-      // Cilindro, cono, esfera
-      case 'M' :
-         if(modoMenu == SELOBJETO){
-            objeto = 1;
-         }
-      break;
-      // Escena
+      // Modelo jerárquico
       case 'X' :
          if(modoMenu == SELOBJETO){
             objeto = 2;
-         }
-      break;
-
-      // Cambiar tapas
-      case 'F':
-         tapas = true;
-      break;
-
-      // Modo de dibujado y selección luz
-      case '0' :
-         if(modoV[4]){
-            luzS = 0;
-            luzActiva[0] = !luzActiva[0];
-         }
-         else if(!animarAutomatico){
-            manualActivado = 0;
-         }
-      break;
-      case '1' :
-         // Modo inmediato
-         if(modoMenu == SELDIBUJADO){
-            modoD = 1;
-         }
-         else if(modoV[4]){
-            luzS = 1;
-            luzActiva[1] = !luzActiva[1];
-         }
-         else if(!animarAutomatico){
-            manualActivado = 1;
-         }
-      break;
-      case '2' :
-         // Modo diferido
-         if(modoMenu == SELDIBUJADO){
-            modoD = 2;
-         }
-         else if(modoV[4]){
-            luzS = 2;
-            luzActiva[2] = !luzActiva[2];
-         }
-         else if(!animarAutomatico){
-            manualActivado = 2;
-         }
-      case '3' :
-         if(modoV[4]){
-            luzS = 3;
-            luzActiva[3] = !luzActiva[3];
-         }
-         else if(!animarAutomatico){
-            manualActivado = 3;
-         }
-      break;
-      case '4' :
-         if(modoV[4]){
-            luzS = 4;
-            luzActiva[4] = !luzActiva[4];
-         }
-         else if(!animarAutomatico){
-            manualActivado = 4;
-         }
-      break;
-      case '5' :
-         if(modoV[4]){
-            luzS = 5;
-            luzActiva[5] = !luzActiva[5];
-         }
-         else if(!animarAutomatico){
-            manualActivado = 5;
-         }
-      break;
-      case '6' :
-         if(modoV[4]){
-            luzS = 6;
-            luzActiva[6] = !luzActiva[6];
-         }
-      break;
-      case '7' :
-         if(modoV[4]){
-            luzS = 7;
-            luzActiva[7] = !luzActiva[7];
+            cout<<"Mostrando modelo jerárquico"<<endl;
          }
       break;
 
@@ -399,15 +412,20 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          if(modoMenu == SELVISUALIZACION){
             if(modoV[0]){
                modoV[0] = false;
+               cout<<"Modo puntos desactivado"<<endl;
             }
             else if(modoV[4]){
-               if(luz[luzS]->esDireccional())
-                  animarAutomaticoLuces = true;
+               if(luz[luzS]->esDireccional()){
+                  cout<<"Animación automática de la luz: ";
+                  animarAutomaticoLuces = !animarAutomaticoLuces;
+                  cout<< ( (animarAutomaticoLuces) ? "activada" : "desactivada" )<<endl;
+               }
             }
             else{
                modoV[0] = true;
                modoV[3] = false;
                modoV[4] = false;
+               cout<<"Modo puntos activado"<<endl;
             }
          }
       break;
@@ -416,38 +434,29 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          if(modoMenu == SELVISUALIZACION){
             if(modoV[1]){
                modoV[1] = false;
+               cout<<"Modo líneas desactivado"<<endl;
             }
             else{
                modoV[1] = true;
                modoV[3] = false;
                modoV[4] = false;
+               cout<<"Modo líneas activado"<<endl;
             }
          }
       break;
-      // Modo solido
+      // Modo sólido
       case 'S' :
-      if(modoMenu == SELVISUALIZACION){
-         if(modoV[2]){
-            modoV[2] = false;
-         }
-         else{
-            modoV[2] = true;
-            modoV[3] = false;
-            modoV[4] = false;
-         }
-      }
-      break;
-      // Modo ajedrez y selecion del angulo alpha
-      case 'A' :
-         if(modoMenu == SELVISUALIZACION && !modoV[4]){
-            modoV[0] = false;
-            modoV[1] = false;
-            modoV[2] = false;
-            modoV[3] = true;
-            modoV[4] = false;
-         }
-         else if(modoV[4]){
-            angulo = 0;
+         if(modoMenu == SELVISUALIZACION){
+            if(modoV[2]){
+               modoV[2] = false;
+               cout<<"Modo sólido desactivado"<<endl;
+            }
+            else{
+               modoV[2] = true;
+               modoV[3] = false;
+               modoV[4] = false;
+               cout<<"Modo sólido activado"<<endl;
+            }
          }
       break;
       // Modo iluminación
@@ -458,23 +467,131 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             modoV[2] = false;
             modoV[3] = false;
             modoV[4] = true;
+            cout<<"Modo iluminación activado"<<endl;
          }
       break;  
-      // Selección Beta 
+
+      // Números
+      case '0' :
+         if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 0;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+         else if(modoMenu == SELMANUAL){
+            manualActivado = 0;
+            cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+      break;
+      case '1' :
+         // Modo inmediato
+         if(modoMenu == SELDIBUJADO){
+            modoD = 1;
+            cout<<"Modo inmediato seleccionado"<<endl;
+         }
+         else if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 1;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+         else if(modoMenu == SELMANUAL){
+            manualActivado = 1;
+            cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+      break;
+      case '2' :
+         // Modo diferido
+         if(modoMenu == SELDIBUJADO){
+            modoD = 2;
+            cout<<"Modo diferido seleccionado"<<endl;
+         }
+         else if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 2;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+         else if(modoMenu == SELMANUAL){
+            manualActivado = 2;
+            cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+      break;
+      case '3' :
+         if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 3;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+         else if(modoMenu == SELMANUAL){
+            manualActivado = 3;
+            cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+      break;
+      case '4' :
+         if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 4;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+         else if(modoMenu == SELMANUAL){
+            manualActivado = 4;
+            cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+      break;
+      case '5' :
+         if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 5;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+         else if(modoMenu == SELMANUAL){
+            manualActivado = 5;
+            cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+      break;
+      case '6' :
+         if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 6;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+      break;
+      case '7' :
+         if(modoMenu == SELVISUALIZACION && modoV[4]){
+            luzS = 7;
+            cout<<"Luz " << luzS << " seleccionada y ";
+            luzActiva[luzS] = !luzActiva[luzS];
+            cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+      break;
+
+      // Ángulo beta
       case 'B' :
          if(modoV[4]){
             angulo = 1;
+            cout<<"Ángulo beta seleccionado"<<endl;
          }
       break;
-      // Incrementar angulo
+
+      // Incremento del angulo manual
       case '>' :
          if(modoV[4] && angulo!=-1 && luzS!=-1 && luz[luzS] != nullptr){
             if(luz[luzS]->esDireccional()){
                if(angulo == 0)   luz[luzS]->variarAnguloAlpha(1);
                else              luz[luzS]->variarAnguloBeta(1);
+               cout<<"Incremento del ángulo ";
+               cout<< ( (angulo == 0) ? "alpha" : "beta" );
+               cout<<" de la luz "<<luzS<<endl;
             }
          }
-         else if( modoMenu == SELVISUALIZACION && !animarAutomatico){
+         else if( modoMenu == SELMANUAL){
+            cout<<"Velocidad manual aumentada"<<endl;
             velocidadManual++;
          }
       break;
@@ -484,43 +601,44 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             if(luz[luzS]->esDireccional()){
                if(angulo == 0)   luz[luzS]->variarAnguloAlpha(-1);
                else              luz[luzS]->variarAnguloBeta(-1);
+               cout<<"Decremento del ángulo ";
+               cout<< ( (angulo == 0) ? "alpha" : "beta" );
+               cout<<" de la luz "<<luzS<<endl;
             }
          }
-         else if( modoMenu == SELVISUALIZACION && !animarAutomatico){
+         else if( modoMenu == SELMANUAL){
+            cout<<"Velocidad manual reducida"<<endl;
             velocidadManual--;
          }
       break;
-      // Modo animación
-      // Automática
-      case 'J' :
-         if(modoMenu == SELVISUALIZACION){
-            animarAutomatico = !animarAutomatico;
-         }
-      break;
-      // Manualmente
-      case 'W' :
-         if(modoMenu == SELVISUALIZACION){
-            animarAutomatico = false;
-         }
-      break;
 
+      // Controles de animación
       case '+' :
-         if(modoMenu == SELVISUALIZACION){
-            if(animarAutomatico || animarAutomaticoLuces)
+         if(modoMenu == SELAUTO){
+            if(animarAutomatico)
                   velocidadAnimacion++;
-            else
-               animarModeloManual(manualActivado, velocidadManual);
+         }
+         else if(modoMenu == SELMANUAL){
+            animarModeloManual(manualActivado, velocidadManual);
+         }
+         else if(modoMenu == SELVISUALIZACION && modoV[4] && animarAutomaticoLuces){
+            velocidadAnimacionLuz++;
          }
       break;
       case '-' :
-         if(modoMenu == SELVISUALIZACION){
-            if(animarAutomatico || animarAutomaticoLuces)
+         if(modoMenu == SELAUTO){
+            if(animarAutomatico)
                if(velocidadAnimacion>1)
                   velocidadAnimacion--;
-            else
-               animarModeloManual(manualActivado, -velocidadManual);
+         }
+         else if(modoMenu == SELMANUAL){
+            animarModeloManual(manualActivado, velocidadManual);
+         }
+         else if(modoMenu == SELVISUALIZACION && modoV[4] && animarAutomaticoLuces){
+            velocidadAnimacionLuz--;
          }
       break;
+      
    }
    return salir;
 }

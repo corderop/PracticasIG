@@ -46,6 +46,9 @@ Escena::Escena()
     modoV[3] = false;
     modoV[4] = false;
 
+    // Creamos una textura
+    Textura tex("texturas/wall2.jpg");
+
     // Material de prueba
     Tupla4f col4(0.61424, 0.04136, 0.04136, 1.0);
     Tupla4f col5(0.727811, 0.626959, 0.626959, 1.0);
@@ -73,6 +76,7 @@ Escena::Escena()
     cubo->setColor(0.0, 1.0, 0.0, 1);
     cubo->setColor(0.0, 0.0, 1.0, 2);
     cubo->setMaterial(ruby);
+    cubo->setTexturas(tex);
 
     tetraedro = new Tetraedro();
     tetraedro->setColor(0.0, 0.0, 1.0, 0);
@@ -184,6 +188,7 @@ void Escena::dibujar()
    glEnable(GL_NORMALIZE);
    glDisable(GL_LIGHTING);
    glShadeModel(GL_FLAT);
+   glPointSize(5.0);
 
    change_observer();
    ejes.draw();
@@ -193,20 +198,23 @@ void Escena::dibujar()
       tapas=false;
    }
 
+   if(texturas) glEnable( GL_TEXTURE_2D );
+   else         glDisable( GL_TEXTURE_2D );
+
    if(modoV[4]){
       glShadeModel(GL_SMOOTH); // Si se comenta usa el modo FLAT
       activarLuces();
    }
 
    if(objeto == 0){
-      glPushMatrix();
-         glTranslatef(+80.0,0.0,0.0);
+      // glPushMatrix();
+      //    glTranslatef(+80.0,0.0,0.0);
          cubo->draw(modoD, modoV);
-      glPopMatrix();
-      glPushMatrix();
-         glTranslatef(-80.0,0.0,0.0);
-         tetraedro->draw(modoD, modoV);
-      glPopMatrix();
+      // glPopMatrix();
+      // glPushMatrix();
+      //    glTranslatef(-80.0,0.0,0.0);
+      //    tetraedro->draw(modoD, modoV);
+      // glPopMatrix();
    }
    else if(objeto == 1){
       glPushMatrix();
@@ -282,6 +290,7 @@ void Escena::opcionesInteraccion(){
    std::cout<<"    + - Aumenta el grado de libertad"<<std::endl;
    std::cout<<"    - - Disminuye el grado de libertad"<<std::endl;
    std::cout<<"F - Activar/desactivar tapas"<<std::endl;
+   std::cout<<"T - Activar/desactivar texturas"<<std::endl;
    std::cout<<std::endl<<"----------------------------------"<<std::endl;
 }
 
@@ -383,8 +392,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break ;
       // CAMBIAR TAPAS
       case 'F':
-         if(modoMenu = NADA)
+         if(modoMenu == NADA){
             tapas = true;
+            cout<<"Alternando tapas"<<endl;
+         }
+      break;
+      case 'T':
+         if(modoMenu == NADA){
+            texturas = !texturas;
+            cout<<"Texturas ";
+            cout<< ( (texturas) ? "activadas" : "desactivadas" ) <<endl;
+         }
       break;
 
       // -------------

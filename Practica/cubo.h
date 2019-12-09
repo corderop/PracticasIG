@@ -24,6 +24,10 @@
 
 class Cubo : public Malla3D
 {
+   private:
+
+   void calcular_texturas() override;
+
    public:
    Cubo(float l=1) ;
 

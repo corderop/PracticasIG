@@ -12,9 +12,11 @@ Cubo::Cubo(float lado)
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
 
    // Vertices
-   Tupla3f v0(lado/2,-lado/2,lado/2), v1(lado/2,-lado/2,-lado/2), v2(-lado/2,-lado/2,-lado/2), v3(-lado/2,-lado/2,lado/2),
-           v4(lado/2,lado/2,lado/2),  v5(lado/2,lado/2,-lado/2),  v6(-lado/2,lado/2,-lado/2),  v7(-lado/2,lado/2,lado/2);
-
+//    Tupla3f v0(lado/2,-lado/2,lado/2), v1(lado/2,-lado/2,-lado/2), v2(-lado/2,-lado/2,-lado/2), v3(-lado/2,-lado/2,lado/2),
+//            v4(lado/2,lado/2,lado/2),  v5(lado/2,lado/2,-lado/2),  v6(-lado/2,lado/2,-lado/2),  v7(-lado/2,lado/2,lado/2);
+    Tupla3f v0(-lado/2,lado/2,lado/2),  v1(-lado/2,-lado/2,lado/2),  v2(lado/2,-lado/2,lado/2),  v3(lado/2,lado/2,lado/2),
+            v4(-lado/2,lado/2,-lado/2), v5(-lado/2,-lado/2,-lado/2), v6(lado/2,-lado/2,-lado/2), v7(lado/2,lado/2,-lado/2);
+   
    v.push_back(v0);
    v.push_back(v1);
    v.push_back(v2);
@@ -25,12 +27,12 @@ Cubo::Cubo(float lado)
    v.push_back(v7);
 
    //Triangulos
-   Tupla3i  f0(0,2,1), f1(0,3,2),   // Cara de abajo
-            f2(4,5,6), f3(6,7,4),   // Cara de arriba
-            f4(0,4,3), f5(4,7,3),   // Cara de frente
-            f6(1,2,6), f7(6,5,1),   // Cara posterior
-            f8(0,1,5), f9(5,4,0),  // Cara derecha
-            f10(2,3,7),f11(7,6,2);  // Cara izquierda
+   Tupla3i  f0(0,1,3), f1(1,2,3),   // Cara de frente
+            f2(1,5,2), f3(5,6,2),   // Cara de abajo
+            f4(4,0,7), f5(0,3,7),   // Cara de arriba
+            f6(7,6,4), f7(6,5,4),   // Cara posterior
+            f8(3,2,7), f9(2,6,7),   // Cara derecha
+            f10(4,5,0),f11(5,1,0);  // Cara izquierda
 
    f.push_back(f0);
    f.push_back(f1);
@@ -44,12 +46,15 @@ Cubo::Cubo(float lado)
    f.push_back(f9);
    f.push_back(f10);
    f.push_back(f11);
-
-   // Color
-   setColor(1.0, 0.0, 0.0, 0);
-   setColor(0.0, 1.0, 0.0, 1);
-   setColor(0.0, 0.0, 1.0, 2);
-
-   calcular_normales();
 }
 
+void Cubo::calcular_texturas(){
+    ct.push_back({0.0,0.0});
+    ct.push_back({0.0,1.0});
+    ct.push_back({1.0,1.0});
+    ct.push_back({1.0,0.0});
+    // ct.push_back({1.0,1.0});
+    // ct.push_back({1.0,0.0});
+    // ct.push_back({0.0,0.0});
+    // ct.push_back({0.0,1.0});
+}

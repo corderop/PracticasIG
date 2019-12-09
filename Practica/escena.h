@@ -14,6 +14,7 @@
 #include "luzdireccional.h"
 #include "luzposicional.h"
 #include "persona.h"
+#include "textura.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, SELAUTO, SELMANUAL} menu;
 class Escena
@@ -79,6 +80,7 @@ class Escena
    int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
    bool modoV[5]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion
    bool tapas = false; // Indica si hay que cambiar de estado las tapas
+   bool texturas = false; // Mostrar o no texturas
    int luzS, angulo; // Número de la luz seleccionada y angulo a modificar
    // Objeto: -1 nada, 0 cubo, 1 cilindro, esfera y cono, 2 escena
    // Modo visualizacion: 0 solido, 1 puntos, 2 lineas, 3 todos, 4 ajedrez

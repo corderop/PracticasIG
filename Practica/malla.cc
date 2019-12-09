@@ -64,12 +64,15 @@ void Malla3D::draw_ModoInmediato(int modo)
 {
 
   // Activamos el uso de un array de vértices
-  glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3, GL_FLOAT, 0, v.data());
-  glEnableClientState(GL_COLOR_ARRAY);
   glColorPointer(3, GL_FLOAT, 0, c[modo].data());
-  glEnableClientState( GL_NORMAL_ARRAY );
   glNormalPointer( GL_FLOAT, 0, nv.data() );
+  glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_COLOR_ARRAY);
+  glEnableClientState( GL_NORMAL_ARRAY );
+  glEnableClientState( GL_TEXTURE_COORD_ARRAY);
 
   // Dibujamos los elementos
   glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
@@ -78,6 +81,7 @@ void Malla3D::draw_ModoInmediato(int modo)
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_COLOR_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
+  glDisableClientState( GL_TEXTURE_COORD_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
@@ -195,6 +199,16 @@ void Malla3D::draw(int modoD, int modoV, bool ajedrez)
       m->aplicar();
    if(nv.empty())
       calcular_normales();
+   if(t != nullptr){
+      if(!ct.empty())
+         t->activar();
+      else{
+         calcular_texturas();
+         t->activar();
+      }
+      
+   }
+   
    // Activamos aquí el color para que funcione para ambos modos   
    if(modoD == 1){
       if(ajedrez)
@@ -239,6 +253,10 @@ void Malla3D::calcular_normales_caras(){
 
       nc.push_back(n);
    }
+}
+
+void Malla3D::setTexturas(Textura tex){
+   t = new Textura(tex);
 }
 
 void Malla3D::setMaterial(Material mat){

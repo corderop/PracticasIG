@@ -13,6 +13,7 @@
 #include "aux.h"
 #include "ply_reader.h"
 #include "material.h"
+#include "textura.h"
 
 // *****************************************************************************
 //
@@ -53,11 +54,15 @@ class Malla3D
 
    void setMaterial(Material mat);
 
+   void setTexturas(Textura tex);
+
    protected:
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
    void calcular_normales_caras();
+
+   virtual void calcular_texturas(){}
 
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ;   // una terna de 3 enteros por cada cara o triángulo
@@ -66,6 +71,10 @@ class Malla3D
    std::vector<Tupla3f> c_a;
    std::vector<Tupla3f> nc;   // Vector de normales de las caras
    std::vector<Tupla3f> nv;   // Vector de normales de los vértices
+   // Texturas
+   std::vector<Tupla2f> ct;
+   Textura *t = nullptr;
+   // Material
    Material *m = nullptr;
 
    GLuint id_ind, id_ver, id_col[3], id_nor;

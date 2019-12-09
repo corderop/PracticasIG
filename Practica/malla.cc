@@ -67,13 +67,14 @@ void Malla3D::draw_ModoInmediato(int modo)
   glVertexPointer(3, GL_FLOAT, 0, v.data());
   glColorPointer(3, GL_FLOAT, 0, c[modo].data());
   glNormalPointer( GL_FLOAT, 0, nv.data() );
-  glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_COLOR_ARRAY);
   glEnableClientState( GL_NORMAL_ARRAY );
-  glEnableClientState( GL_TEXTURE_COORD_ARRAY);
-
+  if(!ct.empty()){
+      glEnableClientState( GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
+  }
   // Dibujamos los elementos
   glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
 
@@ -206,7 +207,6 @@ void Malla3D::draw(int modoD, int modoV, bool ajedrez)
          calcular_texturas();
          t->activar();
       }
-      
    }
    
    // Activamos aquí el color para que funcione para ambos modos   

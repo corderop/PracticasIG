@@ -47,7 +47,7 @@ Escena::Escena()
     modoV[4] = false;
 
     // Creamos una textura
-    Textura tex("texturas/wall2.jpg");
+    Textura tex("texturas/wall3.jpg");
 
     // Material de prueba
     Tupla4f col4(0.61424, 0.04136, 0.04136, 1.0);

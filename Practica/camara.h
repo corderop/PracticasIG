@@ -9,19 +9,21 @@ class Camara
         Tupla3f eye,
                 at,
                 up;
-        int tipo; // Ortogonal o Perspectiva
-        float left, right, near, far;
+        int tipo; // 0 - Ortográfica, 1 - Perspectiva
+        float fov, aspect, near, far;
+
+        void rotar(float g, char eje, int vector);
+        Tupla3f matrizRotacion();
 
     public:
 
-        Camara();
+        Camara(int tipo, Tupla3f ojo, Tupla3f arriba, Tupla3f punto);
 
         // Rotar la cámara
         void rotarXExaminar(float angle);
         void rotarYExaminar(float angle);
         void rotarZExaminar(float angle);
         void rotarXFirstPerson(float angle);
-        void rotarYFirstPerson(float angle);
         void rotarYFirstPerson(float angle);
 
         // Mover la cámara
@@ -30,7 +32,11 @@ class Camara
         // Hacer zoom
         void zoom(float factor);
 
+        // Seleccionar el observador
+        void setObserver();
 
+        // Seleccionar la proyección
+        void setProyeccion();
 } ;
 
 #endif

@@ -132,6 +132,10 @@ Escena::Escena()
     Tupla4f colL(1.0, 1.0, 1.0, 1.0);
     luz[0] = new LuzPosicional(pos, GL_LIGHT0, colL, colL, colL);
     luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, colL, colL, colL);
+
+    // Camaras
+    camaras[0] = new Camara(1, {0,0,+600}, {0,1,0}, {0,0,0});
+    camS = 0;
 }
 
 //**************************************************************************
@@ -188,6 +192,7 @@ void Escena::dibujar()
    glEnable(GL_NORMALIZE);
    glDisable(GL_LIGHTING);
    glShadeModel(GL_FLAT);
+   glDisable( GL_TEXTURE_2D );
    glPointSize(5.0);
 
    change_observer();
@@ -263,7 +268,7 @@ void Escena::opcionesInteraccion(){
    std::cout<<"    1 - Modo inmediato"<<std::endl;
    std::cout<<"    2 - Modo diferido"<<std::endl;
    std::cout<<"O - Seleccionar modo objeto"<<std::endl;
-   std::cout<<"    C - Cubo y tetraedro"<<std::endl;
+   std::cout<<"    H - Cubo y tetraedro"<<std::endl;
    std::cout<<"    M - Cilindro, esfera y cono"<<std::endl;
    std::cout<<"    X - Modelo jerárquico"<<std::endl;
    std::cout<<"V - Seleccionar modo visualización"<<std::endl;
@@ -289,6 +294,8 @@ void Escena::opcionesInteraccion(){
    std::cout<<"    < - Reducir velocidad manual"<<std::endl;
    std::cout<<"    + - Aumenta el grado de libertad"<<std::endl;
    std::cout<<"    - - Disminuye el grado de libertad"<<std::endl;
+   std::cout<<"C - Activar selección de camaras"<<std::endl;
+   std::cout<<"    0...7 - Seleccionar el grado de libertad"<<std::endl;
    std::cout<<"F - Activar/desactivar tapas"<<std::endl;
    std::cout<<"T - Activar/desactivar texturas"<<std::endl;
    std::cout<<std::endl<<"----------------------------------"<<std::endl;
@@ -309,6 +316,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    bool salir=false;
    switch( toupper(tecla) )
    {
+      // Provisional
+      case 'Z':
+         camaras[camS]->zoom(20);
+      break;
       // -------------
       // SELECCIÓN DE MODO
       // -------------
@@ -377,6 +388,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout<<"Ángulo alpha seleccionado"<<endl;
          }
       break ;
+      case 'C':
+         if(modoMenu == NADA){
+            modoMenu = SELCAMARAS;
+            cout<<"Modo selección de cámara activado"<<endl;
+         }
+      break;
       // Sel. modo animación manual
       // Mostrar cilindro, esfera y cono
       case 'M' :
@@ -410,7 +427,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       // -------------
       // Selección de objeto
       // Cubo y tetraedro
-      case 'C' :
+      case 'H' :
          if(modoMenu == SELOBJETO){
             objeto = 0;
             cout<<"Mostrando cubo y tetraedro"<<endl;
@@ -667,16 +684,20 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         Observer_angle_y-- ;
+         // Observer_angle_y-- ;
+         camaras[camS]->rotarXFirstPerson(+1);
          break;
 	   case GLUT_KEY_RIGHT:
-         Observer_angle_y++ ;
+         // Observer_angle_y++ ;
+         camaras[camS]->rotarXFirstPerson(-1);
          break;
 	   case GLUT_KEY_UP:
-         Observer_angle_x-- ;
+         // Observer_angle_x-- ;
+         camaras[camS]->rotarYFirstPerson(+1);
          break;
 	   case GLUT_KEY_DOWN:
-         Observer_angle_x++ ;
+         // Observer_angle_x++ ;
+         camaras[camS]->rotarYFirstPerson(-1);
          break;
 	   case GLUT_KEY_PAGE_UP:
          Observer_distance *=1.2 ;
@@ -700,8 +721,9 @@ void Escena::change_projection( const float ratio_xy )
 {
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
-   const float wx = float(Height)*ratio_xy ;
-   glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
+   // const float wx = float(Height)*ratio_xy ;
+   // glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
+   camaras[camS]->setProyeccion();
 }
 //**************************************************************************
 // Funcion que se invoca cuando cambia el tamaño de la ventana
@@ -724,7 +746,8 @@ void Escena::change_observer()
    // posicion del observador
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   glTranslatef( 0.0, 0.0, -Observer_distance );
-   glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
-   glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+   // glTranslatef( 0.0, 0.0, -Observer_distance );
+   // glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
+   // glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+   camaras[camS]->setObserver();
 }

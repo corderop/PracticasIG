@@ -15,8 +15,9 @@
 #include "luzposicional.h"
 #include "persona.h"
 #include "textura.h"
+#include "camara.h"
 
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, SELAUTO, SELMANUAL} menu;
+typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, SELAUTO, SELMANUAL, SELCAMARAS} menu;
 class Escena
 {
 
@@ -76,6 +77,10 @@ class Escena
    // Luces
    Luz* luz[8];
    bool luzActiva[8];
+
+   // Camaras
+   Camara* camaras[8];
+   int camS;
 
    int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
    bool modoV[5]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion

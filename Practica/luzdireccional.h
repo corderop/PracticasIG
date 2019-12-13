@@ -14,8 +14,8 @@ class LuzDireccional : public Luz
    
      LuzDireccional( Tupla2f direccion, GLenum idLuzOpenGL, Tupla4f colorAmbiente, Tupla4f colorEspecular, Tupla4f colorDifuso);
 
-     void variarAnguloAlpha(float incremento) override;
-     void variarAnguloBeta(float incremento) override;
+     void variarAnguloAlpha(float incremento);
+     void variarAnguloBeta(float incremento);
      void calcularDireccion();
      void animacionAutomatica();
 } ;

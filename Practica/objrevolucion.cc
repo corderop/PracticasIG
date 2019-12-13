@@ -11,31 +11,38 @@
 // *****************************************************************************
 // objeto de revolución obtenido a partir de un perfil (en un PLY)
 
-ObjRevolucion::ObjRevolucion() {
+// ***********************************
+// Func. auxiliares para constructores
+// ***********************************
 
-   _tapa_inf = _tapa_sup = true;
-   q_tapa_inf = q_tapa_sup = true;
+void ObjRevolucion::const_tapas(bool inf, bool sup){
+   _tapa_inf = q_tapa_inf = inf;
+   _tapa_sup = q_tapa_sup = sup;
 
    id_tapas[0] = id_tapas[1] = 0;
+}
 
+void ObjRevolucion::const_malla(int n, std::vector<Tupla3f> archivo){
+   N = n;
+   M = archivo.size();
+   
+   if(archivo[0][1] < archivo[M-1][1])
+      darVuelta(archivo);
+
+   crearMalla(archivo, N, 'y');
+}
+
+
+ObjRevolucion::ObjRevolucion() {
+   const_tapas(true, true);
 }
 
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
+   const_tapas(tapa_inf, tapa_sup);
+
    std::vector<Tupla3f> perfil;
-
-   q_tapa_inf = _tapa_inf = tapa_inf;
-   q_tapa_sup = _tapa_sup = tapa_sup;
-
-   N = num_instancias;
-
    ply::read_vertices(archivo ,perfil);
-   M = perfil.size();
-
-   if(perfil[0][1] < perfil[perfil.size()-1][1])
-      darVuelta(perfil);
-
-   crearMalla(perfil, N, 'y');
-   crearAjedrez();
+   const_malla(num_instancias, perfil);
 }
 
 // *****************************************************************************
@@ -43,17 +50,8 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
 
  
 ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
-    
-   q_tapa_inf = _tapa_inf = tapa_inf;
-   q_tapa_sup = _tapa_sup = tapa_sup;
-
-   N = num_instancias;
-   M = archivo.size();
-   
-   if(archivo[0][1] < archivo[M-1][1])
-      darVuelta(archivo);
-
-   crearMalla(archivo, N, 'y');
+   const_tapas(tapa_inf, tapa_sup);
+   const_malla(num_instancias, archivo);
 }
 
 void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, char eje) {

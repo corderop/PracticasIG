@@ -18,6 +18,7 @@ class Luz{
 
      virtual void variarAnguloAlpha(float incremento){};
      virtual void variarAnguloBeta(float incremento){};
+     virtual void variarPosicion(float x, float y, float z){};
 };
 
 #endif

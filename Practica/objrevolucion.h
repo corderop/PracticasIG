@@ -54,7 +54,11 @@ protected:
 
 private:
     void detectarTapas(std::vector<Tupla3f> & perfil_original, char eje, std::vector<Tupla3f> & tapas);
-    void anadirTapas(std::vector<Tupla3f> & tapas, char eje);    
+    void anadirTapas(std::vector<Tupla3f> & tapas, char eje);   
+
+    // Funciones auxiliares de contructores
+    void const_tapas(bool inf, bool sup);
+    void const_malla(int n, std::vector<Tupla3f> archivo);
 } ;
 
 #endif

@@ -1,13 +1,15 @@
 #include "camara.h"
 
-Camara::Camara(int tipo, Tupla3f ojo, Tupla3f arriba,  Tupla3f punto){
-    tipo = tipo;
+Camara::Camara(int tp, Tupla3f ojo, Tupla3f arriba,  Tupla3f punto, float alto, float ancho){
+    tipo = tp;
     eye = ojo;
     up = arriba.normalized();
-    aspect = 1/1; // Cuadrado
-    fov = 45;
+    aspect = ancho/alto;
+    left = alto/2;
+    top = ancho/2;
     near = 50;
     far  = 2000;
+    fov = atan(alto/near)*(180/PI);
     at = punto;
 }
 
@@ -43,7 +45,12 @@ void Camara::setObserver(){
 }
 
 void Camara::setProyeccion(){
-    gluPerspective(fov, aspect, near, far);
+    if(this->tipo == 1){
+        gluPerspective(fov, aspect, near, far);
+    }
+    else if(this->tipo == 0){
+        glOrtho(-left, left, -top, top, near, far);
+    }
 }
 
 // **************************************
@@ -52,56 +59,104 @@ void Camara::setProyeccion(){
 
 // Rotación en primera persona de X
 void Camara::rotarXFirstPerson(float angle){
-    rotar(angle, 'y', 0);
-    rotar(angle, 'y', 1);
+    rotar(angle, 'x');
+    // Tupla3f Vv, Vat;
+
+    // Vv    = {at(0)-eye(0), at(1)-eye(1), at(2)-eye(2)};
+    // Vv    = Vv.normalized();
+
+    // angle *= (PI/180);
+
+    // Vat(2) = Vv(2)*cos(angle) - Vv(0)*sin(angle);
+    // Vat(0) = Vv(2)*sin(angle) + Vv(0)*cos(angle);
+    // Vat(1) = Vv(1);
+
+    // at(0) = Vat(0)+eye(0);
+    // at(1) = Vat(1)+eye(1);
+    // at(2) = Vat(2)+eye(2);
 }
 
 // Rotación en primera persona de Y
 void Camara::rotarYFirstPerson(float angle){
-    rotar(angle, 'x', 0);
-    rotar(angle, 'x', 1);
+
+    rotar(angle, 'y');
+    // Tupla3f Vv, Vat, Vup;
+
+    // Vv    = {at(0)-eye(0), at(1)-eye(1), at(2)-eye(2)};
+    // Vv    = Vv.normalized();
+
+    // angle *= (PI/180);
+
+    // Vat(1) = Vv(1)*cos(angle) - Vv(2)*sin(angle);
+    // Vat(2) = Vv(1)*sin(angle) + Vv(2)*cos(angle);
+    // Vat(0) = Vv(0);
+
+    // Vup(1) = up(1)*cos(angle) - up(2)*sin(angle);
+    // Vup(2) = up(1)*sin(angle) + up(2)*cos(angle);
+    // Vup(0) = up(0);
+
+    // at(0) = Vat(0)+eye(0);
+    // at(1) = Vat(1)+eye(1);
+    // at(2) = Vat(2)+eye(2);
+
+    // up = Vup;
 }
 
 // Mediante matriz de rotación
-void Camara::rotar(float g, char eje, int vector){
-    // Vector de visión. Representa la dirección de la visión
-    Tupla3f v;
-    if(vector == 0){
-        v = {at(0)-eye(0), at(1)-eye(1), at(2)-eye(2)};
-        v = v.normalized();
-    }
-    else
-        v = up;    
-    
-    Tupla3f salida;
+void Camara::rotar(float g, char eje){
+    // Vectores para la transformación
+    Tupla3f Vv, Vx, Vy, Vat, Vup;
+
+    // Calculamos el vector de dirección hacia donde estamos mirando
+    Vv    = {at(0)-eye(0), at(1)-eye(1), at(2)-eye(2)};
+    Vv    = Vv.normalized();
+    std::cout<<Vv<<std::endl;
+
+    // Calculamos el vector que hará de eje X
+    Vx(0) = Vv(0)*cos(90*(PI/180))    + Vv(2)*sin(90*(PI/180));
+    Vx(1) = Vv(1)*1;
+    Vx(2) = Vv(0)*(-sin(90*(PI/180))) + Vv(2)*cos(90*(PI/180));
+    // Vx(2) = 0;
+    Vx    = Vx.normalized();
+
+    // Calculamos el vector que hará de eje Y
+    Vy(0) = Vv(0)*1;
+    Vy(1) = Vv(1)*cos(90*(PI/180)) + Vv(2)*(-sin(90*(PI/180)));
+    Vy(2) = Vv(1)*sin(90*(PI/180)) + Vv(2)*cos(90*(PI/180));
+    // Vy(2) = 0;
+    Vy    = Vy.normalized();
+
+    std::cout<<Vx<<" "<<Vy<<std::endl;
+
     g *= (PI/180); // Pasamos a radianes los grados
 
-    // Rotamos el vector de dirección mediante las 
-    // matrices de rotación
-    switch (eje){
-
-        case 'x':
-            salida(0) =   v(0)*1;
-            salida(1) =   v(1)*cos(g) + v(2)*(-sin(g));
-            salida(2) =   v(1)*sin(g) + v(2)*cos(g);
-        break;
-
-        case 'y':
-            salida(0) =   v(0)*cos(g)    + v(2)*sin(g);
-            salida(1) =   v(1)*1;
-            salida(2) =   v(0)*(-sin(g)) + v(2)*cos(g);
-        break;
-
+    // Calculamos la matriz
+    if(eje == 'x'){
+        Vat = matrizRotacion(Vy, Vv, g);
+        Vup = matrizRotacion(Vy, up, g);
+    }
+    else if(eje == 'y'){
+        Vat = matrizRotacion(Vx, Vv, g);
+        Vup = matrizRotacion(Vx, up, g);
     }
 
     // Lo convertimos en el punto hacia el que mirar
-    // o en el vector up en el segundo caso
-    if(vector==0){
-        at(0) = salida(0)+eye(0);
-        at(1) = salida(1)+eye(1);
-        at(2) = salida(2)+eye(2);
-    }
-    else
-        up = salida;
+    at(0) = Vat(0)+eye(0);
+    at(1) = Vat(1)+eye(1);
+    at(2) = Vat(2)+eye(2);
+    std::cout<<Vat<<std::endl;
+
+    // Actualizamos el vector up
+    up = Vup;
     
+}
+
+Tupla3f Camara::matrizRotacion(Tupla3f eje, Tupla3f v, float g){
+    Tupla3f salida;
+
+    salida(0) = ( cos(g) + eje(0)*eje(0)*(1-cos(g)) )*v(0)        + ( eje(0)*eje(1)*(1-cos(g)) - eje(2)*sin(g) )*v(1) + ( eje(0)*eje(2)*(1-cos(g)) + eje(1)*sin(g) )*v(2);
+    salida(1) = ( eje(1)*eje(0)*(1-cos(g)) + eje(2)*sin(g) )*v(0) + ( cos(g) + eje(1)*eje(1)*(1-cos(g)) )*v(1)        + ( eje(1)*eje(2)*(1-cos(g)) - eje(0)*sin(g) )*v(2);
+    salida(2) = ( eje(2)*eje(0)*(1-cos(g)) - eje(1)*sin(g) )*v(0) + ( eje(2)*eje(1)*(1-cos(g)) + eje(0)*sin(g) )*v(1) + ( cos(g) + eje(2)*eje(2)*(1-cos(g)) )*v(2);
+
+    return salida;
 }

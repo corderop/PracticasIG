@@ -77,9 +77,7 @@ class Malla3D
    // Material
    Material *m = nullptr;
 
-   GLuint id_ind, id_ver, id_col[3], id_nor;
-
-   // completar: tabla de colores, tabla de normales de vértices
+   GLuint id_ind, id_ver, id_col[3], id_nor, id_tex;
 } ;
 
 

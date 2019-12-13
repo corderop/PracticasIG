@@ -1,10 +1,5 @@
 // #############################################################################
-//
-// Informática Gráfica (Grado Informática)
-//
-// Archivo: Cubo.h
-
-//
+// CLASE CUBO
 // #############################################################################
 
 #ifndef CUBO_H_INCLUDED
@@ -12,28 +7,17 @@
 
 #include "aux.h"
 
-// *****************************************************************************
-//
-// clases derivadas de Malla3D (definen constructores específicos)
-//
-// *****************************************************************************
-
-// *****************************************************************************
-// Cubo con centro en el origen y lado unidad por defecto
-// (tiene 9 vertices y 6 caras)
-
 class Cubo : public Malla3D
 {
-   private:
+    private:
 
-   void calcular_texturas() override;
+        // Calcular las coordenadas de texturas del cubo
+        void calcular_texturas() override;
 
-   public:
-   Cubo(float l=1) ;
+    public:
 
+        // Inicializa vértices y triángulos pero no colores
+        Cubo(float l=1);
 } ;
-
-
-
 
 #endif

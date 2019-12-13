@@ -4,14 +4,9 @@
 
 Cubo::Cubo(float lado)
 {
-
-   // inicializar la tabla de vértices
-
-   // inicializar la tabla de caras o triángulos:
-   // (es importante en cada cara ordenar los vértices en sentido contrario
-   //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
-
-   // Vertices
+    // Vertices
+    // 8 principales 0-7
+    // 4 duplicados para texturas 8-11
     Tupla3f v0(-lado/2,lado/2,lado/2),  v1(-lado/2,-lado/2,lado/2),  v2(lado/2,-lado/2,lado/2),  v3(lado/2,lado/2,lado/2),
             v4(-lado/2,lado/2,-lado/2), v5(-lado/2,-lado/2,-lado/2), v6(lado/2,-lado/2,-lado/2), v7(lado/2,lado/2,-lado/2);
    
@@ -28,7 +23,9 @@ Cubo::Cubo(float lado)
    v.push_back(v5); // 10
    v.push_back(v6); // 11
 
-   //Triangulos
+   // Triangulos
+   // 12 principales
+   // 4 duplicados para texturas (cara superior e inferior)
    Tupla3i  f0(0,1,3), f1(1,2,3),   // Cara de frente
             f2(1,5,2), f3(5,6,2),   // Cara de abajo
             f4(4,0,7), f5(0,3,7),   // Cara de arriba

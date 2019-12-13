@@ -22,12 +22,7 @@ void Brazo::draw(int modoD, bool modoV[]){
 }
 
 void Brazo::cambiarGradoBrazo(int grado){
-    if(gradoBrazo+grado<=90 && gradoBrazo+grado>=-90)
-        gradoBrazo += grado;
-    else if(gradoBrazo+grado>90)
-        gradoBrazo = 90;
-    else
-        gradoBrazo = -90;
+    gradoBrazo += grado;
 }
 
 void Brazo::animacionAndar(float velocidad){

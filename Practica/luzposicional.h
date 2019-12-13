@@ -10,6 +10,8 @@ class LuzPosicional : public Luz
    
     LuzPosicional( Tupla3f posicion, GLenum idLuzOpenGL, Tupla4f colorAmbiente, Tupla4f colorEspecular, Tupla4f colorDifuso);
 
+    void variarPosicion(float x, float y, float z);
+
 } ;
 
 #endif

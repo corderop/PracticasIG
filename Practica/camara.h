@@ -9,15 +9,16 @@ class Camara
         Tupla3f eye,
                 at,
                 up;
+        float left, top;
         int tipo; // 0 - Ortográfica, 1 - Perspectiva
         float fov, aspect, near, far;
 
-        void rotar(float g, char eje, int vector);
-        Tupla3f matrizRotacion();
+        void rotar(float g, char eje);
+        Tupla3f matrizRotacion(Tupla3f eje, Tupla3f v, float g);
 
     public:
 
-        Camara(int tipo, Tupla3f ojo, Tupla3f arriba, Tupla3f punto);
+        Camara(int tp, Tupla3f ojo, Tupla3f arriba, Tupla3f punto, float alto, float ancho);
 
         // Rotar la cámara
         void rotarXExaminar(float angle);

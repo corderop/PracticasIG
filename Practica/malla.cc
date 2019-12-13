@@ -111,6 +111,9 @@ void Malla3D::draw_ModoDiferido(int modo)
 
    if(id_nor == 0)
       id_nor = CrearVBO(GL_ARRAY_BUFFER, nv.size()*sizeof(float)*3, nv.data());
+   
+   if(id_tex == 0)
+      id_tex = CrearVBO(GL_ARRAY_BUFFER, ct.size()*sizeof(float)*2, ct.data());
 
    // especificar localización y formato de la tabla de vértices, habilitar tabla
    glBindBuffer( GL_ARRAY_BUFFER, id_ver );  // activar VBO de vértices
@@ -129,6 +132,13 @@ void Malla3D::draw_ModoDiferido(int modo)
    glEnableClientState(GL_COLOR_ARRAY);
    glEnableClientState(GL_NORMAL_ARRAY);
 
+   if(!ct.empty()){
+      glEnableClientState( GL_TEXTURE_COORD_ARRAY);
+      glBindBuffer( GL_ARRAY_BUFFER, id_tex);
+      glTexCoordPointer(2, GL_FLOAT, 0, 0);
+      glBindBuffer( GL_ARRAY_BUFFER, 0 ); 
+  }
+
    // visualizar triángulos con glDrawElements (puntero a tabla == 0)
    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id_ind); // activar VBO de triángulos
    glDrawElements( GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, 0 ) ;
@@ -137,6 +147,7 @@ void Malla3D::draw_ModoDiferido(int modo)
    glDisableClientState( GL_VERTEX_ARRAY );
    glDisableClientState( GL_COLOR_ARRAY );
    glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState( GL_TEXTURE_COORD_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,
@@ -173,24 +184,24 @@ void Malla3D::draw_ModoAjedrez(){
 }
 
 void Malla3D::draw(int modoD, bool modoV[]){
-   bool ajedrez = modoV[3];
-
    // Activación modo puntos
    if(modoV[0]){
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-      draw(modoD, 1, ajedrez);
+      draw(modoD, 1, modoV[3]);
    }
 
    // Activación modo líneas
    if(modoV[1]){
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      draw(modoD, 2, ajedrez);
+      draw(modoD, 2, modoV[3]);
    }
 
    // Activación modo sólido
    if(modoV[3] || modoV[2] || modoV[4] ){
+      if(t != nullptr && modoV[5]) glEnable( GL_TEXTURE_2D );
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      draw(modoD, 0, ajedrez);
+      draw(modoD, 0, modoV[3]);
+      glDisable( GL_TEXTURE_2D );
    }
 }
 

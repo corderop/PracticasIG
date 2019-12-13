@@ -17,7 +17,7 @@ Escena::Escena()
 
     ejes.changeAxisSize( 5000 );
 
-    objeto = -1;  // Ninguno seleccionado
+    objeto = 0;  // Ninguno seleccionado
     modoD = 1;    // Modo inmediato por defecto
     luzS = 0;
     angulo = -1;
@@ -45,6 +45,7 @@ Escena::Escena()
     modoV[2] = true;    // Modo solido por defecto
     modoV[3] = false;
     modoV[4] = false;
+    modoV[5] = false;
 
     // Creamos una textura
     Textura tex("texturas/wall.jpg");
@@ -71,7 +72,7 @@ Escena::Escena()
     Material skin(col10, col11, col12, 11.264);
 
     // Cubo y tetraedro
-    cubo = new Cubo(75);
+    cubo = new Cubo(40);
     cubo->setColor(1.0, 0.0, 0.0, 0);
     cubo->setColor(0.0, 1.0, 0.0, 1);
     cubo->setColor(0.0, 0.0, 1.0, 2);
@@ -85,36 +86,36 @@ Escena::Escena()
     tetraedro->setMaterial(esmeralda);
     
     // Cilindro, cono y esfera
-    cilindro = new Cilindro(40,80,30);
+    cilindro = new Cilindro(40,40,20);
     cilindro->setColor(1.0, 0.0, 0.0, 0);
     cilindro->setColor(0.0, 1.0, 0.0, 1);
     cilindro->setColor(0.0, 0.0, 0.0, 2);
     cilindro->setMaterial(esmeralda);
 
-    cono = new Cono(40, 80, 30);
+    cono = new Cono(40, 40, 20);
     cono->setColor(1.0, 0.0, 0.0, 0);
     cono->setColor(0.0, 1.0, 0.0, 1);
     cono->setColor(0.0, 0.0, 0.0, 2);
     cono->setMaterial(ruby);
 
-    esfera = new Esfera(40, 40, 30);
-    esfera->setColor(1.0, 0.0, 0.0, 0);
-    esfera->setColor(0.0, 1.0, 0.0, 1);
-    esfera->setColor(0.0, 0.0, 0.0, 2);
+    esfera = new Esfera(40, 40, 20);
+    esfera->setColor(0.0, 0.0, 0.0, 0);
+    esfera->setColor(1.0, 0.0, 0.0, 1);
+    esfera->setColor(0.0, 1.0, 0.0, 2);
     esfera->setMaterial(gold);
 
     // P3
     peon1 = new ObjRevolucion("plys/peon.ply", 40, true, true);
-    peon1->setColor(1.0, 1.0, 1.0, 0);
+    peon1->setColor(1.0, 0.0, 1.0, 0);
     peon1->setColor(0.0, 1.0, 0.0, 1);
     peon1->setColor(0.0, 0.0, 1.0, 2);
     peon1->setMaterial(esmeralda);
 
-    peon2 = new ObjRevolucion("plys/peon.ply", 40, true, true);
-    peon2->setColor(1.0, 1.0, 1.0, 0);
-    peon2->setColor(0.0, 1.0, 0.0, 1);
-    peon2->setColor(0.0, 0.0, 1.0, 2);
-    peon2->setMaterial(ruby);
+    ply = new ObjPLY("plys/ant.ply");
+    ply->setColor(0.0, 0.0, 1.0, 0);
+    ply->setColor(0.0, 1.0, 0.0, 1);
+    ply->setColor(0.0, 0.0, 1.0, 2);
+    ply->setMaterial(ruby);
 
     // P4
     persona = new Persona();
@@ -134,8 +135,11 @@ Escena::Escena()
     luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, colL, colL, colL);
 
     // Camaras
-    camaras[0] = new Camara(1, {0,0,+600}, {0,1,0}, {0,0,0});
-    camS = 0;
+    camaras[0] = new Camara(1, {0,0,600}, {0,1,0}, {0,0,0}, 300, 300);
+    camaras[1] = new Camara(1, {0,+600,0}, {0,0,1}, {0,0,0}, 500, 500);
+    camaras[2] = new Camara(1, {600,0,0}, {0,1,0}, {0,0,0}, 500, 500);
+    camaras[3] = new Camara(0, {600,600,+600}, {0,1,0}, {0,0,0}, 3000, 3000);
+    camS = 7;
 }
 
 //**************************************************************************
@@ -162,7 +166,6 @@ void Escena::changeTapas(){
    cono->cambiarTapas();
    esfera->cambiarTapas();
    peon1->cambiarTapas();
-   peon2->cambiarTapas();
    persona->cambiarTapas();
 }
 
@@ -192,8 +195,6 @@ void Escena::dibujar()
    glEnable(GL_NORMALIZE);
    glDisable(GL_LIGHTING);
    glShadeModel(GL_FLAT);
-   glDisable( GL_TEXTURE_2D );
-   glPointSize(5.0);
 
    change_observer();
    ejes.draw();
@@ -203,23 +204,52 @@ void Escena::dibujar()
       tapas=false;
    }
 
-   if(texturas) glEnable( GL_TEXTURE_2D );
-   else         glDisable( GL_TEXTURE_2D );
-
    if(modoV[4]){
       glShadeModel(GL_SMOOTH); // Si se comenta usa el modo FLAT
       activarLuces();
    }
 
    if(objeto == 0){
-      // glPushMatrix();
-      //    glTranslatef(+80.0,0.0,0.0);
-         cubo->draw(modoD, modoV);
-      // glPopMatrix();
-      // glPushMatrix();
-      //    glTranslatef(-80.0,0.0,0.0);
-      //    tetraedro->draw(modoD, modoV);
-      // glPopMatrix();
+      
+      // Cara de alante
+      glPushMatrix();
+         // Fila cono, cilindro, esfera
+         glPushMatrix();
+            glTranslatef(0.0,80.0,0.0);
+            glPushMatrix();
+               glTranslatef(-80.0, -20.0, 0.0);
+               cono->draw(modoD, modoV);
+            glPopMatrix();
+            glPushMatrix();
+               glTranslatef(80.0, -20.0, 0.0);
+               cilindro->draw(modoD, modoV);
+            glPopMatrix();
+            esfera->draw(modoD, modoV);
+         glPopMatrix();
+         
+         // Modelo en el medio
+         glPushMatrix();
+            glScalef(3,3,3);
+            persona->draw(modoD, modoV);
+         glPopMatrix();
+
+         glPushMatrix();
+            glTranslatef(0.0,-80.0,0.0);
+            glPushMatrix();
+               glTranslatef(-80.0, 0.0, 0.0);
+               glScalef(20.0,20.0,20.0);
+               peon1->draw(modoD, modoV);
+            glPopMatrix();
+            glPushMatrix();
+               glTranslatef(80.0,0.0,0.0);
+               glScalef(2.5,2.5,2.5);
+               ply->draw(modoD, modoV);
+            glPopMatrix();
+            cubo->draw(modoD, modoV);
+         glPopMatrix();
+
+      glPopMatrix();
+      
    }
    else if(objeto == 1){
       glPushMatrix();
@@ -255,7 +285,11 @@ void Escena::animarModeloManual(int numero, float suma){
 }
 
 void Escena::animarLuces(){
-   luz[luzS]->variarAnguloAlpha(velocidadAnimacionLuz);
+   if(luz[luzS]->esDireccional())
+      luz[luzS]->variarAnguloAlpha(velocidadAnimacionLuz);
+   else{
+      luz[luzS]->variarPosicion(velocidadAnimacionLuz, 0, 0);
+   }
 }
 
 /**
@@ -316,10 +350,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    bool salir=false;
    switch( toupper(tecla) )
    {
-      // Provisional
-      case 'Z':
-         camaras[camS]->zoom(20);
-      break;
       // -------------
       // SELECCIÓN DE MODO
       // -------------
@@ -380,6 +410,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                modoV[2] = false;
                modoV[3] = true;
                modoV[4] = false;
+               modoV[5] = false;
                cout<<"Modo ajedrez activado"<<endl;
             }
          }
@@ -416,9 +447,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
       case 'T':
          if(modoMenu == NADA){
-            texturas = !texturas;
+            modoV[5] = !modoV[5];
             cout<<"Texturas ";
-            cout<< ( (texturas) ? "activadas" : "desactivadas" ) <<endl;
+            cout<< ( (modoV[5]) ? "activadas" : "desactivadas" ) <<endl;
          }
       break;
 
@@ -450,11 +481,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                cout<<"Modo puntos desactivado"<<endl;
             }
             else if(modoV[4]){
-               if(luz[luzS]->esDireccional()){
-                  cout<<"Animación automática de la luz: ";
-                  animarAutomaticoLuces = !animarAutomaticoLuces;
-                  cout<< ( (animarAutomaticoLuces) ? "activada" : "desactivada" )<<endl;
-               }
+               cout<<"Animación automática de la luz: ";
+               animarAutomaticoLuces = !animarAutomaticoLuces;
+               cout<< ( (animarAutomaticoLuces) ? "activada" : "desactivada" )<<endl;
             }
             else{
                modoV[0] = true;
@@ -518,6 +547,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             manualActivado = 0;
             cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
          }
+         else if(modoMenu == SELCAMARAS){
+            camS = 0;
+            change_observer();
+            change_projection(1);
+         }
       break;
       case '1' :
          // Modo inmediato
@@ -534,6 +568,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELMANUAL){
             manualActivado = 1;
             cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+         else if(modoMenu == SELCAMARAS){
+            camS = 1;
+            change_observer();
+            change_projection(1);
          }
       break;
       case '2' :
@@ -552,6 +591,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             manualActivado = 2;
             cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
          }
+         else if(modoMenu == SELCAMARAS){
+            camS = 2;
+            change_observer();
+            change_projection(1);
+         }
       break;
       case '3' :
          if(modoMenu == SELVISUALIZACION && modoV[4]){
@@ -563,6 +607,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELMANUAL){
             manualActivado = 3;
             cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
+         else if(modoMenu == SELCAMARAS){
+            camS = 3;
+            change_observer();
+            change_projection(1);
          }
       break;
       case '4' :
@@ -576,6 +625,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             manualActivado = 4;
             cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
          }
+         else if(modoMenu == SELCAMARAS){
+            camS = 4;
+            change_observer();
+            change_projection(1);
+         }
       break;
       case '5' :
          if(modoMenu == SELVISUALIZACION && modoV[4]){
@@ -588,6 +642,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             manualActivado = 5;
             cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
          }
+         else if(modoMenu == SELCAMARAS){
+            camS = 5;
+            change_observer();
+            change_projection(1);
+         }
       break;
       case '6' :
          if(modoMenu == SELVISUALIZACION && modoV[4]){
@@ -596,6 +655,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             luzActiva[luzS] = !luzActiva[luzS];
             cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
          }
+         else if(modoMenu == SELCAMARAS){
+            camS = 6;
+            change_observer();
+            change_projection(1);
+         }
       break;
       case '7' :
          if(modoMenu == SELVISUALIZACION && modoV[4]){
@@ -603,6 +667,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout<<"Luz " << luzS << " seleccionada y ";
             luzActiva[luzS] = !luzActiva[luzS];
             cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
+         }
+         else if(modoMenu == SELCAMARAS){
+            camS = 7;
+            change_observer();
+            change_projection(1);
          }
       break;
 
@@ -627,7 +696,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if( modoMenu == SELMANUAL){
             cout<<"Velocidad manual aumentada"<<endl;
-            velocidadManual++;
+            velocidadManual[manualActivado]++;
          }
       break;
       // Decrementar angulo
@@ -643,7 +712,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if( modoMenu == SELMANUAL){
             cout<<"Velocidad manual reducida"<<endl;
-            velocidadManual--;
+            velocidadManual[manualActivado]--;
          }
       break;
 
@@ -654,7 +723,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                   velocidadAnimacion++;
          }
          else if(modoMenu == SELMANUAL){
-            animarModeloManual(manualActivado, velocidadManual);
+            animarModeloManual(manualActivado, velocidadManual[manualActivado]);
          }
          else if(modoMenu == SELVISUALIZACION && modoV[4] && animarAutomaticoLuces){
             velocidadAnimacionLuz++;
@@ -667,7 +736,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                   velocidadAnimacion--;
          }
          else if(modoMenu == SELMANUAL){
-            animarModeloManual(manualActivado, velocidadManual);
+            animarModeloManual(manualActivado, -velocidadManual[manualActivado]);
          }
          else if(modoMenu == SELVISUALIZACION && modoV[4] && animarAutomaticoLuces){
             velocidadAnimacionLuz--;
@@ -684,26 +753,28 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         // Observer_angle_y-- ;
-         camaras[camS]->rotarXFirstPerson(+1);
+         if(camS == 7) Observer_angle_y-- ;
+         else camaras[camS]->rotarXFirstPerson(-1);
          break;
 	   case GLUT_KEY_RIGHT:
-         // Observer_angle_y++ ;
-         camaras[camS]->rotarXFirstPerson(-1);
+         if(camS == 7) Observer_angle_y++ ;
+         else camaras[camS]->rotarXFirstPerson(+1);
          break;
 	   case GLUT_KEY_UP:
-         // Observer_angle_x-- ;
-         camaras[camS]->rotarYFirstPerson(+1);
+         if(camS == 7) Observer_angle_x-- ;
+         else camaras[camS]->rotarYFirstPerson(+1);
          break;
 	   case GLUT_KEY_DOWN:
-         // Observer_angle_x++ ;
-         camaras[camS]->rotarYFirstPerson(-1);
+         if(camS == 7) Observer_angle_x++ ;
+         else camaras[camS]->rotarYFirstPerson(-1);
          break;
 	   case GLUT_KEY_PAGE_UP:
-         Observer_distance *=1.2 ;
+         if(camS == 7) Observer_distance *=1.2 ;
+         else camaras[camS]->zoom(10);
          break;
 	   case GLUT_KEY_PAGE_DOWN:
-         Observer_distance /= 1.2 ;
+         if(camS == 7) Observer_distance /= 1.2 ;
+         else camaras[camS]->zoom(-10);
          break;
 	}
 
@@ -721,9 +792,10 @@ void Escena::change_projection( const float ratio_xy )
 {
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
-   // const float wx = float(Height)*ratio_xy ;
-   // glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
-   camaras[camS]->setProyeccion();
+   const float wx = float(Height)*ratio_xy ;
+   if(camS == 7)  glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
+   else if(camaras[camS]!=nullptr)  
+      camaras[camS]->setProyeccion();
 }
 //**************************************************************************
 // Funcion que se invoca cuando cambia el tamaño de la ventana
@@ -746,8 +818,11 @@ void Escena::change_observer()
    // posicion del observador
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   // glTranslatef( 0.0, 0.0, -Observer_distance );
-   // glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
-   // glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
-   camaras[camS]->setObserver();
+   if(camS == 7) {
+      glTranslatef( 0.0, 0.0, -Observer_distance );
+      glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
+      glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+   }
+   if(camaras[camS]!=nullptr)
+      camaras[camS]->setObserver();
 }

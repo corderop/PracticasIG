@@ -51,7 +51,7 @@ class Escena
         animarAutomaticoLuces = false;
    float velocidadAnimacion = 1,
          velocidadAnimacionLuz = 1,
-         velocidadManual = 1;
+         velocidadManual[5] = {1,1,1,1,1};
    int manualActivado = 0;
 
    menu modoMenu=NADA;
@@ -67,8 +67,8 @@ class Escena
    Esfera * esfera = nullptr;
 
    // 2
+   ObjPLY * ply = nullptr;
    ObjRevolucion * peon1 = nullptr;
-   ObjRevolucion * peon2 = nullptr;
 
    // 3
    Persona *persona = nullptr;
@@ -83,9 +83,8 @@ class Escena
    int camS;
 
    int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
-   bool modoV[5]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion
+   bool modoV[6]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion, 5 - texturas
    bool tapas = false; // Indica si hay que cambiar de estado las tapas
-   bool texturas = false; // Mostrar o no texturas
    int luzS, angulo; // Número de la luz seleccionada y angulo a modificar
    // Objeto: -1 nada, 0 cubo, 1 cilindro, esfera y cono, 2 escena
    // Modo visualizacion: 0 solido, 1 puntos, 2 lineas, 3 todos, 4 ajedrez

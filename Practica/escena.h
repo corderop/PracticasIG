@@ -14,6 +14,7 @@
 #include "luzdireccional.h"
 #include "luzposicional.h"
 #include "persona.h"
+#include "cuadro.h"
 #include "textura.h"
 #include "camara.h"
 
@@ -59,6 +60,7 @@ class Escena
    Ejes ejes;
    // 0
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
+   Cuadro * cuadro = nullptr;
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
    
    // 1

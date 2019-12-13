@@ -49,6 +49,7 @@ Escena::Escena()
 
     // Creamos una textura
     Textura tex("texturas/wall.jpg");
+    Textura tex2("texturas/text-madera.jpg");
 
     // Material de prueba
     Tupla4f col4(0.61424, 0.04136, 0.04136, 1.0);
@@ -78,6 +79,15 @@ Escena::Escena()
     cubo->setColor(0.0, 0.0, 1.0, 2);
     cubo->setMaterial(ruby);
     cubo->setTexturas(tex);
+    cubo->calcular_texturas();
+
+    cuadro = new Cuadro(40);
+    cuadro->setColor(1.0, 0.0, 0.0, 0);
+    cuadro->setColor(0.0, 1.0, 0.0, 1);
+    cuadro->setColor(0.0, 0.0, 1.0, 2);
+    cuadro->setMaterial(ruby);
+    cuadro->setTexturas(tex2);
+    cuadro->calcular_texturas();
 
     tetraedro = new Tetraedro();
     tetraedro->setColor(0.0, 0.0, 1.0, 0);
@@ -217,8 +227,8 @@ void Escena::dibujar()
          glPushMatrix();
             glTranslatef(0.0,80.0,0.0);
             glPushMatrix();
-               glTranslatef(-80.0, -20.0, 0.0);
-               cono->draw(modoD, modoV);
+               glTranslatef(-80.0, 0.0, 0.0);
+               cuadro->draw(modoD, modoV);
             glPopMatrix();
             glPushMatrix();
                glTranslatef(80.0, -20.0, 0.0);

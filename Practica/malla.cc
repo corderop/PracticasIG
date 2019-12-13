@@ -198,7 +198,10 @@ void Malla3D::draw(int modoD, bool modoV[]){
 
    // Activación modo sólido
    if(modoV[3] || modoV[2] || modoV[4] ){
-      if(t != nullptr && modoV[5]) glEnable( GL_TEXTURE_2D );
+      if(t != nullptr && modoV[5]){
+         glEnable( GL_TEXTURE_2D );
+         t->activar();
+      }
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       draw(modoD, 0, modoV[3]);
       glDisable( GL_TEXTURE_2D );
@@ -211,14 +214,6 @@ void Malla3D::draw(int modoD, int modoV, bool ajedrez)
       m->aplicar();
    if(nv.empty())
       calcular_normales();
-   if(t != nullptr){
-      if(!ct.empty())
-         t->activar();
-      else{
-         calcular_texturas();
-         t->activar();
-      }
-   }
    
    // Activamos aquí el color para que funcione para ambos modos   
    if(modoD == 1){

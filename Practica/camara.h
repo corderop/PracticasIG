@@ -13,7 +13,11 @@ class Camara
         int tipo; // 0 - Ortográfica, 1 - Perspectiva
         float fov, aspect, near, far;
 
-        void rotar(float g, char eje);
+        // Ejes sobre la camara y vector de dirección
+        Tupla3f Vv, Vx, Vy;
+
+        void rotarFPS(float g, char eje);
+        void rotarAlrededor(float g, char eje);
         Tupla3f matrizRotacion(Tupla3f eje, Tupla3f v, float g);
 
     public:
@@ -38,6 +42,8 @@ class Camara
 
         // Seleccionar la proyección
         void setProyeccion();
+
+        inline void setAt(Tupla3f punto){ at = punto; };
 } ;
 
 #endif

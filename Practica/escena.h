@@ -31,6 +31,9 @@ class Escena
     // Activar las luces de la escena
     void activarLuces();
 
+    void dibujarEscena();
+    void setColor();
+
  // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
        
        // variables que definen la posicion de la camara en coordenadas polares
@@ -92,6 +95,14 @@ class Escena
    // Modo visualizacion: 0 solido, 1 puntos, 2 lineas, 3 todos, 4 ajedrez
    // Modo dibujado: 1 Modo inmediato, 2 Modo diferido
    
+    // Interacción con el ratón
+    int pulsado = 0; // 0 - ninguno, 1 - raton der, 2 - raton izq
+    int x_actual;
+    int y_actual;
+    int x_sel = -1;
+    int y_sel = -1;
+    int obj_selec = 0;
+
    public:
 
     Escena();
@@ -109,5 +120,13 @@ class Escena
     void animarModeloAutomaticamente();
     void animarModeloManual(int numero, float suma);
     void animarLuces();
+
+    // Interacción con el ratón
+    void clickRaton( int boton, int estado, int x, int y);
+    void ratonMovido( int x, int y);
+
+    // Detección de objetos
+    void setPuntoRotacion(Malla3D *ptr);
+    void dibujaSeleccion();
 };
 #endif

@@ -202,6 +202,7 @@ void Malla3D::draw(int modoD, bool modoV[]){
          glEnable( GL_TEXTURE_2D );
          t->activar();
       }
+      
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       draw(modoD, 0, modoV[3]);
       glDisable( GL_TEXTURE_2D );
@@ -267,4 +268,8 @@ void Malla3D::setTexturas(Textura tex){
 
 void Malla3D::setMaterial(Material mat){
    m = new Material(mat);
+}
+
+void Malla3D::modificarCoordenadas(int x, int y, int z){
+   coord = {x,y,z};
 }

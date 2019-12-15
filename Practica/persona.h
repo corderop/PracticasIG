@@ -20,7 +20,7 @@ class Persona
       // Avance
       float avance;
       // Posición
-      float x,z;
+      Tupla3f c = {0,0,0};
 
    public:
       Persona();
@@ -52,6 +52,10 @@ class Persona
 
       // Cambio de tapas
       void cambiarTapas();
+
+      // Coordenadas del objeto
+      void modificarCoordenadas(int x, int y, int z);
+      inline Tupla3f getCoordenadas(){ return c; };
 } ;
 
 #endif

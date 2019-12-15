@@ -13,9 +13,29 @@
 // variable que contiene un puntero a la escena
 Escena *escena = nullptr ;
 
+// *********************************
+// Función idle para animar
+// *********************************
+
 void funcion_idle() {
    if (escena!=nullptr)
       escena->animarModeloAutomaticamente();
+   glutPostRedisplay();
+}
+
+// *********************************
+// Función ejecutada al hacer click
+// *********************************
+
+void clickRaton( int boton, int estado, int x, int y){
+   if(escena!=nullptr)
+      escena->clickRaton(boton, estado, x, y);
+   glutPostRedisplay();
+}
+
+void ratonMovido( int x, int y){
+   if(escena!=nullptr)
+      escena->ratonMovido(x, y);
    glutPostRedisplay();
 }
 
@@ -131,6 +151,10 @@ int main( int argc, char **argv )
    // SUSTITUIR EL NOMBRE DEL ALUMNO
    glutCreateWindow("Practicas IG: PABLO CORDERO ROMERO");
 
+   // Interacción con el ratón
+   glutMouseFunc( clickRaton );
+   glutMotionFunc( ratonMovido );
+
    // asignación de la funcion llamada "dibujar" al evento de dibujo
    glutDisplayFunc( draw_scene );
 
@@ -159,8 +183,6 @@ int main( int argc, char **argv )
 
    // funcion de inicialización de la escena (necesita que esté la ventana creada)
    escena->inicializar( UI_window_width, UI_window_height );
-
-
 
    // ejecutar del bucle de eventos
    glutMainLoop();

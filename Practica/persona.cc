@@ -9,16 +9,15 @@ Persona::Persona(){
 
     orientacion = 0;
     avance = 0;
-    x = z = 0;
     piernaDer->setRotando(false);
     piernaIzq->setRotando(true);
 }
 
 void Persona::draw(int modoD, bool modoV[]){
     glPushMatrix();
-        glTranslatef(x + avance*cos(orientacion*M_PI/180),0,z + (-avance*sin(orientacion*M_PI/180)));
-        x += avance*cos(orientacion*M_PI/180);
-        z += -avance*sin(orientacion*M_PI/180);
+        glTranslatef(c(0) + avance*cos(orientacion*M_PI/180),0,c(2) + (-avance*sin(orientacion*M_PI/180)));
+        c(0) += avance*cos(orientacion*M_PI/180);
+        c(2) += -avance*sin(orientacion*M_PI/180);
         avance = 0;
         glRotatef(orientacion, 0, 1, 0);
         glRotatef(90, 0, 1, 0);
@@ -139,4 +138,10 @@ void Persona::cambiarTapas(){
     piernaIzq->cambiarTapas();
     tronco->cambiarTapas();
     cabeza->cambiarTapas();
+}
+
+void Persona::modificarCoordenadas(int x_p, int y_p, int z_p){
+    c(0) = x_p;
+    c(1) = y_p;
+    c(2) = z_p;
 }

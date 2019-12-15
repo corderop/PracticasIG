@@ -56,6 +56,9 @@ class Malla3D
 
    void setTexturas(Textura tex);
 
+   void modificarCoordenadas(int x, int y, int z);
+   inline Tupla3f getCoordenadas(){ return coord; };
+
    protected:
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
@@ -74,8 +77,11 @@ class Malla3D
    // Texturas
    std::vector<Tupla2f> ct;
    Textura *t = nullptr;
+   bool text_active = false;
    // Material
    Material *m = nullptr;
+
+   Tupla3f coord = {0,0,0}; // Coordenadas absolutas del objeto, necesarias para rotar sobre el
 
    GLuint id_ind, id_ver, id_col[3], id_nor, id_tex;
 } ;

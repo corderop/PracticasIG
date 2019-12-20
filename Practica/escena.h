@@ -90,7 +90,7 @@ class Escena
         Camara* camaras[8];                 // Camaras
 
         // Objetos escena
-        Cubo *muro;
+        Cubo *muro1;
         Cuadro *suelo;
 
         // ***************

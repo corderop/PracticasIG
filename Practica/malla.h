@@ -56,7 +56,9 @@ class Malla3D
 
    void setTexturas(Textura tex);
 
-   void modificarCoordenadas(int x, int y, int z);
+   void setCoordenadasTexturas(std::vector<Tupla2f> tex);
+
+   void modificarCoordenadas(float x, float y, float z);
    inline Tupla3f getCoordenadas(){ return coord; };
 
    protected:

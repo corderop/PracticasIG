@@ -5,7 +5,7 @@
 Cuadro::Cuadro(float lado)
 {
     // Vertices
-    Tupla3f v0(-lado/2,lado/2,lado/2),  v1(-lado/2,-lado/2,lado/2),  v2(lado/2,-lado/2,lado/2),  v3(lado/2,lado/2,lado/2);
+    Tupla3f v0(-lado/2,lado/2,0.0),  v1(-lado/2,-lado/2,0.0),  v2(lado/2,-lado/2,0.0),  v3(lado/2,lado/2,0.0);
    
    v.push_back(v0);
    v.push_back(v1);
@@ -20,7 +20,7 @@ Cuadro::Cuadro(float lado)
 }
 
 void Cuadro::calcular_texturas(){
-    ct.resize(22);
+    ct.resize(4);
     ct[0] = {0,0};
     ct[1] = {0,1};
     ct[2] = {1,1};

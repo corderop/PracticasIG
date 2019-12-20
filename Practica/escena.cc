@@ -72,12 +72,34 @@ Escena::Escena()
     // Camaras
     camaras[0] = new Camara(1, {0,0,600}, {0,1,0}, {0,0,0}, 50, 50);
     camaras[1] = new Camara(0, {0,0,600}, {0,1,0}, {0,0,0}, 300, 300);
-    camaras[2] = new Camara(1, {600,0,0}, {0,1,0}, {0,0,0}, 500, 500);
-    camaras[3] = new Camara(1, {600,600,+600}, {0,1,0}, {0,0,0}, 3000, 3000);
+    camaras[2] = new Camara(1, {600,0,0}, {0,1,0}, {0,0,0}, 50, 50);
+    camaras[3] = new Camara(1, {600,600,+600}, {0,1,0}, {0,0,0}, 40, 40);
+
+    cuadro->modificarCoordenadas(-80,80,0);
+    cilindro->modificarCoordenadas(80,60,0);
+    esfera->modificarCoordenadas(0,80,0);
+    peon1->modificarCoordenadas(-80,-80,0);
+    ply->modificarCoordenadas(80,-80,0);
+    cubo->modificarCoordenadas(0,-80,0);
 
     // ESCENA
+    // Carretera
    	suelo = new Cuadro(40);
-	suelo->setColor(175/255, 175/255, 175/255, 0);
+	suelo->setColor(100.0/255, 100.0/255, 100.0/255, 0);
+    Textura tex3("texturas/road.jpg");
+    suelo->setTexturas(tex3);
+
+    std::vector<Tupla2f> aux;
+    aux.resize(4);
+    aux[0] = {0,0};
+    aux[1] = {2,0};
+    aux[2] = {2,1};
+    aux[3] = {0,1};
+
+    suelo->setCoordenadasTexturas(aux);
+
+    // Muros
+    muro1 = new Cubo(40);
 }
 
 void Escena::setColor(){
@@ -211,10 +233,10 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 
 	glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
 
-	Width  = UI_window_width;
-	Height = UI_window_height;
+	Width  = UI_window_width/10;
+	Height = UI_window_height/10;
 
-	// change_projection( float(UI_window_width)/float(UI_window_height) );
+	change_projection();
 	glViewport( 0, 0, UI_window_width, UI_window_height );
 }
 
@@ -271,15 +293,12 @@ void Escena::dibujarObjetos(){
             glTranslatef(0.0,80.0,0.0);
             glPushMatrix();
                glTranslatef(-80.0, 0.0, 0.0);
-               cuadro->modificarCoordenadas(-80,80,0);
                cuadro->draw(modoD, modoV);
             glPopMatrix();
             glPushMatrix();
-               glTranslatef(80.0, -20.0, 0.0);
-               cilindro->modificarCoordenadas(80,60,0);
+               glTranslatef(80.0, -20.0, 0.0);        
                cilindro->draw(modoD, modoV);
-            glPopMatrix();
-            esfera->modificarCoordenadas(0,80,0);
+            glPopMatrix(); 
             esfera->draw(modoD, modoV);
          glPopMatrix();
          
@@ -294,22 +313,21 @@ void Escena::dibujarObjetos(){
             glPushMatrix();
                glTranslatef(-80.0, 0.0, 0.0);
                glScalef(20.0,20.0,20.0);
-               peon1->modificarCoordenadas(-80,-80,0);
                peon1->draw(modoD, modoV);
             glPopMatrix();
             glPushMatrix();
                glTranslatef(80.0,0.0,0.0);
                glScalef(2.5,2.5,2.5);
-               ply->modificarCoordenadas(80,-80,0);
                ply->draw(modoD, modoV);
             glPopMatrix();
-            cubo->modificarCoordenadas(0,-80,0);
             cubo->draw(modoD, modoV);
          glPopMatrix();
       glPopMatrix();
 	}
 	else if(objeto == 2){
 		glPushMatrix();
+            glScalef(10.0,1.0,30.0);
+            glRotatef(-90, 1.0, 0.0, 0.0);
 			suelo->draw(modoD, modoV);
 		glPopMatrix();
 	}
@@ -350,7 +368,7 @@ void Escena::dibujaSeleccion(){
 	modoD = modoD_c;
 	modoV[0] = modoV_c[0];
 	modoV[1] = modoV_c[1];
-	modoV[2] = modoV_c[2];    // Modo solido
+	modoV[2] = modoV_c[2];
 	modoV[3] = modoV_c[3];
 	modoV[4] = modoV_c[4];
 	modoV[5] = modoV_c[5];
@@ -970,28 +988,22 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         if(camS == 7) Observer_angle_y-- ;
-         else camaras[camS]->rotarXExaminar(-1);
+         camaras[camS]->rotarXExaminar(-1);
          break;
 	   case GLUT_KEY_RIGHT:
-         if(camS == 7) Observer_angle_y++ ;
-         else camaras[camS]->rotarXExaminar(+1);
+         camaras[camS]->rotarXExaminar(+1);
          break;
 	   case GLUT_KEY_UP:
-         if(camS == 7) Observer_angle_x-- ;
-         else camaras[camS]->rotarYExaminar(+1);
+         camaras[camS]->rotarYExaminar(+1);
          break;
 	   case GLUT_KEY_DOWN:
-         if(camS == 7) Observer_angle_x++ ;
-         else camaras[camS]->rotarYExaminar(-1);
+         camaras[camS]->rotarYExaminar(-1);
          break;
 	   case GLUT_KEY_PAGE_UP:
-         if(camS == 7) Observer_distance *=1.2 ;
-         else camaras[camS]->zoom(1);
+         camaras[camS]->zoom(1);
          break;
 	   case GLUT_KEY_PAGE_DOWN:
-         if(camS == 7) Observer_distance /= 1.2 ;
-         else camaras[camS]->zoom(-1);
+         camaras[camS]->zoom(-1);
          break;
 	}
 
@@ -1018,8 +1030,9 @@ void Escena::change_projection()
 
 void Escena::redimensionar( int newWidth, int newHeight )
 {
-   Width  = newWidth;
-   Height = newHeight;
+   Width  = newWidth/10;
+   Height = newHeight/10;
+   change_projection();
    glViewport( 0, 0, newWidth, newHeight);
 }
 

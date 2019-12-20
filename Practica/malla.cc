@@ -270,6 +270,11 @@ void Malla3D::setMaterial(Material mat){
    m = new Material(mat);
 }
 
-void Malla3D::modificarCoordenadas(int x, int y, int z){
-   coord = {x,y,z};
+void Malla3D::modificarCoordenadas(float x, float y, float z){
+   Tupla3f aux(x, y, z);
+   coord = aux;
+}
+
+void Malla3D::setCoordenadasTexturas(std::vector<Tupla2f> tex){
+   ct = tex;
 }

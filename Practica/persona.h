@@ -4,6 +4,7 @@
 #include "aux.h"
 #include "tronco.h"
 #include "pierna.h"
+#include "sombrero.h"
 #include "esfera.h"
 #include "material.h"
 
@@ -14,6 +15,7 @@ class Persona
             *piernaDer;
       Tronco *tronco;
       Esfera *cabeza;
+      Sombrero *sombrero;
 
       // Orientación
       int orientacion;
@@ -43,12 +45,14 @@ class Persona
       void setColorPiel(float R, float G, float B);
       void setColorPantalones(float R, float G, float B);
       void setColorCamiseta(float R, float G, float B);
+      void setColorSombrero(float R, float G, float B);
 
       // Selección de materiales
       void setMaterial(Material & mat);
       void setMaterialPiel(Material & mat);
       void setMaterialPantalones(Material & mat);
       void setMaterialCamiseta(Material & mat);
+      void setMaterialSombrero(Material & mat);
 
       // Cambio de tapas
       void cambiarTapas();

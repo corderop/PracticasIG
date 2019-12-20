@@ -27,7 +27,6 @@ class Camara
         // Rotar la cámara
         void rotarXExaminar(float angle);
         void rotarYExaminar(float angle);
-        void rotarZExaminar(float angle);
         void rotarXFirstPerson(float angle);
         void rotarYFirstPerson(float angle);
 

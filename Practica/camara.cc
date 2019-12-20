@@ -12,14 +12,14 @@ Camara::Camara(int tp, Tupla3f ojo, Tupla3f arriba,  Tupla3f punto, float alto, 
     // Calculamos el eje Y y X
     // El eje X será el resultado del producto vectorial del vector visión y up
     // El eje Y será el resultado del producto vectorial del vector visión y eje x
-    Vx = { Vv(1)*up(2) - Vv(2)*up(1), Vv(2)*up(0) - Vv(0)*up(2), Vv(0)*up(1) - Vv(1)*up(0) };
+    Vx = Vv.cross(up); 
     Vx = Vx.normalized();
-    Vy = { Vx(1)*Vv(2) - Vx(2)*Vv(1), Vx(2)*Vv(0) - Vx(0)*Vv(2), Vx(0)*Vv(1) - Vx(1)*Vv(0) };
+    Vy = Vx.cross(Vv);
     Vy = Vy.normalized();
 
     aspect = ancho/alto;
-    left = alto/2;
-    top = ancho/2;
+    left = ancho/2;
+    top = alto/2;
     near = 50;
     far  = 2000;
     fov = atan(left/near)*(180/PI)*2;
@@ -88,7 +88,7 @@ void Camara::rotarFPS(float g, char eje){
     Tupla3f Vat, Vup;
 
     // Calculamos el vector de dirección hacia donde estamos mirando
-    Vv    = {at(0)-eye(0), at(1)-eye(1), at(2)-eye(2)};
+    Vv = {at(0)-eye(0), at(1)-eye(1), at(2)-eye(2)};
 
     g *= (PI/180); // Pasamos a radianes los grados
 
@@ -105,9 +105,7 @@ void Camara::rotarFPS(float g, char eje){
     }
 
     // Lo convertimos en el punto hacia el que mirar
-    at(0) = Vat(0)+eye(0);
-    at(1) = Vat(1)+eye(1);
-    at(2) = Vat(2)+eye(2);
+    at = Vat + eye;
 
     // Actualizamos el vector up
     up = Vup;
@@ -120,10 +118,9 @@ void Camara::rotarAlrededor(float g, char eje){
     Tupla3f Vat, Vup, V;
 
     // Calculamos el vector de dirección hacia donde estamos mirando
-    V    = {eye(0)-at(0), eye(1)-at(1), eye(2)-at(2)};
-    // V    = Vv.normalized();
+    V = {eye(0)-at(0), eye(1)-at(1), eye(2)-at(2)};
 
-    g *= (PI/180); // Pasamos a radianes los grados
+    g *= (PI/180); // Pasamos a radianes los grados   
 
     // Calculamos la matriz
     if(eje == 'x'){
@@ -137,10 +134,8 @@ void Camara::rotarAlrededor(float g, char eje){
         Vy  = matrizRotacion(Vx, Vy, g);
     }
 
-    // Lo convertimos en el punto hacia el que mirar
-    eye(0) = at(0)+V(0);
-    eye(1) = at(1)+V(1);
-    eye(2) = at(2)+V(2);
+    // Convertimos el resultado a la nueva posición de la cámara
+    eye = at + V;
 
     // Actualizamos el vector up
     up = Vup;

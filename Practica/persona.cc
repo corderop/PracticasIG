@@ -6,6 +6,7 @@ Persona::Persona(){
     piernaIzq = new Pierna();
     tronco = new Tronco();
     cabeza = new Esfera(40,40,1);
+    sombrero = new Sombrero();
 
     orientacion = 0;
     avance = 0;
@@ -22,6 +23,7 @@ void Persona::draw(int modoD, bool modoV[]){
         glRotatef(orientacion, 0, 1, 0);
         glRotatef(90, 0, 1, 0);
         // Persona
+        sombrero->draw(modoD, modoV);
         tronco->draw(modoD, modoV);
         glPushMatrix();
             glTranslatef(0,10,0);
@@ -70,6 +72,9 @@ void Persona::moverGradoLibertad(int numero, float cambio){
             // Brazo izq
             tronco->moverBrazo(1, cambio);
             break;
+        case 6:
+            sombrero->cambiarAlturaSombrero(cambio);
+            break;
     }
 }
 
@@ -77,6 +82,7 @@ void Persona::andar(float velocidad=1){
     piernaDer->animacionAndar(velocidad);
     piernaIzq->animacionAndar(velocidad);
     tronco->animacionAndar(velocidad);
+    sombrero->animacionAndar(velocidad);
     avanzar(velocidad*0.1);
 }
 
@@ -86,6 +92,7 @@ void Persona::setColor(float R, float G, float B, int tipo){
     piernaDer->setColor(R,G,B,tipo);
     tronco->setColor(R,G,B,tipo);
     cabeza->setColor(R,G,B,tipo);
+    sombrero->setColor(R,G,B,tipo);
 }
 
 void Persona::setColorPiel(float R, float G, float B){
@@ -106,12 +113,17 @@ void Persona::setColorCamiseta(float R, float G, float B){
     tronco->setColorCuerpo(R, G, B, 0);
 }
 
+void Persona::setColorSombrero(float R, float G, float B){
+    sombrero->setColor(R,G,B,0);
+}
+
 // Selección de material
 void Persona::setMaterial(Material & mat){
     piernaDer->setMaterial(mat);
     piernaIzq->setMaterial(mat);
     tronco->setMaterial(mat);
     cabeza->setMaterial(mat);
+    sombrero->setMaterial(mat);
 }
 
 void Persona::setMaterialPiel(Material & mat){
@@ -132,12 +144,17 @@ void Persona::setMaterialCamiseta(Material & mat){
     tronco->setMaterialCuerpo(mat);
 }
 
+void Persona::setMaterialSombrero(Material & mat){
+    sombrero->setMaterial(mat);
+}
+
 // Cambio de tapas
 void Persona::cambiarTapas(){
     piernaDer->cambiarTapas();
     piernaIzq->cambiarTapas();
     tronco->cambiarTapas();
     cabeza->cambiarTapas();
+    sombrero->cambiarTapas();
 }
 
 void Persona::modificarCoordenadas(int x_p, int y_p, int z_p){

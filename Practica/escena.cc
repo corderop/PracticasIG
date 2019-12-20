@@ -1,10 +1,10 @@
-#include "aux.h"     // includes de OpenGL/glut/glew, windows, y librería std de C++
+#include "aux.h"
 #include "escena.h"
-#include "malla.h" // objetos: Cubo y otros....
+#include "malla.h"
 
-//**************************************************************************
-// constructor de la escena (no puede usar ordenes de OpenGL)
-//**************************************************************************
+// ***************************************
+// INICIALIZACIÓN Y FUNCIONES AUXILIARES
+// ***************************************
 
 Escena::Escena()
 {
@@ -21,6 +21,7 @@ Escena::Escena()
     modoD = 1;    // Modo inmediato por defecto
     luzS = 0;
     angulo = -1;
+	camS = 0;
     
     luz[0] = nullptr;
     luz[1] = nullptr;
@@ -31,6 +32,7 @@ Escena::Escena()
     luz[6] = nullptr;
     luz[7] = nullptr;
 
+	// Luces activadas por defecto
     luzActiva[0] = true;
     luzActiva[1] = true;
     luzActiva[2] = true;
@@ -40,6 +42,7 @@ Escena::Escena()
     luzActiva[6] = true;
     luzActiva[7] = true;
 
+	// Modo sólido activado por defecto
     modoV[0] = false;
     modoV[1] = false;
     modoV[2] = true;    // Modo solido por defecto
@@ -47,116 +50,155 @@ Escena::Escena()
     modoV[4] = false;
     modoV[5] = false;
 
-    // Creamos una textura
-    Textura tex("texturas/wall.jpg");
-    Textura tex2("texturas/text-madera.jpg");
-
-    // Material de prueba
-    Tupla4f col4(0.61424, 0.04136, 0.04136, 1.0);
-    Tupla4f col5(0.727811, 0.626959, 0.626959, 1.0);
-    Tupla4f col6(0.1745, 0.01175, 0.01175, 1.0);
-    Material ruby(col4, col5, col6, 0.6*128);
-
-    Tupla4f col1(0.07568, 0.61424, 0.07568, 1.0);
-    Tupla4f col2(0.633, 0.727811, 0.633, 1.0);
-    Tupla4f col3(0.0215, 0.1745, 0.0215, 1.0);
-    Material esmeralda(col1, col2, col3, 0.6*128);
-
-    Tupla4f col7(0.75164, 0.60648, 0.22648, 1.0);
-    Tupla4f col8(0.628281, 0.555802, 0.366065, 1.0);
-    Tupla4f col9(0.24725, 0.1995, 0.0745, 1.0);
-    Material gold(col7, col8, col9, 0.4*128);
-
-    Tupla4f col10(1.0, 0.829, 0.829, 0.922);
-    Tupla4f col11(0.296648, 0.296648, 0.296648, 0.922);
-    Tupla4f col12(0.25, 0.20725, 0.20725, 0.922);
-    Material skin(col10, col11, col12, 11.264);
-
-    Tupla4f col13(0.5,0.5,0.5,1.0);
-    Tupla4f col14(0.7,0.7,0.7,1.0);
-    Tupla4f col15(0.05,0.05,0.05,1.0);
-    Material white(col13, col14, col15, 10.0);
-
-    // Cubo y tetraedro
+	// Creación de objetos
     cubo = new Cubo(40);
-    cubo->setColor(1.0, 1.0, 1.0, 0);
-    cubo->setColor(0.0, 1.0, 0.0, 1);
-    cubo->setColor(0.0, 0.0, 1.0, 2);
-    cubo->setMaterial(white);
-    cubo->setTexturas(tex);
-    cubo->calcular_texturas();
-
     cuadro = new Cuadro(40);
-    cuadro->setColor(1.0, 1.0, 1.0, 0);
-    cuadro->setColor(0.0, 1.0, 0.0, 1);
-    cuadro->setColor(0.0, 0.0, 1.0, 2);
-    cuadro->setMaterial(white);
-    cuadro->setTexturas(tex2);
-    cuadro->calcular_texturas();
-
     tetraedro = new Tetraedro();
-    tetraedro->setColor(0.0, 0.0, 1.0, 0);
-    tetraedro->setColor(1.0, 0.0, 0.0, 1);
-    tetraedro->setColor(0.0, 0.0, 0.0, 2);
-    tetraedro->setMaterial(esmeralda);
-    
-    // Cilindro, cono y esfera
     cilindro = new Cilindro(40,40,20);
-    cilindro->setColor(1.0, 0.0, 0.0, 0);
-    cilindro->setColor(0.0, 1.0, 0.0, 1);
-    cilindro->setColor(0.0, 0.0, 0.0, 2);
-    cilindro->setMaterial(esmeralda);
-
     cono = new Cono(40, 40, 20);
-    cono->setColor(1.0, 0.0, 0.0, 0);
-    cono->setColor(0.0, 1.0, 0.0, 1);
-    cono->setColor(0.0, 0.0, 0.0, 2);
-    cono->setMaterial(ruby);
-
     esfera = new Esfera(40, 40, 20);
-    esfera->setColor(0.0, 0.0, 0.0, 0);
-    esfera->setColor(1.0, 0.0, 0.0, 1);
-    esfera->setColor(0.0, 1.0, 0.0, 2);
-    esfera->setMaterial(gold);
-
-    // P3
     peon1 = new ObjRevolucion("plys/peon.ply", 40, true, true);
-    peon1->setColor(1.0, 0.0, 1.0, 0);
-    peon1->setColor(0.0, 1.0, 0.0, 1);
-    peon1->setColor(0.0, 0.0, 1.0, 2);
-    peon1->setMaterial(esmeralda);
-
     ply = new ObjPLY("plys/ant.ply");
-    ply->setColor(0.0, 0.0, 1.0, 0);
-    ply->setColor(0.0, 1.0, 0.0, 1);
-    ply->setColor(0.0, 0.0, 1.0, 2);
-    ply->setMaterial(ruby);
-
-    // P4
     persona = new Persona();
-    persona->setColorPiel(236.0/256, 188.0/256, 180.0/256);
-    persona->setColorCamiseta(0,0,1.0);
-    persona->setColorPantalones(1.0,0,0);
-    persona->setColor(0.0, 0.0, 0.0, 2);
-    persona->setColor(0.0, 1.0, 0.0, 1);
-    persona->setMaterialPiel(skin);
-    persona->setMaterialCamiseta(ruby);
-    persona->setMaterialPantalones(esmeralda);
 
-    // Luces
-    Tupla3f pos(0, 0, 0);
-    Tupla4f colL(1.0, 1.0, 1.0, 1.0);
-    luz[0] = new LuzPosicional(pos, GL_LIGHT0, colL, colL, colL);
-    luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, colL, colL, colL);
+	setColor();
+	setTexturas();
+	setMateriales();
+
+	// Luces
+    luz[0] = new LuzPosicional({0,0,0}, GL_LIGHT0, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0});
+    luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0});
 
     // Camaras
     camaras[0] = new Camara(1, {0,0,600}, {0,1,0}, {0,0,0}, 50, 50);
     camaras[1] = new Camara(0, {0,0,600}, {0,1,0}, {0,0,0}, 300, 300);
     camaras[2] = new Camara(1, {600,0,0}, {0,1,0}, {0,0,0}, 500, 500);
     camaras[3] = new Camara(1, {600,600,+600}, {0,1,0}, {0,0,0}, 3000, 3000);
-    camS = 0;
+
+    // ESCENA
+   	suelo = new Cuadro(40);
+	suelo->setColor(175/255, 175/255, 175/255, 0);
 }
 
+void Escena::setColor(){
+	cubo->setColor(1.0, 1.0, 1.0, 0);
+	cubo->setColor(0.0, 1.0, 0.0, 1);
+	cubo->setColor(0.0, 0.0, 1.0, 2);
+
+	cuadro->setColor(1.0, 1.0, 1.0, 0);
+	cuadro->setColor(0.0, 1.0, 0.0, 1);
+	cuadro->setColor(0.0, 0.0, 1.0, 2);
+
+	tetraedro->setColor(0.0, 0.0, 1.0, 0);
+	tetraedro->setColor(1.0, 0.0, 0.0, 1);
+	tetraedro->setColor(0.0, 0.0, 0.0, 2);
+
+	cilindro->setColor(1.0, 0.0, 0.0, 0);
+	cilindro->setColor(0.0, 1.0, 0.0, 1);
+	cilindro->setColor(0.0, 0.0, 0.0, 2);
+
+	cono->setColor(1.0, 0.0, 0.0, 0);
+	cono->setColor(0.0, 1.0, 0.0, 1);
+	cono->setColor(0.0, 0.0, 0.0, 2);
+
+	esfera->setColor(0.0, 0.0, 0.0, 0);
+	esfera->setColor(1.0, 0.0, 0.0, 1);
+	esfera->setColor(0.0, 1.0, 0.0, 2);
+
+	peon1->setColor(1.0, 0.0, 1.0, 0);
+	peon1->setColor(0.0, 1.0, 0.0, 1);
+	peon1->setColor(0.0, 0.0, 1.0, 2);
+
+	ply->setColor(0.0, 0.0, 1.0, 0);
+	ply->setColor(0.0, 1.0, 0.0, 1);
+	ply->setColor(0.0, 0.0, 1.0, 2);
+   
+    persona->setColorPiel(236.0/256, 188.0/256, 180.0/256);
+    persona->setColorCamiseta(0,0,1.0);
+    persona->setColorPantalones(1.0,0,0);
+    persona->setColorSombrero(1.0,0.0,0.0);
+    persona->setColor(0.0, 0.0, 0.0, 2);
+    persona->setColor(0.0, 1.0, 0.0, 1);
+}
+
+void Escena::setMateriales(){
+
+	// Creación de materiales
+	Tupla4f col1(0.61424, 0.04136, 0.04136, 1.0);
+    Tupla4f col2(0.727811, 0.626959, 0.626959, 1.0);
+    Tupla4f col3(0.1745, 0.01175, 0.01175, 1.0);
+    Material ruby(col1, col2, col2, 0.6*128);
+
+    col1 = Tupla4f(0.07568, 0.61424, 0.07568, 1.0);
+    col2 = Tupla4f(0.633, 0.727811, 0.633, 1.0);
+    col3 = Tupla4f(0.0215, 0.1745, 0.0215, 1.0);
+    Material esmeralda(col1, col2, col3, 0.6*128);
+
+    col1 = Tupla4f(0.75164, 0.60648, 0.22648, 1.0);
+    col2 = Tupla4f(0.628281, 0.555802, 0.366065, 1.0);
+    col3 = Tupla4f(0.24725, 0.1995, 0.0745, 1.0);
+    Material gold(col1, col2, col3, 0.4*128);
+
+    col1 = Tupla4f(1.0, 0.829, 0.829, 0.922);
+    col2 = Tupla4f(0.296648, 0.296648, 0.296648, 0.922);
+    col3 = Tupla4f(0.25, 0.20725, 0.20725, 0.922);
+    Material skin(col1, col2, col3, 11.264);
+
+    col1 = Tupla4f(0.5,0.5,0.5,1.0);
+    col2 = Tupla4f(0.7,0.7,0.7,1.0);
+    col3 = Tupla4f(0.05,0.05,0.05,1.0);
+    Material white(col1, col2, col3, 10.0);
+
+	// Asignación de materiales
+	cubo->setMaterial(white);
+	cuadro->setMaterial(white);
+	tetraedro->setMaterial(esmeralda);
+	cilindro->setMaterial(esmeralda);
+	cono->setMaterial(ruby);
+	esfera->setMaterial(gold);
+	peon1->setMaterial(esmeralda);
+	ply->setMaterial(ruby);
+	persona->setMaterialPiel(skin);
+    persona->setMaterialCamiseta(ruby);
+    persona->setMaterialPantalones(esmeralda);
+    persona->setMaterialSombrero(ruby);
+}
+
+void Escena::setTexturas(){
+	// Creamos una textura
+	Textura tex("texturas/wall.jpg");
+	Textura tex2("texturas/text-madera.jpg");
+
+	cubo->setTexturas(tex);
+	cubo->calcular_texturas();
+	cuadro->setTexturas(tex2);
+	cuadro->calcular_texturas();
+}
+
+void Escena::setPuntoRotacion(Malla3D *ptr){
+   camaras[camS]->setAt(ptr->getCoordenadas());
+}
+
+void Escena::changeTapas(){
+	cilindro->cambiarTapas();
+	cono->cambiarTapas();
+	esfera->cambiarTapas();
+	peon1->cambiarTapas();
+	persona->cambiarTapas();
+}
+
+void Escena::activarLuces(){
+	glEnable(GL_LIGHTING);
+	// Activación de luces
+	if(luzActiva[0] && luz[0]!=nullptr)  luz[0]->activar(); else glDisable(GL_LIGHT0);
+	if(luzActiva[1] && luz[1]!=nullptr)  luz[1]->activar(); else glDisable(GL_LIGHT1);
+	if(luzActiva[2] && luz[2]!=nullptr)  luz[2]->activar(); else glDisable(GL_LIGHT2);
+	if(luzActiva[3] && luz[3]!=nullptr)  luz[3]->activar(); else glDisable(GL_LIGHT3);
+	if(luzActiva[4] && luz[4]!=nullptr)  luz[4]->activar(); else glDisable(GL_LIGHT4);
+	if(luzActiva[5] && luz[5]!=nullptr)  luz[5]->activar(); else glDisable(GL_LIGHT5);
+	if(luzActiva[6] && luz[6]!=nullptr)  luz[6]->activar(); else glDisable(GL_LIGHT6);
+	if(luzActiva[7] && luz[7]!=nullptr)  luz[7]->activar(); else glDisable(GL_LIGHT7);
+}
 //**************************************************************************
 // inicialización de la escena (se ejecuta cuando ya se ha creado la ventana, por
 // tanto sí puede ejecutar ordenes de OpenGL)
@@ -169,32 +211,11 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 
 	glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
 
-	Width  = UI_window_width/10;
-	Height = UI_window_height/10;
+	Width  = UI_window_width;
+	Height = UI_window_height;
 
-   change_projection( float(UI_window_width)/float(UI_window_height) );
+	// change_projection( float(UI_window_width)/float(UI_window_height) );
 	glViewport( 0, 0, UI_window_width, UI_window_height );
-}
-
-void Escena::changeTapas(){
-   cilindro->cambiarTapas();
-   cono->cambiarTapas();
-   esfera->cambiarTapas();
-   peon1->cambiarTapas();
-   persona->cambiarTapas();
-}
-
-void Escena::activarLuces(){
-   glEnable(GL_LIGHTING);
-   // Activación de luces
-   if(luzActiva[0] && luz[0]!=nullptr)  luz[0]->activar(); else glDisable(GL_LIGHT0);
-   if(luzActiva[1] && luz[1]!=nullptr)  luz[1]->activar(); else glDisable(GL_LIGHT1);
-   if(luzActiva[2] && luz[2]!=nullptr)  luz[2]->activar(); else glDisable(GL_LIGHT2);
-   if(luzActiva[3] && luz[3]!=nullptr)  luz[3]->activar(); else glDisable(GL_LIGHT3);
-   if(luzActiva[4] && luz[4]!=nullptr)  luz[4]->activar(); else glDisable(GL_LIGHT4);
-   if(luzActiva[5] && luz[5]!=nullptr)  luz[5]->activar(); else glDisable(GL_LIGHT5);
-   if(luzActiva[6] && luz[6]!=nullptr)  luz[6]->activar(); else glDisable(GL_LIGHT6);
-   if(luzActiva[7] && luz[7]!=nullptr)  luz[7]->activar(); else glDisable(GL_LIGHT7);
 }
 
 // **************************************************************************
@@ -207,263 +228,220 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 
-   if(x_sel!=-1 && y_sel!=-1)
-      dibujaSeleccion();
+	if(x_sel!=-1 && y_sel!=-1)
+		dibujaSeleccion();
 
-   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-   glEnable(GL_CULL_FACE);
-   glEnable(GL_NORMALIZE);
-   glEnable(GL_DITHER);
-   glDisable(GL_LIGHTING);
-   glShadeModel(GL_FLAT);
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiamos de nuevo
 
-   change_projection(1);
-   change_observer();
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_DITHER);
+	glDisable(GL_LIGHTING);	// Se desactiva para mostrar los ejes en sólido
+	glShadeModel(GL_FLAT);
 
-   ejes.draw();
+	// Por si se actualiza la cámara
+	change_projection();
+	change_observer(); 
 
-   if(tapas){
-      changeTapas();
-      tapas=false;
-   }
+	// Se dibujan los ejes
+	ejes.draw();
 
-   if(modoV[4]){
-      glShadeModel(GL_SMOOTH); // Si se comenta usa el modo FLAT
-      activarLuces();
-   }
+	// Cambia las tapas si se solicita
+	if(tapas){
+		changeTapas();
+		tapas=false;
+	}
 
+	// Activa el modo iluminación
+	if(modoV[4]){
+		glShadeModel(GL_SMOOTH); // Si se comenta usa el modo FLAT
+		activarLuces();			 // Enciende las luces activas
+	}
+
+	// Se dibujan los objetos
+	dibujarObjetos();
+}
+
+void Escena::dibujarObjetos(){
    if(objeto == 0){
-      dibujarEscena();
-   }
-   else if(objeto == 1){
+		// Cara de alante
       glPushMatrix();
-         glTranslatef(+80.0,-40.0,0.0);
-         cilindro->draw(modoD, modoV);
-      glPopMatrix();
-      glPushMatrix();
-         glTranslatef(-80.0,-40.0,0.0);
-         cono->draw(modoD, modoV);
-      glPopMatrix();
-      glPushMatrix();
-         glTranslatef(0.0,0.0,-80.0);
-         esfera->draw(modoD, modoV);
-      glPopMatrix();
-   }
-   else if(objeto == 2){
-      glPushMatrix();
-         glScalef(10,10,10);
-         persona->draw(modoD, modoV);
-      glPopMatrix();
-   }
-}
-
-void Escena::dibujarEscena(){
-   // Cara de alante
-   glPushMatrix();
-      // Fila cono, cilindro, esfera
-      glPushMatrix();
-         glTranslatef(0.0,80.0,0.0);
+         // Fila cono, cilindro, esfera
          glPushMatrix();
-            glTranslatef(-80.0, 0.0, 0.0);
-            cuadro->modificarCoordenadas(-80,80,0);
-            cuadro->draw(modoD, modoV);
+            glTranslatef(0.0,80.0,0.0);
+            glPushMatrix();
+               glTranslatef(-80.0, 0.0, 0.0);
+               cuadro->modificarCoordenadas(-80,80,0);
+               cuadro->draw(modoD, modoV);
+            glPopMatrix();
+            glPushMatrix();
+               glTranslatef(80.0, -20.0, 0.0);
+               cilindro->modificarCoordenadas(80,60,0);
+               cilindro->draw(modoD, modoV);
+            glPopMatrix();
+            esfera->modificarCoordenadas(0,80,0);
+            esfera->draw(modoD, modoV);
          glPopMatrix();
+         
+         // Modelo en el medio
          glPushMatrix();
-            glTranslatef(80.0, -20.0, 0.0);
-            cilindro->modificarCoordenadas(80,60,0);
-            cilindro->draw(modoD, modoV);
+            glScalef(3,3,3);
+            persona->draw(modoD, modoV);
          glPopMatrix();
-         esfera->modificarCoordenadas(0,80,0);
-         esfera->draw(modoD, modoV);
-      glPopMatrix();
-      
-      // Modelo en el medio
-      glPushMatrix();
-         glScalef(3,3,3);
-         persona->modificarCoordenadas(0,0,0);
-         persona->draw(modoD, modoV);
-      glPopMatrix();
 
-      glPushMatrix();
-         glTranslatef(0.0,-80.0,0.0);
          glPushMatrix();
-            glTranslatef(-80.0, 0.0, 0.0);
-            glScalef(20.0,20.0,20.0);
-            peon1->modificarCoordenadas(-80,-80,0);
-            peon1->draw(modoD, modoV);
+            glTranslatef(0.0,-80.0,0.0);
+            glPushMatrix();
+               glTranslatef(-80.0, 0.0, 0.0);
+               glScalef(20.0,20.0,20.0);
+               peon1->modificarCoordenadas(-80,-80,0);
+               peon1->draw(modoD, modoV);
+            glPopMatrix();
+            glPushMatrix();
+               glTranslatef(80.0,0.0,0.0);
+               glScalef(2.5,2.5,2.5);
+               ply->modificarCoordenadas(80,-80,0);
+               ply->draw(modoD, modoV);
+            glPopMatrix();
+            cubo->modificarCoordenadas(0,-80,0);
+            cubo->draw(modoD, modoV);
          glPopMatrix();
-         glPushMatrix();
-            glTranslatef(80.0,0.0,0.0);
-            glScalef(2.5,2.5,2.5);
-            ply->modificarCoordenadas(80,-80,0);
-            ply->draw(modoD, modoV);
-         glPopMatrix();
-         cubo->modificarCoordenadas(0,-80,0);
-         cubo->draw(modoD, modoV);
       glPopMatrix();
-
-   glPopMatrix();
-}
-
-void Escena::setPuntoRotacion(Malla3D *ptr){
-   camaras[camS]->setAt(ptr->getCoordenadas());
+	}
+	else if(objeto == 2){
+		glPushMatrix();
+			suelo->draw(modoD, modoV);
+		glPopMatrix();
+	}
 }
 
 void Escena::dibujaSeleccion(){
-   glDisable(GL_DITHER); // Luz y texturas desactivadas por defecto
-   glDisable(GL_LIGHTING);
+	glDisable(GL_DITHER); // Luz y texturas desactivadas por defecto
+	glDisable(GL_LIGHTING);
 
-   int modoD_c = modoD;
-   bool modoV_c[6] = {modoV[0],modoV[1],modoV[2],modoV[3],modoV[4],modoV[5]};
+	// Guarda los modo de dibujado y lo establece en sólido
+	int modoD_c = modoD;
+	bool modoV_c[6] = {modoV[0],modoV[1],modoV[2],modoV[3],modoV[4],modoV[5]};
 
-   modoD = 1; // modo inmediato
-   modoV[0] = false;
-   modoV[1] = false;
-   modoV[2] = true;    // Modo solido
-   modoV[3] = false;
-   modoV[4] = false;
-   modoV[5] = false;
+	modoD = 1; // modo inmediato
+	modoV[0] = false;
+	modoV[1] = false;
+	modoV[2] = true;    // Modo solido
+	modoV[3] = false;
+	modoV[4] = false;
+	modoV[5] = false;
 
-       cubo->setColor(0.1, 0.0, 0.0, 0);
-     cuadro->setColor(0.2, 0.0, 0.0, 0);
-   cilindro->setColor(0.3, 0.0, 0.0, 0);
-     esfera->setColor(0.4, 0.0, 0.0, 0);
-      peon1->setColor(0.5, 0.0, 0.0, 0);
-        ply->setColor(0.6, 0.0, 0.0, 0);
-    persona->setColor(0.7, 0.0, 0.0, 0);
+	// Cambia los colores
+		cubo->setColor(0.1, 0.0, 0.0, 0);
+		cuadro->setColor(0.2, 0.0, 0.0, 0);
+	cilindro->setColor(0.3, 0.0, 0.0, 0);
+		esfera->setColor(0.4, 0.0, 0.0, 0);
+		peon1->setColor(0.5, 0.0, 0.0, 0);
+			ply->setColor(0.6, 0.0, 0.0, 0);
+		persona->setColor(0.7, 0.0, 0.0, 0);
 
-   dibujarEscena();
+	// Dibuja
+	dibujarObjetos();
 
-   GLfloat r[3];
-   GLint   viewport[4];
-   glGetIntegerv(GL_VIEWPORT,viewport);
+	// Obtenemos el objeto seleccionado
+	obtenerObjetoSeleccionado();
 
-   glReadPixels(x_sel, viewport[3]-y_sel, 1, 1, GL_RGB, GL_FLOAT, (void *)r);
+	// Restauramos los valores para el dibujado normal
+	modoD = modoD_c;
+	modoV[0] = modoV_c[0];
+	modoV[1] = modoV_c[1];
+	modoV[2] = modoV_c[2];    // Modo solido
+	modoV[3] = modoV_c[3];
+	modoV[4] = modoV_c[4];
+	modoV[5] = modoV_c[5];
 
-   // Redondeados para evitar errores con float
-   if(round(r[0]*10)/10 == 0.1){
-      if(obj_selec != 1){
-         obj_selec = 1;
-         setPuntoRotacion(cubo);
-      }
-      else{
-         obj_selec = 0;
-         camaras[camS]->setAt({0,0,0});
-      }
-   }
-   else if(round(r[0]*10)/10 == 0.2){
-      if(obj_selec != 2){
-         obj_selec = 2;
-         setPuntoRotacion(cuadro);
-      }
-      else{
-         obj_selec = 0;
-         camaras[camS]->setAt({0,0,0});
-      }
-   }
-   else if(round(r[0]*10)/10 == 0.3){
-      if(obj_selec != 3){
-         obj_selec = 3;
-         setPuntoRotacion(cilindro);
-      }
-      else{
-         obj_selec = 0;
-         camaras[camS]->setAt({0,0,0});
-      }
-   }
-   else if(round(r[0]*10)/10 == 0.4){
-      if(obj_selec != 4){
-         obj_selec = 4;
-         setPuntoRotacion(esfera);
-      }
-      else{
-         obj_selec = 0;
-         camaras[camS]->setAt({0,0,0});
-      }
-   }
-   else if(round(r[0]*10)/10 == 0.5){
-      if(obj_selec != 5){
-         obj_selec = 5;
-         setPuntoRotacion(peon1);
-      }
-      else{
-         obj_selec = 0;
-         camaras[camS]->setAt({0,0,0});
-      }
-   }
-   else if(round(r[0]*10)/10 == 0.6){
-      if(obj_selec != 6){
-         obj_selec = 6;
-         setPuntoRotacion(ply);
-      }
-      else{
-         obj_selec = 0;
-         camaras[camS]->setAt({0,0,0});
-      }
-   }
-   else if(round(r[0]*10)/10 == 0.7){
-      if(obj_selec != 7){
-         obj_selec = 7;
-         camaras[camS]->setAt(persona->getCoordenadas());
-      }
-      else{
-         obj_selec = 0;
-         camaras[camS]->setAt({0,0,0});
-      }
-   }
-
-   // Restauramos los valores para el dibujado normal
-   modoD = modoD_c;
-   modoV[0] = modoV_c[0];
-   modoV[1] = modoV_c[1];
-   modoV[2] = modoV_c[2];    // Modo solido
-   modoV[3] = modoV_c[3];
-   modoV[4] = modoV_c[4];
-   modoV[5] = modoV_c[5];
-
-   setColor();
-   x_sel = y_sel = -1;
+	setColor();
+	x_sel = y_sel = -1;
 }
 
-void Escena::setColor(){
-   cubo->setColor(1.0, 1.0, 1.0, 0);
-   cubo->setColor(0.0, 1.0, 0.0, 1);
-   cubo->setColor(0.0, 0.0, 1.0, 2);
+void Escena::obtenerObjetoSeleccionado(){
+	GLfloat r[3];
+	GLint   viewport[4];
+	glGetIntegerv(GL_VIEWPORT,viewport);
 
-   cuadro->setColor(1.0, 1.0, 1.0, 0);
-   cuadro->setColor(0.0, 1.0, 0.0, 1);
-   cuadro->setColor(0.0, 0.0, 1.0, 2);
+	glReadPixels(x_sel, viewport[3]-y_sel, 1, 1, GL_RGB, GL_FLOAT, (void *)r);
 
-   tetraedro->setColor(0.0, 0.0, 1.0, 0);
-   tetraedro->setColor(1.0, 0.0, 0.0, 1);
-   tetraedro->setColor(0.0, 0.0, 0.0, 2);
-
-   cilindro->setColor(1.0, 0.0, 0.0, 0);
-   cilindro->setColor(0.0, 1.0, 0.0, 1);
-   cilindro->setColor(0.0, 0.0, 0.0, 2);
-
-   cono->setColor(1.0, 0.0, 0.0, 0);
-   cono->setColor(0.0, 1.0, 0.0, 1);
-   cono->setColor(0.0, 0.0, 0.0, 2);
-
-   esfera->setColor(0.0, 0.0, 0.0, 0);
-   esfera->setColor(1.0, 0.0, 0.0, 1);
-   esfera->setColor(0.0, 1.0, 0.0, 2);
-
-   peon1->setColor(1.0, 0.0, 1.0, 0);
-   peon1->setColor(0.0, 1.0, 0.0, 1);
-   peon1->setColor(0.0, 0.0, 1.0, 2);
-
-   ply->setColor(0.0, 0.0, 1.0, 0);
-   ply->setColor(0.0, 1.0, 0.0, 1);
-   ply->setColor(0.0, 0.0, 1.0, 2);
-   
-   persona->setColorPiel(236.0/256, 188.0/256, 180.0/256);
-   persona->setColorCamiseta(0,0,1.0);
-   persona->setColorPantalones(1.0,0,0);
-   persona->setColor(0.0, 0.0, 0.0, 2);
-   persona->setColor(0.0, 1.0, 0.0, 1);
+	// Redondeados para evitar errores con float
+	if(round(r[0]*10)/10 == 0.1){
+		if(obj_selec != 1){
+			obj_selec = 1;
+			setPuntoRotacion(cubo);
+		}
+		else{
+			obj_selec = 0;
+			camaras[camS]->setAt({0,0,0});
+		}
+	}
+	else if(round(r[0]*10)/10 == 0.2){
+		if(obj_selec != 2){
+			obj_selec = 2;
+			setPuntoRotacion(cuadro);
+		}
+		else{
+			obj_selec = 0;
+			camaras[camS]->setAt({0,0,0});
+		}
+	}
+	else if(round(r[0]*10)/10 == 0.3){
+		if(obj_selec != 3){
+			obj_selec = 3;
+			setPuntoRotacion(cilindro);
+		}
+		else{
+			obj_selec = 0;
+			camaras[camS]->setAt({0,0,0});
+		}
+	}
+	else if(round(r[0]*10)/10 == 0.4){
+		if(obj_selec != 4){
+			obj_selec = 4;
+			setPuntoRotacion(esfera);
+		}
+		else{
+			obj_selec = 0;
+			camaras[camS]->setAt({0,0,0});
+		}
+	}
+	else if(round(r[0]*10)/10 == 0.5){
+		if(obj_selec != 5){
+			obj_selec = 5;
+			setPuntoRotacion(peon1);
+		}
+		else{
+			obj_selec = 0;
+			camaras[camS]->setAt({0,0,0});
+		}
+	}
+	else if(round(r[0]*10)/10 == 0.6){
+		if(obj_selec != 6){
+			obj_selec = 6;
+			setPuntoRotacion(ply);
+		}
+		else{
+			obj_selec = 0;
+			camaras[camS]->setAt({0,0,0});
+		}
+	}
+	else if(round(r[0]*10)/10 == 0.7){
+		if(obj_selec != 7){
+			obj_selec = 7;
+			camaras[camS]->setAt(persona->getCoordenadas());
+		}
+		else{
+			obj_selec = 0;
+			camaras[camS]->setAt({0,0,0});
+		}
+	}
 }
+
+// ******************************************************************
+// ANIMACIÓN
+// ******************************************************************
 
 void Escena::animarModeloAutomaticamente(){
    if(animarAutomatico)
@@ -484,7 +462,9 @@ void Escena::animarLuces(){
    }
 }
 
+// *****************************************************************************
 // INTERACCIÓN CON EL RATÓN
+// ***************************************************************************** 
 void Escena::clickRaton( int boton, int estado, int x, int y){
    // Se pulsa el boton derecho
    if( boton == GLUT_RIGHT_BUTTON && estado == GLUT_DOWN){
@@ -511,21 +491,23 @@ void Escena::ratonMovido( int x, int y){
    switch (pulsado)
    {
    case 1:
-      camaras[camS]->rotarXFirstPerson((x-x_actual)*0.1);
-      camaras[camS]->rotarYFirstPerson((y-y_actual)*0.1);
+      if(obj_selec == 0){
+         camaras[camS]->rotarXFirstPerson((x-x_actual)*0.1);
+         camaras[camS]->rotarYFirstPerson((y-y_actual)*0.1);
+      }
+      else{
+         camaras[camS]->rotarXExaminar(-(x-x_actual)*0.1);
+         camaras[camS]->rotarYExaminar(-(y-y_actual)*0.1);
+      }
       x_actual = x;
       y_actual = y;
-      break;
-   
-   case 2:
-      
-      break;
+   break;
    }
 }
 
-/**
- * Opciones de interacción
- */
+// ***********************************************************
+// Interacción con el teclado
+// ***********************************************************
 void Escena::opcionesInteraccion(){
    std::cout<<std::endl<<"----------------------------------"<<std::endl;
    std::cout<<"Q - Salir de cualquier modo o de la ejecución"<<std::endl;
@@ -585,9 +567,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       // SELECCIÓN DE MODO
       // -------------
       // Salir
-      case 'Z' :
-         setPuntoRotacion(peon1);
-      break;
       case 'Q' :
          if (modoMenu!=NADA){
             modoMenu=NADA;  
@@ -784,7 +763,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELCAMARAS){
             camS = 0;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
       case '1' :
@@ -806,7 +785,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELCAMARAS){
             camS = 1;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
       case '2' :
@@ -828,7 +807,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELCAMARAS){
             camS = 2;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
       case '3' :
@@ -845,7 +824,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELCAMARAS){
             camS = 3;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
       case '4' :
@@ -862,7 +841,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELCAMARAS){
             camS = 4;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
       case '5' :
@@ -879,7 +858,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELCAMARAS){
             camS = 5;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
       case '6' :
@@ -889,10 +868,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             luzActiva[luzS] = !luzActiva[luzS];
             cout<< ( (luzActiva[luzS]) ? "activada" : "desactivada" )<<endl;
          }
+         else if(modoMenu == SELMANUAL){
+            manualActivado = 6;
+            cout<<"Grado de libertad seleccionado: " << manualActivado <<endl;
+         }
          else if(modoMenu == SELCAMARAS){
             camS = 6;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
       case '7' :
@@ -905,7 +888,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if(modoMenu == SELCAMARAS){
             camS = 7;
             change_observer();
-            change_projection(1);
+            change_projection();
          }
       break;
 
@@ -1022,13 +1005,11 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
 //
 //***************************************************************************
 
-void Escena::change_projection( const float ratio_xy )
+void Escena::change_projection()
 {
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
-   const float wx = float(Height)*ratio_xy ;
-   if(camS == 7)  glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
-   else if(camaras[camS]!=nullptr)  
+   if(camaras[camS]!=nullptr)  
       camaras[camS]->setProyeccion();
 }
 //**************************************************************************
@@ -1037,10 +1018,9 @@ void Escena::change_projection( const float ratio_xy )
 
 void Escena::redimensionar( int newWidth, int newHeight )
 {
-   Width  = newWidth/10;
-   Height = newHeight/10;
-   change_projection( float(newHeight)/float(newWidth) );
-   glViewport( 0, 0, newWidth, newHeight );
+   Width  = newWidth;
+   Height = newHeight;
+   glViewport( 0, 0, newWidth, newHeight);
 }
 
 //**************************************************************************
@@ -1052,11 +1032,6 @@ void Escena::change_observer()
    // posicion del observador
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   if(camS == 7) {
-      glTranslatef( 0.0, 0.0, -Observer_distance );
-      glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
-      glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
-   }
    if(camaras[camS]!=nullptr)
       camaras[camS]->setObserver();
 }

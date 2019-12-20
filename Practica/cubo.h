@@ -14,7 +14,8 @@ class Cubo : public Malla3D
         // Inicializa vértices y triángulos pero no colores
         Cubo(float l=1);
 
-        // Calcular las coordenadas de texturas del cubo
+        // Calcular las coordenadas de texturas del cubo por defecto
+        // (Aplicar una textura cuadrada de igual forma a todas las caras del cubo)
         void calcular_texturas();
 } ;
 

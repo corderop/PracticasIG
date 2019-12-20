@@ -19,114 +19,146 @@
 #include "camara.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, SELAUTO, SELMANUAL, SELCAMARAS} menu;
+
 class Escena
 {
 
-   private:
+    private:
 
-    /**
-     * Hecho para ahorrar código cuando se quiere dibujar en diferentes modos simultaneamente
-     */
-    void changeTapas();
-    // Activar las luces de la escena
-    void activarLuces();
+        // ***************
+        // Variables
+        // ***************
 
-    void dibujarEscena();
-    void setColor();
+        // Cámara provisional
+        GLfloat Observer_distance;
+        GLfloat Observer_angle_x;
+        GLfloat Observer_angle_y;
 
- // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
-       
-       // variables que definen la posicion de la camara en coordenadas polares
-   GLfloat Observer_distance;
-   GLfloat Observer_angle_x;
-   GLfloat Observer_angle_y;
+        // Ventana y transformación de la perspectiva
+        GLfloat Width, Height, Front_plane, Back_plane;
 
-   // variables que controlan la ventana y la transformacion de perspectiva
-   GLfloat Width, Height, Front_plane, Back_plane;
+        // Interacción con el ususario
+        menu modoMenu=NADA;
 
-    // Transformación de cámara
-	void change_projection( const float ratio_xy );
-	void change_observer();
+        // Interacción con el ratón
+        int pulsado = 0,    // 0 - ninguno, 1 - raton der, 2 - raton izq
+            x_actual,       // Coordenada x para mover en primera persona para detectar movimiento
+            y_actual,       // Coordenada x para mover en primera persona para detectar movimiento
+            x_sel = -1,     // X cuando se pulsa en pantalla
+            y_sel = -1,     // Y cuando se pulsa en pantalla
+            obj_selec = 0;  // Objeto seleccionado. Hecho para poder seleccionar y deseleccionar un objeto.
 
-   void clear_window();
+        // Forma de dibujado
+        int objeto,         // Escena a dibujar cuando hay varias posibles
+            modoD;          // Modo de dibujado: 1 - inmediato, 2 - diferido
+        bool modoV[6];      // Modo de visualización: 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion, 5 - texturas
+        bool tapas = false; // Indica si hay que cambiar de estado las tapas
 
-   // Animación
-   bool animarAutomatico = false,
-        animarAutomaticoLuces = false;
-   float velocidadAnimacion = 1,
-         velocidadAnimacionLuz = 1,
-         velocidadManual[5] = {1,1,1,1,1};
-   int manualActivado = 0;
+        // Selecciones
+        int luzS,           // Número de la luz seleccionada
+            angulo,         // Ángulo a modificar
+            camS;           // Camara activa
+        bool luzActiva[8];  // Situación de cada luz
 
-   menu modoMenu=NADA;
-   // Objetos de la escena
-   Ejes ejes;
-   // 0
-   Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-   Cuadro * cuadro = nullptr;
-   Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
-   
-   // 1
-   Cilindro * cilindro = nullptr;
-   Cono * cono = nullptr;
-   Esfera * esfera = nullptr;
+        // Animación
+        bool animarAutomatico = false,              // Animación automática de los modelos de la escena
+             animarAutomaticoLuces = false;         // Animación automática de las luces animadas
+        float velocidadAnimacion = 1,               // Velocidad de la animación de modelos
+              velocidadAnimacionLuz = 1,            // Velocidad de la animación de luces
+              velocidadManual[7] = {1,1,1,1,1,1,1}; // Velocidad de cada grado de libertad independiente
+        int manualActivado = 0;                     // Grado de libertad a animar de modo manual
 
-   // 2
-   ObjPLY * ply = nullptr;
-   ObjRevolucion * peon1 = nullptr;
+        // Objetos de la escena
+        Ejes ejes;                          // Ejes
 
-   // 3
-   Persona *persona = nullptr;
-   Brazo *brazo = nullptr;
+        Cubo * cubo = nullptr ;             // Cubo
+        Cuadro * cuadro = nullptr;          // Cuadro para aplicar textura
+        Tetraedro * tetraedro= nullptr ;    // Tetraedro
 
-   // Luces
-   Luz* luz[8];
-   bool luzActiva[8];
+        ObjPLY * ply = nullptr;             // PLY
+        Cilindro * cilindro = nullptr;      // Cilindro
+        Cono * cono = nullptr;              // Cono
+        Esfera * esfera = nullptr;          // Esfera
+        ObjRevolucion * peon1 = nullptr;    // PLY por revolución
 
-   // Camaras
-   Camara* camaras[8];
-   int camS;
+        Persona *persona = nullptr;         // Modelo jerárquico
 
-   int objeto, modoD; // Objeto, modo de visualizacion, modo de dibujado
-   bool modoV[6]; // 0 - Puntos, 1 - lineas, 2 - solido, 3 - ajedrez, 4 - iluminacion, 5 - texturas
-   bool tapas = false; // Indica si hay que cambiar de estado las tapas
-   int luzS, angulo; // Número de la luz seleccionada y angulo a modificar
-   // Objeto: -1 nada, 0 cubo, 1 cilindro, esfera y cono, 2 escena
-   // Modo visualizacion: 0 solido, 1 puntos, 2 lineas, 3 todos, 4 ajedrez
-   // Modo dibujado: 1 Modo inmediato, 2 Modo diferido
-   
-    // Interacción con el ratón
-    int pulsado = 0; // 0 - ninguno, 1 - raton der, 2 - raton izq
-    int x_actual;
-    int y_actual;
-    int x_sel = -1;
-    int y_sel = -1;
-    int obj_selec = 0;
+        Cilindro *p1;
+        Cilindro *p2;
 
-   public:
+        Luz* luz[8];                        // Luces
+        Camara* camaras[8];                 // Camaras
 
-    Escena();
-	void inicializar( int UI_window_width, int UI_window_height );
-	void redimensionar( int newWidth, int newHeight ) ;
+        // Objetos escena
+        Cubo *muro;
+        Cuadro *suelo;
 
-	// Dibujar
-	void dibujar() ;
+        // ***************
+        // Funciones
+        // ***************
 
-	// Interacción con la escena
-	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
-	void teclaEspecial( int Tecla1, int x, int y );
-    void opcionesInteraccion();
+        // Hecho para ahorrar código cuando se quiere dibujar en diferentes modos simultaneamente
+        void changeTapas();
 
-    void animarModeloAutomaticamente();
-    void animarModeloManual(int numero, float suma);
-    void animarLuces();
+        // Activar todas las luces de la escena
+        void activarLuces();
 
-    // Interacción con el ratón
-    void clickRaton( int boton, int estado, int x, int y);
-    void ratonMovido( int x, int y);
+        // Llamadas a los draw de los objetos así como las transformaciones correspondientes
+        void dibujarObjetos();
 
-    // Detección de objetos
-    void setPuntoRotacion(Malla3D *ptr);
-    void dibujaSeleccion();
+        // Modificación de los colores de todos los elementos de la escena
+        void setColor();
+        // Modificación de las texturas de todos los elementos de la escena
+        void setTexturas();
+        // Modificación de los materiales de todos los elementos de la escena
+        void setMateriales();
+
+        // Dibuja los objetos con un solo color para poder seleccionarlos
+        void dibujaSeleccion();
+        // Según la selección declara que ha sido seleccionado
+        void obtenerObjetoSeleccionado();
+
+        // Transformación de cámara
+        void change_projection();
+        void change_observer();
+        void clear_window();
+
+    public:
+
+        // Constructor principal
+        Escena();
+
+        // Ventana
+        void inicializar( int UI_window_width, int UI_window_height );
+        void redimensionar( int newWidth, int newHeight ) ;
+
+        // Función de dibujado
+        void dibujar() ;
+
+        // Interacción con la escena
+        bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
+        void teclaEspecial( int Tecla1, int x, int y );
+
+        // Muestra las opciones de interacción con el teclado por consola
+        void opcionesInteraccion();
+
+        // Animación del modelo de forma automática
+        void animarModeloAutomaticamente();
+
+        // Animación del modelo manual
+        //   numero: número de grado de libertad
+        //   suma: modificación del grado de libertad
+        void animarModeloManual(int numero, float suma);
+
+        // Animación automática de luces
+        void animarLuces();
+
+        // Interacción con el ratón
+        void clickRaton( int boton, int estado, int x, int y);
+        void ratonMovido( int x, int y);
+
+        // Detección de objetos
+        // Cambiar el at de la camara actual para que esta gire en torno a el
+        void setPuntoRotacion(Malla3D *ptr);
 };
 #endif

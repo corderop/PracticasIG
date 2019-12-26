@@ -47,6 +47,7 @@ class Escena
             x_sel = -1,     // X cuando se pulsa en pantalla
             y_sel = -1,     // Y cuando se pulsa en pantalla
             obj_selec = 0;  // Objeto seleccionado. Hecho para poder seleccionar y deseleccionar un objeto.
+        Tupla3f posicionObjeto = {0,0,0};
 
         // Forma de dibujado
         int objeto,         // Escena a dibujar cuando hay varias posibles

@@ -1,5 +1,6 @@
 [ ] - Modelo jerárquico arreglar
-[ ] - Cámara sigue mostrando el objeto seleccionado al cambio
-[ ] - Cambia de color el objeto seleccionado
+[x] - Cámara sigue mostrando el objeto seleccionado al cambio
+[x] - Cambia de color el objeto seleccionado
+    * El material a cambiar tengo que buscarlo. Qué sea amarillo.
 [ ] - Cambiar de color los objetos seleccionables
 [x] - Cambiar a glFrustrum

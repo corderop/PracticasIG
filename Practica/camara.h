@@ -16,6 +16,8 @@ class Camara
         // Ejes sobre la camara y vector de dirección
         Tupla3f Vv, Vx, Vy;
 
+        Tupla3f prevAt;
+
         void rotarFPS(float g, char eje);
         void rotarAlrededor(float g, char eje);
         Tupla3f matrizRotacion(Tupla3f eje, Tupla3f v, float g);
@@ -42,7 +44,9 @@ class Camara
         // Seleccionar la proyección
         void setProyeccion();
 
-        inline void setAt(Tupla3f punto){ at = punto; };
+        void setAt(Tupla3f punto);
+
+        inline void restaurarPrevioAt(){ at = prevAt; };
 } ;
 
 #endif

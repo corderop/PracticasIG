@@ -360,6 +360,8 @@ void Escena::dibujaSeleccion(){
 	// Dibuja
 	dibujarObjetos();
 
+    setColor();
+
 	// Obtenemos el objeto seleccionado
 	obtenerObjetoSeleccionado();
 
@@ -372,7 +374,6 @@ void Escena::dibujaSeleccion(){
 	modoV[4] = modoV_c[4];
 	modoV[5] = modoV_c[5];
 
-	setColor();
 	x_sel = y_sel = -1;
 }
 
@@ -388,70 +389,84 @@ void Escena::obtenerObjetoSeleccionado(){
 		if(obj_selec != 1){
 			obj_selec = 1;
 			setPuntoRotacion(cubo);
+            posicionObjeto = cubo->getCoordenadas();
+            cubo->setColor(1.0,1.0,0.0, 0);
 		}
 		else{
 			obj_selec = 0;
-			camaras[camS]->setAt({0,0,0});
+			camaras[camS]->restaurarPrevioAt();
 		}
 	}
 	else if(round(r[0]*10)/10 == 0.2){
 		if(obj_selec != 2){
 			obj_selec = 2;
 			setPuntoRotacion(cuadro);
+            posicionObjeto = cuadro->getCoordenadas();
+            cuadro->setColor(1.0,1.0,0.0, 0);
 		}
 		else{
 			obj_selec = 0;
-			camaras[camS]->setAt({0,0,0});
+			camaras[camS]->restaurarPrevioAt();
 		}
 	}
 	else if(round(r[0]*10)/10 == 0.3){
 		if(obj_selec != 3){
 			obj_selec = 3;
 			setPuntoRotacion(cilindro);
+            posicionObjeto = cilindro->getCoordenadas();
+            cilindro->setColor(1.0,1.0,0.0, 0);
 		}
 		else{
 			obj_selec = 0;
-			camaras[camS]->setAt({0,0,0});
+			camaras[camS]->restaurarPrevioAt();
 		}
 	}
 	else if(round(r[0]*10)/10 == 0.4){
 		if(obj_selec != 4){
 			obj_selec = 4;
 			setPuntoRotacion(esfera);
+            posicionObjeto = esfera->getCoordenadas();
+            esfera->setColor(1.0,1.0,0.0, 0);
 		}
 		else{
 			obj_selec = 0;
-			camaras[camS]->setAt({0,0,0});
+			camaras[camS]->restaurarPrevioAt();
 		}
 	}
 	else if(round(r[0]*10)/10 == 0.5){
 		if(obj_selec != 5){
 			obj_selec = 5;
+            posicionObjeto = peon1->getCoordenadas();
 			setPuntoRotacion(peon1);
+            peon1->setColor(1.0,1.0,0.0, 0);
 		}
 		else{
 			obj_selec = 0;
-			camaras[camS]->setAt({0,0,0});
+			camaras[camS]->restaurarPrevioAt();
 		}
 	}
 	else if(round(r[0]*10)/10 == 0.6){
 		if(obj_selec != 6){
 			obj_selec = 6;
 			setPuntoRotacion(ply);
+            posicionObjeto = ply->getCoordenadas();
+            ply->setColor(1.0,1.0,0.0, 0);
 		}
 		else{
 			obj_selec = 0;
-			camaras[camS]->setAt({0,0,0});
+			camaras[camS]->restaurarPrevioAt();
 		}
 	}
 	else if(round(r[0]*10)/10 == 0.7){
 		if(obj_selec != 7){
 			obj_selec = 7;
+            posicionObjeto = persona->getCoordenadas();
 			camaras[camS]->setAt(persona->getCoordenadas());
+            persona->setColor(1.0,1.0,0.0, 0);
 		}
 		else{
 			obj_selec = 0;
-			camaras[camS]->setAt({0,0,0});
+			camaras[camS]->restaurarPrevioAt();
 		}
 	}
 }
@@ -801,6 +816,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoMenu == SELCAMARAS){
             camS = 1;
+            if(obj_selec != 0 && camaras[camS] != nullptr)
+                camaras[camS]->setAt(posicionObjeto);
+            
             change_observer();
             change_projection();
          }
@@ -823,6 +841,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoMenu == SELCAMARAS){
             camS = 2;
+
+            if(obj_selec != 0 && camaras[camS] != nullptr)
+                camaras[camS]->setAt(posicionObjeto);
+
             change_observer();
             change_projection();
          }
@@ -840,6 +862,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoMenu == SELCAMARAS){
             camS = 3;
+
+            if(obj_selec != 0 && camaras[camS] != nullptr)
+                camaras[camS]->setAt(posicionObjeto);
+
             change_observer();
             change_projection();
          }
@@ -857,6 +883,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoMenu == SELCAMARAS){
             camS = 4;
+
+            if(obj_selec != 0 && camaras[camS] != nullptr)
+                camaras[camS]->setAt(posicionObjeto);
+
             change_observer();
             change_projection();
          }
@@ -874,6 +904,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoMenu == SELCAMARAS){
             camS = 5;
+
+            if(obj_selec != 0 && camaras[camS] != nullptr)
+                camaras[camS]->setAt(posicionObjeto);
+
             change_observer();
             change_projection();
          }
@@ -891,6 +925,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoMenu == SELCAMARAS){
             camS = 6;
+
+            if(obj_selec != 0 && camaras[camS] != nullptr)
+                camaras[camS]->setAt(posicionObjeto);
+
             change_observer();
             change_projection();
          }
@@ -904,6 +942,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
          else if(modoMenu == SELCAMARAS){
             camS = 7;
+
+            if(obj_selec != 0 && camaras[camS] != nullptr)
+                camaras[camS]->setAt(posicionObjeto);
+
             change_observer();
             change_projection();
          }

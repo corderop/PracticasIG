@@ -151,3 +151,8 @@ Tupla3f Camara::matrizRotacion(Tupla3f eje, Tupla3f v, float g){
 
     return salida;
 }
+
+void Camara::setAt(Tupla3f punto){
+    prevAt = at;
+    at = punto;
+}

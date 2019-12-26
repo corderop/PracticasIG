@@ -53,7 +53,7 @@ void Camara::setObserver(){
 
 void Camara::setProyeccion(){
     if(this->tipo == 1){
-        gluPerspective(fov, aspect, near, far);
+        glFrustum(-left, left, -top, top, near, far);
     }
     else if(this->tipo == 0){
         glOrtho(-left, left, -top, top, near, far);

@@ -61,13 +61,13 @@ Escena::Escena()
     ply = new ObjPLY("plys/ant.ply");
     persona = new Persona();
 
-	setColor();
+    setColor();
 	setTexturas();
-	setMateriales();
+    setMateriales();
 
 	// Luces
-    luz[0] = new LuzPosicional({0,0,0}, GL_LIGHT0, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0});
-    luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0});
+    luz[0] = new LuzPosicional({0,0,0}, GL_LIGHT0, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5});
+    luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5});
 
     // Camaras
     camaras[0] = new Camara(1, {0,0,600}, {0,1,0}, {0,0,0}, 50, 50);
@@ -144,12 +144,11 @@ void Escena::setColor(){
 }
 
 void Escena::setMateriales(){
-
 	// Creación de materiales
 	Tupla4f col1(0.61424, 0.04136, 0.04136, 1.0);
     Tupla4f col2(0.727811, 0.626959, 0.626959, 1.0);
     Tupla4f col3(0.1745, 0.01175, 0.01175, 1.0);
-    Material ruby(col1, col2, col2, 0.6*128);
+    Material ruby(col1, col2, col3, 0.6*128);
 
     col1 = Tupla4f(0.07568, 0.61424, 0.07568, 1.0);
     col2 = Tupla4f(0.633, 0.727811, 0.633, 1.0);

@@ -20,7 +20,7 @@ class Material
     Material (  Tupla4f mdifuso,
                 Tupla4f mespecular,
                 Tupla4f mambiente,
-                float brillo);
+                float mbrillo);
 
     void aplicar();
 

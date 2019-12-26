@@ -14,12 +14,12 @@ Material::Material (const Material &mat){
     (*this) = mat;
 }
 
-Material::Material(Tupla4f mdifuso, Tupla4f mespecular, Tupla4f mambiente, float brillo){
+Material::Material(Tupla4f mdifuso, Tupla4f mespecular, Tupla4f mambiente, float mbrillo){
 
     this->difuso = mdifuso;
     this->especular = mespecular;
-    this->ambiente = ambiente;
-    this->brillo = brillo;
+    this->ambiente = mambiente;
+    this->brillo = mbrillo;
 }
                 
 void Material::aplicar(){

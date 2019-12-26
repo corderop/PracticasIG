@@ -8,3 +8,7 @@
 ## Cosas que hacer con internet
 
 [ ] - Cambiar colores
+[ ] - Buscar ply farola
+[ ] - Buscar materiales
+[ ] - Buscar textura aceras
+    * Coordenadas de texturas de acera 

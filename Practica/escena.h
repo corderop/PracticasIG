@@ -69,6 +69,8 @@ class Escena
               velocidadAnimacionLuz = 1,            // Velocidad de la animación de luces
               velocidadManual[7] = {1,1,1,1,1,1,1}; // Velocidad de cada grado de libertad independiente
         int manualActivado = 0;                     // Grado de libertad a animar de modo manual
+        int posicionAnimacion = 0;
+        int rotacionAnimacion = 0;
 
         // Objetos de la escena
         Ejes ejes;                          // Ejes
@@ -94,6 +96,7 @@ class Escena
         // Objetos escena
         Cubo *muro1, *muro2;
         Cuadro *suelo;
+        Cubo *acera1, *acera2, *acera3;
 
         // ***************
         // Funciones

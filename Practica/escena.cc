@@ -20,7 +20,7 @@ Escena::Escena()
     camaras[0] = new Camara(1, {0,0,600}, {0,1,0}, {0,0,0}, 50, 50);
     camaras[1] = new Camara(0, {0,0,600}, {0,1,0}, {0,0,0}, 300, 300);
     camaras[2] = new Camara(1, {600,0,0}, {0,1,0}, {0,0,0}, 50, 50);
-    camaras[3] = new Camara(0, {2000,2000,+2000}, {0,1,0}, {0,0,0}, 500, 500);
+    camaras[3] = new Camara(1, {2000,2000,+2000}, {0,1,0}, {0,0,0}, 50, 50);
 
     cuadro->modificarCoordenadas(-80,80,0);
     cilindro->modificarCoordenadas(80,60,0);
@@ -90,7 +90,11 @@ void Escena::crearObjetos(){
 	suelo = new Cuadro(40);
 	// Muros
     muro1 = new Cubo(40);
-	muro2 = new Cubo(40);
+    muro2 = new Cubo(40);
+    // Aceras
+    acera1 = new Cubo(40);
+    acera2 = new Cubo(40);
+    acera3 = new Cubo(40);
 }
 
 void Escena::setColor(){
@@ -137,6 +141,9 @@ void Escena::setColor(){
 	suelo->setColor(100.0/255, 100.0/255, 100.0/255, 0);
 	muro1->setColor(255.0/255, 0.0, 0.0, 0);
 	muro2->setColor(255.0/255, 0.0, 0.0, 0);
+    acera1->setColor(150.0/255, 150.0/255, 100.0/255, 0);
+    acera2->setColor(150.0/255, 150.0/255, 100.0/255, 0);
+    acera3->setColor(150.0/255, 150.0/255, 100.0/255, 0);
 }
 
 void Escena::setMateriales(){
@@ -371,23 +378,49 @@ void Escena::dibujarObjetos(){
       glPopMatrix();
 	}
 	else if(objeto == 2){
+        // Suelo
 		glPushMatrix();
             glScalef(20.0,1.0,60.0);
             glRotatef(-90, 1.0, 0.0, 0.0);
 			suelo->draw(modoD, modoV);
 		glPopMatrix();
+        // Muros
 		glPushMatrix();
 			glTranslatef(0.0,100.0,0.0);
 			glScalef(2.0, 5.0, 60.0);
 			glPushMatrix();
-				glTranslatef(-220.0,0.0,0.0);
+				glTranslatef(-310.0,0.0,0.0);
 				muro1->draw(modoD, modoV);
 			glPopMatrix();
 			glPushMatrix();
-				glTranslatef(220.0,0.0,0.0);
+				glTranslatef(310.0,0.0,0.0);
 				muro2->draw(modoD, modoV);
 			glPopMatrix();
 		glPopMatrix();
+        // Aceras
+        glPushMatrix();
+            glPushMatrix();
+                glTranslatef(0.0,20.0,0.0);
+                glScalef(4.5,1.0,35.0);
+                acera1->draw(modoD, modoV);
+            glPopMatrix();
+            glPushMatrix();
+                glTranslatef(490.0, 20.0,0.0);
+                glScalef(4.5,1.0,60.0);
+                acera2->draw(modoD, modoV);
+            glPopMatrix();
+            glPushMatrix();
+                glTranslatef(-490.0, 20.0,0.0);
+                glScalef(4.5,1.0,60.0);
+                acera3->draw(modoD, modoV);
+            glPopMatrix();
+        glPopMatrix();
+        // Modelo
+        glPushMatrix();
+            glTranslatef(0.0,176.0,650.0);
+            glScalef(17.0, 17.0, 17.0);
+            persona->draw(modoD, modoV);
+        glPopMatrix();
 	}
 }
 
@@ -535,8 +568,21 @@ void Escena::obtenerObjetoSeleccionado(){
 // ******************************************************************
 
 void Escena::animarModeloAutomaticamente(){
-	if(animarAutomatico)
-		persona->andar(velocidadAnimacion);
+	if(animarAutomatico){
+        posicionAnimacion += velocidadAnimacion;
+        if(posicionAnimacion > 700){
+            rotacionAnimacion += velocidadAnimacion;
+            if(rotacionAnimacion < 180)
+                persona->rotar(velocidadAnimacion);
+            else{
+                persona->setRotacion180();
+                rotacionAnimacion = 0;
+                posicionAnimacion = 0;
+            }
+        }
+        else
+		    persona->andar(velocidadAnimacion);
+    }
 	if(animarAutomaticoLuces)
 		animarLuces();
 }

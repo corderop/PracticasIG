@@ -36,7 +36,9 @@ class Persona
       // Modificar avance
       void avanzar(float mod);
 
+      // Animación automática
       void andar(float velocidad);
+      void setRotacion180();
 
       void moverGradoLibertad(int numero, float cambio);
 

@@ -8,7 +8,7 @@ Persona::Persona(){
     cabeza = new Esfera(40,40,1);
     sombrero = new Sombrero();
 
-    orientacion = 0;
+    orientacion = 90;
     avance = 0;
     piernaDer->setRotando(false);
     piernaIzq->setRotando(true);
@@ -47,6 +47,14 @@ void Persona::rotar(int grados){
 
 void Persona::avanzar(float mod){
     avance = mod;
+}
+
+void Persona::setRotacion180(){
+    if(abs(90-orientacion) < abs(270-orientacion))
+        orientacion = 90;
+    else
+        orientacion = 270;
+    
 }
 
 void Persona::moverGradoLibertad(int numero, float cambio){

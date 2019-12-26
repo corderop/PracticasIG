@@ -29,13 +29,14 @@ class Escena
         // Variables
         // ***************
 
-        // Cámara provisional
-        GLfloat Observer_distance;
-        GLfloat Observer_angle_x;
-        GLfloat Observer_angle_y;
+        // // Cámara provisional
+        // GLfloat Observer_distance;
+        // GLfloat Observer_angle_x;
+        // GLfloat Observer_angle_y;
 
         // Ventana y transformación de la perspectiva
-        GLfloat Width, Height, Front_plane, Back_plane;
+        // GLfloat Width, Height, Front_plane, Back_plane;
+        GLfloat Width, Height;
 
         // Interacción con el ususario
         menu modoMenu=NADA;
@@ -91,7 +92,7 @@ class Escena
         Camara* camaras[8];                 // Camaras
 
         // Objetos escena
-        Cubo *muro1;
+        Cubo *muro1, *muro2;
         Cuadro *suelo;
 
         // ***************
@@ -107,12 +108,20 @@ class Escena
         // Llamadas a los draw de los objetos así como las transformaciones correspondientes
         void dibujarObjetos();
 
+        // Función auxiliar para el constructor
+        void auxConstructor();
+
+        // Creación de objetos
+        void crearObjetos();
+
         // Modificación de los colores de todos los elementos de la escena
         void setColor();
         // Modificación de las texturas de todos los elementos de la escena
         void setTexturas();
         // Modificación de los materiales de todos los elementos de la escena
         void setMateriales();
+        // Modificación de las coordenadas de texturas de todos los objetos de la escena
+        void setCoordTexturas();
 
         // Dibuja los objetos con un solo color para poder seleccionarlos
         void dibujaSeleccion();

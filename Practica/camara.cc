@@ -20,8 +20,8 @@ Camara::Camara(int tp, Tupla3f ojo, Tupla3f arriba,  Tupla3f punto, float alto, 
     aspect = ancho/alto;
     left = ancho/2;
     top = alto/2;
-    near = 50;
-    far  = 2000;
+    near = 30;
+    far  = 5000;
     fov = atan(left/near)*(180/PI)*2;
 }
 

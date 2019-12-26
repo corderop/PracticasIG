@@ -8,12 +8,35 @@
 
 Escena::Escena()
 {
-    opcionesInteraccion();
-    Front_plane       = 50.0;
-    Back_plane        = 2000.0;
-    Observer_distance = 4*Front_plane;
-    Observer_angle_x  = 0.0 ;
-    Observer_angle_y  = 0.0 ;
+	auxConstructor();
+
+	crearObjetos();
+
+	// Luces
+    luz[0] = new LuzPosicional({0,0,0}, GL_LIGHT0, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5});
+    luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5});
+
+    // Camaras
+    camaras[0] = new Camara(1, {0,0,600}, {0,1,0}, {0,0,0}, 50, 50);
+    camaras[1] = new Camara(0, {0,0,600}, {0,1,0}, {0,0,0}, 300, 300);
+    camaras[2] = new Camara(1, {600,0,0}, {0,1,0}, {0,0,0}, 50, 50);
+    camaras[3] = new Camara(0, {2000,2000,+2000}, {0,1,0}, {0,0,0}, 500, 500);
+
+    cuadro->modificarCoordenadas(-80,80,0);
+    cilindro->modificarCoordenadas(80,60,0);
+    esfera->modificarCoordenadas(0,80,0);
+    peon1->modificarCoordenadas(-80,-80,0);
+    ply->modificarCoordenadas(80,-80,0);
+    cubo->modificarCoordenadas(0,-80,0);
+
+	setColor();
+	setTexturas();
+    setMateriales();
+	setCoordTexturas();
+}
+
+void Escena::auxConstructor(){
+	opcionesInteraccion();
 
     ejes.changeAxisSize( 5000 );
 
@@ -21,7 +44,7 @@ Escena::Escena()
     modoD = 1;    // Modo inmediato por defecto
     luzS = 0;
     angulo = -1;
-	camS = 0;
+	camS = 3;
     
     luz[0] = nullptr;
     luz[1] = nullptr;
@@ -49,8 +72,10 @@ Escena::Escena()
     modoV[3] = false;
     modoV[4] = false;
     modoV[5] = false;
+}
 
-	// Creación de objetos
+void Escena::crearObjetos(){
+	// Creación de objetos no escena
     cubo = new Cubo(40);
     cuadro = new Cuadro(40);
     tetraedro = new Tetraedro();
@@ -61,45 +86,11 @@ Escena::Escena()
     ply = new ObjPLY("plys/ant.ply");
     persona = new Persona();
 
-    setColor();
-	setTexturas();
-    setMateriales();
-
-	// Luces
-    luz[0] = new LuzPosicional({0,0,0}, GL_LIGHT0, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5});
-    luz[1] = new LuzDireccional({0,0}, GL_LIGHT1, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5}, {1.0,1.0,1.0,0.5});
-
-    // Camaras
-    camaras[0] = new Camara(1, {0,0,600}, {0,1,0}, {0,0,0}, 50, 50);
-    camaras[1] = new Camara(0, {0,0,600}, {0,1,0}, {0,0,0}, 300, 300);
-    camaras[2] = new Camara(1, {600,0,0}, {0,1,0}, {0,0,0}, 50, 50);
-    camaras[3] = new Camara(1, {600,600,+600}, {0,1,0}, {0,0,0}, 40, 40);
-
-    cuadro->modificarCoordenadas(-80,80,0);
-    cilindro->modificarCoordenadas(80,60,0);
-    esfera->modificarCoordenadas(0,80,0);
-    peon1->modificarCoordenadas(-80,-80,0);
-    ply->modificarCoordenadas(80,-80,0);
-    cubo->modificarCoordenadas(0,-80,0);
-
-    // ESCENA
-    // Carretera
-   	suelo = new Cuadro(40);
-	suelo->setColor(100.0/255, 100.0/255, 100.0/255, 0);
-    Textura tex3("texturas/road.jpg");
-    suelo->setTexturas(tex3);
-
-    std::vector<Tupla2f> aux;
-    aux.resize(4);
-    aux[0] = {0,0};
-    aux[1] = {2,0};
-    aux[2] = {2,1};
-    aux[3] = {0,1};
-
-    suelo->setCoordenadasTexturas(aux);
-
-    // Muros
+	// OBJETOS ESCENA
+	suelo = new Cuadro(40);
+	// Muros
     muro1 = new Cubo(40);
+	muro2 = new Cubo(40);
 }
 
 void Escena::setColor(){
@@ -141,6 +132,11 @@ void Escena::setColor(){
     persona->setColorSombrero(1.0,0.0,0.0);
     persona->setColor(0.0, 0.0, 0.0, 2);
     persona->setColor(0.0, 1.0, 0.0, 1);
+
+	// Escena
+	suelo->setColor(100.0/255, 100.0/255, 100.0/255, 0);
+	muro1->setColor(255.0/255, 0.0, 0.0, 0);
+	muro2->setColor(255.0/255, 0.0, 0.0, 0);
 }
 
 void Escena::setMateriales(){
@@ -194,7 +190,56 @@ void Escena::setTexturas(){
 	cubo->calcular_texturas();
 	cuadro->setTexturas(tex2);
 	cuadro->calcular_texturas();
+
+	// ESCENA
+	Textura tex3("texturas/road.jpg");
+    suelo->setTexturas(tex3);
+
+	muro1->setTexturas(tex);
+	muro2->setTexturas(tex);
 }
+
+void Escena::setCoordTexturas(){
+	std::vector<Tupla2f> aux;
+
+	// suelo
+    aux.resize(4);
+    aux[0] = {0,0};
+    aux[1] = {5,0};
+    aux[2] = {5,2};
+    aux[3] = {0,2};
+    suelo->setCoordenadasTexturas(aux);
+
+	// muro1
+	aux.clear();
+	aux.resize(16);
+	// Cara de la derecha
+	aux[3] = {0,0};
+    aux[2] = {0,1};
+    aux[6] = {10,1};
+    aux[7] = {10,0};
+	// Cara de la izquierda
+	aux[0] = {0,0};
+    aux[1] = {0,1};
+    aux[5] = {10,1};
+    aux[4] = {10,0};
+	// Cara de enfrente
+	aux[9]  = {1,0};
+    aux[10] = {1,0.4};
+	// Cara de atrás
+	// aux[15] = {0,0};
+	aux[14] = {11,0.4};
+	aux[13] = {11,0};
+	// aux[12] = {0.4,0};
+	// Cara de arriba
+	aux[8] = {0,0};
+	aux[11] = {0,0.4};
+	aux[15] = {10,0.4};
+	aux[12] = {10,0};
+    muro1->setCoordenadasTexturas(aux);
+	muro2->setCoordenadasTexturas(aux);
+}
+
 
 void Escena::setPuntoRotacion(Malla3D *ptr){
    camaras[camS]->setAt(ptr->getCoordenadas());
@@ -254,6 +299,8 @@ void Escena::dibujar()
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiamos de nuevo
 
+	setColor();
+
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DITHER);
@@ -284,7 +331,7 @@ void Escena::dibujar()
 }
 
 void Escena::dibujarObjetos(){
-   if(objeto == 0){
+   	if(objeto == 0){
 		// Cara de alante
       glPushMatrix();
          // Fila cono, cilindro, esfera
@@ -325,9 +372,21 @@ void Escena::dibujarObjetos(){
 	}
 	else if(objeto == 2){
 		glPushMatrix();
-            glScalef(10.0,1.0,30.0);
+            glScalef(20.0,1.0,60.0);
             glRotatef(-90, 1.0, 0.0, 0.0);
 			suelo->draw(modoD, modoV);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(0.0,100.0,0.0);
+			glScalef(2.0, 5.0, 60.0);
+			glPushMatrix();
+				glTranslatef(-220.0,0.0,0.0);
+				muro1->draw(modoD, modoV);
+			glPopMatrix();
+			glPushMatrix();
+				glTranslatef(220.0,0.0,0.0);
+				muro2->draw(modoD, modoV);
+			glPopMatrix();
 		glPopMatrix();
 	}
 }
@@ -476,108 +535,108 @@ void Escena::obtenerObjetoSeleccionado(){
 // ******************************************************************
 
 void Escena::animarModeloAutomaticamente(){
-   if(animarAutomatico)
-      persona->andar(velocidadAnimacion);
-   if(animarAutomaticoLuces)
-      animarLuces();
+	if(animarAutomatico)
+		persona->andar(velocidadAnimacion);
+	if(animarAutomaticoLuces)
+		animarLuces();
 }
 
 void Escena::animarModeloManual(int numero, float suma){
-   persona->moverGradoLibertad(numero, suma);
+   	persona->moverGradoLibertad(numero, suma);
 }
 
 void Escena::animarLuces(){
-   if(luz[luzS]->esDireccional())
-      luz[luzS]->variarAnguloAlpha(velocidadAnimacionLuz);
-   else{
-      luz[luzS]->variarPosicion(velocidadAnimacionLuz, 0, 0);
-   }
+	if(luz[luzS]->esDireccional())
+		luz[luzS]->variarAnguloAlpha(velocidadAnimacionLuz);
+	else{
+		luz[luzS]->variarPosicion(velocidadAnimacionLuz, 0, 0);
+	}
 }
 
 // *****************************************************************************
 // INTERACCIÓN CON EL RATÓN
 // ***************************************************************************** 
 void Escena::clickRaton( int boton, int estado, int x, int y){
-   // Se pulsa el boton derecho
-   if( boton == GLUT_RIGHT_BUTTON && estado == GLUT_DOWN){
-      pulsado = 1;
-      x_actual = x;
-      y_actual = y;
-   }
-   else if(boton == GLUT_LEFT_BUTTON && estado == GLUT_DOWN){
-      x_sel = x;
-      y_sel = y;
-   }
-   else if(boton == 3 && estado == GLUT_UP){
-      camaras[camS]->zoom(1);
-   }
-   else if(boton == 4 && estado == GLUT_UP){
-      camaras[camS]->zoom(-1);
-   }
-   else{
-      pulsado = 0;
-   }
+	// Se pulsa el boton derecho
+	if( boton == GLUT_RIGHT_BUTTON && estado == GLUT_DOWN){
+		pulsado = 1;
+		x_actual = x;
+		y_actual = y;
+	}
+	else if(boton == GLUT_LEFT_BUTTON && estado == GLUT_DOWN){
+		x_sel = x;
+		y_sel = y;
+	}
+	else if(boton == 3 && estado == GLUT_UP){
+		camaras[camS]->zoom(1);
+	}
+	else if(boton == 4 && estado == GLUT_UP){
+		camaras[camS]->zoom(-1);
+	}
+	else{
+		pulsado = 0;
+	}
 }
 
 void Escena::ratonMovido( int x, int y){
-   switch (pulsado)
-   {
-   case 1:
-      if(obj_selec == 0){
-         camaras[camS]->rotarXFirstPerson((x-x_actual)*0.1);
-         camaras[camS]->rotarYFirstPerson((y-y_actual)*0.1);
-      }
-      else{
-         camaras[camS]->rotarXExaminar(-(x-x_actual)*0.1);
-         camaras[camS]->rotarYExaminar(-(y-y_actual)*0.1);
-      }
-      x_actual = x;
-      y_actual = y;
-   break;
-   }
+	switch (pulsado)
+	{
+	case 1:
+		if(obj_selec == 0){
+			camaras[camS]->rotarXFirstPerson((x-x_actual)*0.1);
+			camaras[camS]->rotarYFirstPerson((y-y_actual)*0.1);
+		}
+		else{
+			camaras[camS]->rotarXExaminar(-(x-x_actual)*0.1);
+			camaras[camS]->rotarYExaminar(-(y-y_actual)*0.1);
+		}
+		x_actual = x;
+		y_actual = y;
+	break;
+	}
 }
 
 // ***********************************************************
 // Interacción con el teclado
 // ***********************************************************
 void Escena::opcionesInteraccion(){
-   std::cout<<std::endl<<"----------------------------------"<<std::endl;
-   std::cout<<"Q - Salir de cualquier modo o de la ejecución"<<std::endl;
-   std::cout<<"D - Seleccionar modo dibujado"<<std::endl;
-   std::cout<<"    1 - Modo inmediato"<<std::endl;
-   std::cout<<"    2 - Modo diferido"<<std::endl;
-   std::cout<<"O - Seleccionar modo objeto"<<std::endl;
-   std::cout<<"    H - Cubo y tetraedro"<<std::endl;
-   std::cout<<"    M - Cilindro, esfera y cono"<<std::endl;
-   std::cout<<"    X - Modelo jerárquico"<<std::endl;
-   std::cout<<"V - Seleccionar modo visualización"<<std::endl;
-   std::cout<<"    P - Activar/desactivar modo puntos"<<std::endl;
-   std::cout<<"    L - Activar/desactivar modo líneas"<<std::endl;
-   std::cout<<"    S - Activar/desactivar modo sólido"<<std::endl;
-   std::cout<<"    A - Activar/desactivar modo ajedrez"<<std::endl;
-   std::cout<<"    I - Activar/desactivar modo iluminación"<<std::endl;
-   std::cout<<"        0...7 - Activar/desactivar y seleccionar cada luz"<<std::endl;
-   std::cout<<"        A - Activar variación ángulo alpha"<<std::endl;
-   std::cout<<"        B - Activar variación ángulo beta"<<std::endl;
-   std::cout<<"        > - Incrementa el ángulo"<<std::endl;
-   std::cout<<"        < - Decrementa el ángulo"<<std::endl;
-   std::cout<<"        P - Activar/desactivar animación automática de la luz"<<std::endl;
-   std::cout<<"            + - Aumenta la velocidad de la animación"<<std::endl;
-   std::cout<<"            - - Disminuye la velocidad de la animación"<<std::endl;
-   std::cout<<"A - Activar/descativar animación automática de los modelos"<<std::endl;
-   std::cout<<"    + - Aumenta la velocidad de la animación"<<std::endl;
-   std::cout<<"    - - Disminuye la velocidad de la animación"<<std::endl;
-   std::cout<<"M - Activar animación manual de los modelos"<<std::endl;
-   std::cout<<"    0...n - Seleccionar el grado de libertad"<<std::endl;
-   std::cout<<"    > - Aumentar velocidad manual"<<std::endl;
-   std::cout<<"    < - Reducir velocidad manual"<<std::endl;
-   std::cout<<"    + - Aumenta el grado de libertad"<<std::endl;
-   std::cout<<"    - - Disminuye el grado de libertad"<<std::endl;
-   std::cout<<"C - Activar selección de camaras"<<std::endl;
-   std::cout<<"    0...7 - Seleccionar el grado de libertad"<<std::endl;
-   std::cout<<"F - Activar/desactivar tapas"<<std::endl;
-   std::cout<<"T - Activar/desactivar texturas"<<std::endl;
-   std::cout<<std::endl<<"----------------------------------"<<std::endl;
+	std::cout<<std::endl<<"----------------------------------"<<std::endl;
+	std::cout<<"Q - Salir de cualquier modo o de la ejecución"<<std::endl;
+	std::cout<<"D - Seleccionar modo dibujado"<<std::endl;
+	std::cout<<"    1 - Modo inmediato"<<std::endl;
+	std::cout<<"    2 - Modo diferido"<<std::endl;
+	std::cout<<"O - Seleccionar modo objeto"<<std::endl;
+	std::cout<<"    H - Cubo y tetraedro"<<std::endl;
+	std::cout<<"    M - Cilindro, esfera y cono"<<std::endl;
+	std::cout<<"    X - Modelo jerárquico"<<std::endl;
+	std::cout<<"V - Seleccionar modo visualización"<<std::endl;
+	std::cout<<"    P - Activar/desactivar modo puntos"<<std::endl;
+	std::cout<<"    L - Activar/desactivar modo líneas"<<std::endl;
+	std::cout<<"    S - Activar/desactivar modo sólido"<<std::endl;
+	std::cout<<"    A - Activar/desactivar modo ajedrez"<<std::endl;
+	std::cout<<"    I - Activar/desactivar modo iluminación"<<std::endl;
+	std::cout<<"        0...7 - Activar/desactivar y seleccionar cada luz"<<std::endl;
+	std::cout<<"        A - Activar variación ángulo alpha"<<std::endl;
+	std::cout<<"        B - Activar variación ángulo beta"<<std::endl;
+	std::cout<<"        > - Incrementa el ángulo"<<std::endl;
+	std::cout<<"        < - Decrementa el ángulo"<<std::endl;
+	std::cout<<"        P - Activar/desactivar animación automática de la luz"<<std::endl;
+	std::cout<<"            + - Aumenta la velocidad de la animación"<<std::endl;
+	std::cout<<"            - - Disminuye la velocidad de la animación"<<std::endl;
+	std::cout<<"A - Activar/descativar animación automática de los modelos"<<std::endl;
+	std::cout<<"    + - Aumenta la velocidad de la animación"<<std::endl;
+	std::cout<<"    - - Disminuye la velocidad de la animación"<<std::endl;
+	std::cout<<"M - Activar animación manual de los modelos"<<std::endl;
+	std::cout<<"    0...n - Seleccionar el grado de libertad"<<std::endl;
+	std::cout<<"    > - Aumentar velocidad manual"<<std::endl;
+	std::cout<<"    < - Reducir velocidad manual"<<std::endl;
+	std::cout<<"    + - Aumenta el grado de libertad"<<std::endl;
+	std::cout<<"    - - Disminuye el grado de libertad"<<std::endl;
+	std::cout<<"C - Activar selección de camaras"<<std::endl;
+	std::cout<<"    0...7 - Seleccionar el grado de libertad"<<std::endl;
+	std::cout<<"F - Activar/desactivar tapas"<<std::endl;
+	std::cout<<"T - Activar/desactivar texturas"<<std::endl;
+	std::cout<<std::endl<<"----------------------------------"<<std::endl;
 }
 
 //**************************************************************************
@@ -1089,3 +1148,5 @@ void Escena::change_observer()
    if(camaras[camS]!=nullptr)
       camaras[camS]->setObserver();
 }
+
+

@@ -199,6 +199,7 @@ void Malla3D::draw(int modoD, bool modoV[]){
    // Activación modo sólido
    if(modoV[3] || modoV[2] || modoV[4] ){
       if(t != nullptr && modoV[5]){
+         setColor(1.0,1.0,1.0,0);
          glEnable( GL_TEXTURE_2D );
          t->activar();
       }

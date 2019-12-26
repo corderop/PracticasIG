@@ -4,3 +4,7 @@
     * El material a cambiar tengo que buscarlo. Qué sea amarillo.
 [ ] - Cambiar de color los objetos seleccionables
 [x] - Cambiar a glFrustrum
+
+## Cosas que hacer con internet
+
+[ ] - Cambiar colores

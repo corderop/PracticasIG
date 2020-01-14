@@ -21,7 +21,8 @@ class Persona
       int orientacion;
       // Avance
       float avance;
-      // Posición
+      Tupla3f pos = {0,0,0};
+      // Avanzado
       Tupla3f c = {0,0,0};
 
    public:
@@ -61,7 +62,7 @@ class Persona
 
       // Coordenadas del objeto
       void modificarCoordenadas(int x, int y, int z);
-      inline Tupla3f getCoordenadas(){ return c; };
+      inline Tupla3f getCoordenadas(){ return pos; };
 } ;
 
 #endif

@@ -10,7 +10,7 @@
 // Visualización en modo inmediato con 'glDrawElements'
 
 Malla3D::Malla3D(){
-   id_ind = id_ver = id_col[0] = id_col[1] = id_col[2] = id_nor = 0;
+   id_ind = id_ver = id_col[0] = id_col[1] = id_col[2] = id_nor = id_tex = 0;
 }
 
 void Malla3D::crearAjedrez(){
@@ -200,6 +200,16 @@ void Malla3D::draw(int modoD, bool modoV[]){
    if(modoV[3] || modoV[2] || modoV[4] ){
       if(t != nullptr && modoV[5]){
          setColor(1.0,1.0,1.0,0);
+
+         if(modoV[4]){
+            Tupla4f col1(0.5,0.5,0.5,1.0);
+            Tupla4f col2(0.7,0.7,0.7,1.0);
+            Tupla4f col3(0.05,0.05,0.05,1.0);
+            Material white(col1, col2, col3, 10.0);
+
+            setMaterial(white);
+         }
+         
          glEnable( GL_TEXTURE_2D );
          t->activar();
       }
@@ -273,7 +283,7 @@ void Malla3D::setMaterial(Material mat){
 
 void Malla3D::modificarCoordenadas(float x, float y, float z){
    Tupla3f aux(x, y, z);
-   coord = aux;
+   coord = coord + aux;
 }
 
 void Malla3D::setCoordenadasTexturas(std::vector<Tupla2f> tex){

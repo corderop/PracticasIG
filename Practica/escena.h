@@ -61,6 +61,9 @@ class Escena
             angulo,         // Ángulo a modificar
             camS;           // Camara activa
         bool luzActiva[8];  // Situación de cada luz
+        bool parpadeo = false;
+        bool coloreado = true;
+        int contadorParpadeo = 0;
 
         // Animación
         bool animarAutomatico = false,              // Animación automática de los modelos de la escena
@@ -83,8 +86,6 @@ class Escena
         Cilindro * cilindro = nullptr;      // Cilindro
         Cono * cono = nullptr;              // Cono
         Esfera * esfera = nullptr;          // Esfera
-        ObjRevolucion * peon1 = nullptr;    // PLY por revolución
-
         Persona *persona = nullptr;         // Modelo jerárquico
 
         Cilindro *p1;
@@ -97,6 +98,9 @@ class Escena
         Cubo *muro1, *muro2;
         Cuadro *suelo;
         Cubo *acera1, *acera2, *acera3;
+        ObjPLY *coche;
+        ObjRevolucion * peon1 = nullptr;    // PLY por revolución
+        
 
         // ***************
         // Funciones
@@ -116,6 +120,9 @@ class Escena
 
         // Creación de objetos
         void crearObjetos();
+
+        // Parpadeo de objetos seleccionables
+        void colorearParpadeo();
 
         // Modificación de los colores de todos los elementos de la escena
         void setColor();

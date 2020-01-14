@@ -19,6 +19,7 @@ void Persona::draw(int modoD, bool modoV[]){
         glTranslatef(c(0) + avance*cos(orientacion*M_PI/180),0,c(2) + (-avance*sin(orientacion*M_PI/180)));
         c(0) += avance*cos(orientacion*M_PI/180);
         c(2) += -avance*sin(orientacion*M_PI/180);
+        pos = pos + c;
         avance = 0;
         glRotatef(orientacion, 0, 1, 0);
         glRotatef(90, 0, 1, 0);
@@ -166,7 +167,6 @@ void Persona::cambiarTapas(){
 }
 
 void Persona::modificarCoordenadas(int x_p, int y_p, int z_p){
-    c(0) = x_p;
-    c(1) = y_p;
-    c(2) = z_p;
+    Tupla3f aux(x_p, y_p, z_p);
+    pos = pos + aux;
 }

@@ -2,7 +2,7 @@
 [x] - Cámara sigue mostrando el objeto seleccionado al cambio
 [x] - Cambia de color el objeto seleccionado
     * El material a cambiar tengo que buscarlo. Qué sea amarillo.
-[ ] - Cambiar de color los objetos seleccionables
+[x] - Cambiar de color los objetos seleccionables
 [x] - Cambiar a glFrustrum
 
 ## Cosas que hacer con internet

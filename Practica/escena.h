@@ -77,8 +77,6 @@ class Escena
 
         // Objetos de la escena
         Ejes ejes;                          // Ejes
-
-        Cubo * cubo = nullptr ;             // Cubo
         Cuadro * cuadro = nullptr;          // Cuadro para aplicar textura
         Tetraedro * tetraedro= nullptr ;    // Tetraedro
 
@@ -100,6 +98,7 @@ class Escena
         Cubo *acera1, *acera2, *acera3;
         ObjPLY *coche;
         ObjRevolucion * peon1 = nullptr;    // PLY por revolución
+        Cubo * cubo = nullptr ;             // Cubo
         
 
         // ***************
